@@ -296,6 +296,25 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .cad.sumiu .soquete img,.cad.sumiu .soquete .vazio{opacity:.15;filter:grayscale(1)}
 .cad.sumiu .nomeplate{text-decoration:line-through;opacity:.55}
 .cad.sumiu .pontos{color:var(--oxblood)}
+.voa{position:absolute;z-index:25;pointer-events:none;font-family:var(--f-disp);font-weight:900;font-size:1.25rem;
+  color:#7FE0AE;text-shadow:0 0 10px rgba(92,164,130,.9),0 2px 0 rgba(0,0,0,.7);white-space:nowrap}
+.voa.neg{color:#E07A74;text-shadow:0 0 10px rgba(176,74,70,.9),0 2px 0 rgba(0,0,0,.7)}
+.pontos{display:inline-block}
+/* tela cheia curta dos momentos decisivos do duelo */
+.flash{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:none;text-align:center;animation:flash .62s ease-out both}
+.flash .fi{font-size:clamp(5rem,22vw,11rem);line-height:1;animation:flash-ic .62s cubic-bezier(.2,.9,.3,1.3) both}
+.flash .ft{font-family:var(--f-disp);font-weight:900;font-stretch:118%;text-transform:uppercase;letter-spacing:-.02em;
+  font-size:clamp(1.8rem,7vw,3.6rem);color:#fff;text-shadow:0 4px 0 rgba(0,0,0,.45);margin-top:8px}
+.flash-leitada{background:radial-gradient(circle,rgba(255,255,250,.96),rgba(236,232,220,.9))}
+.flash-leitada .ft{color:#3A3226;text-shadow:none}
+.flash-jesus{background:radial-gradient(circle,rgba(255,236,160,.95),rgba(214,160,40,.88))}
+.flash-jesus .ft{color:#4A3408;text-shadow:0 0 24px rgba(255,255,255,.9)}
+.flash-rasputin{background:radial-gradient(circle,rgba(90,40,110,.93),rgba(20,8,26,.95))}
+.flash-moises{background:linear-gradient(90deg,rgba(28,90,170,.95),rgba(10,30,70,.6) 45%,rgba(10,30,70,.6) 55%,rgba(28,90,170,.95))}
+@keyframes flash{0%{opacity:0}12%{opacity:1}72%{opacity:1}100%{opacity:0}}
+@keyframes flash-ic{0%{transform:scale(.2) rotate(-20deg)}45%{transform:scale(1.15) rotate(4deg)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.flash .fi{animation:none}}
 .carimbo{position:absolute;top:18px;left:50%;z-index:6;transform:translateX(-50%) rotate(-12deg);
   font-family:var(--f-mono);font-weight:700;font-size:.7rem;letter-spacing:.14em;color:var(--oxblood);
   border:2px solid var(--oxblood);background:rgba(10,15,23,.85);padding:2px 8px;border-radius:3px;
@@ -1478,6 +1497,7 @@ function bonusRel(gab, rk){
   for(const r of S.rels){
     if(r.fn){ if(rk === r.fn) v += r.b; continue; }
     if(r.req && !relLiberada(r)) continue;     /* Tetezinho, Pod e Zap sem os donos juntos não valem */
+    if(DESLIGA && r.dono === DESLIGA) continue;
     if(r.over || r.cresce) continue;       /* a de transformação já pagou no atributo */
     if(r.especial){                        /* efeito próprio no lugar do +12 */
       if(r.k === "manicoba" && S.etapa > 0 && relAtiva("manicoba")) v += (gab[rk] && gab[rk].n === r.dono) ? REL_B : 3;
@@ -1495,7 +1515,7 @@ function temReliquia(fig){ return !!relDe(fig); }
 /* relíquia de efeito próprio valendo: está na mesa e o dono segue na cúpula */
 function relAtiva(k){
   if(!S || !S.gab) return false;
-  return S.rels.some(r => r.k === k && (!r.req || relLiberada(r)) && ROLES.some(x => S.gab[x.k] && S.gab[x.k].n === r.dono && !sumiu(S.gab[x.k])));
+  return S.rels.some(r => r.k === k && r.dono !== DESLIGA && (!r.req || relLiberada(r)) && ROLES.some(x => S.gab[x.k] && S.gab[x.k].n === r.dono && !sumiu(S.gab[x.k])));
 }
 /* Eduardo Lopes e Jesus não cabem na mesma cúpula: na primeira vez que os dois se encontram,
    cara ou coroa decide quem some pelo resto da partida. Quem some joga com a cadeira vazia,
@@ -1706,7 +1726,10 @@ const TROLLAGENS = [
 ];
 const trolou = k => !!S.troll && S.troll.k === k;
 const PAS_ENGAJ = {k:"engaj", ic:"📱", n:"Engajamento", d:"+2 em todas as funções para cada influenciador além do primeiro na cúpula."};
-function pasDe(fig){ return fig && !sumiu(fig) ? (PASSIVAS[fig.n] || (fig.p === "Redes Sociais" ? PAS_ENGAJ : null)) : null; }
+/* DESLIGA: nome de quem tem passiva e relíquias ignoradas; SEM_SIN: sinergias ignoradas.
+   Só a medição dos números voando usa isso (renderMesa), sempre voltando ao normal. */
+let DESLIGA = null, SEM_SIN = false;
+function pasDe(fig){ return fig && !sumiu(fig) && fig.n !== DESLIGA ? (PASSIVAS[fig.n] || (fig.p === "Redes Sociais" ? PAS_ENGAJ : null)) : null; }
 function temPas(k){
   if(!S || !S.gab) return false;
   for(const r of ROLES){ const p = pasDe(S.gab[r.k]); if(p && p.k === k) return true; }
@@ -2018,7 +2041,7 @@ const SINERGIAS = [
   {ic:"📖", n:"A Lei e a Graça",          m:["Jesus Cristo","Moisés"], b:5, d:"os mandamentos e o sermão da montanha"}
 ].filter(x => x.m.every(n => F.some(f => f.n === n)));
 function sinergiasDe(gab){
-  if(!gab || !S) return [];
+  if(!gab || !S || SEM_SIN) return [];
   const nomes = ROLES.map(r => gab[r.k]).filter(f => f && !(gab === S.gab && sumiu(f))).map(f => f.n);
   return SINERGIAS.filter(x => x.m.filter(n => nomes.includes(n)).length >= 2);
 }
@@ -2266,6 +2289,69 @@ const PLENARIO = `<div class="plenario"><svg viewBox="0 0 400 408" preserveAspec
 
 /* no celular a pílula da função não cabe por extenso */
 const ETQ_CURTA = {lid:"Chefe", arp:"Articulação", eco:"Economia", des:"Desenvolv.", gue:"Guerra"};
+/* Quanto a passiva/relíquias de cada figura e cada sinergia somam em cada cadeira.
+   Chave "origem>cadeira": a origem é a cadeira de quem ativou. */
+function contribuicoes(){
+  const out = {}, ocup = ROLES.filter(r => S.gab[r.k]);
+  const cadeiraDe = n => (ROLES.find(r => S.gab[r.k] && S.gab[r.k].n === n) || {}).k;
+  const base = {}; ocup.forEach(r => base[r.k] = forca(S.gab, r.k));
+  for(const r0 of ocup){
+    const f = S.gab[r0.k];
+    if(!PASSIVAS[f.n] && !S.rels.some(x => x.dono === f.n) && f.p !== "Redes Sociais") continue;
+    DESLIGA = f.n;
+    try{ ocup.forEach(r => { const d = base[r.k] - forca(S.gab, r.k); if(Math.abs(d) >= .5) out[r0.k + ">" + r.k] = d; }); }
+    finally{ DESLIGA = null; }
+  }
+  const sins = sinergiasDe(S.gab);
+  if(sins.length){
+    SEM_SIN = true;
+    try{
+      ocup.forEach(r => {
+        const d = base[r.k] - forca(S.gab, r.k); if(Math.abs(d) < .5) return;
+        const x = sins.find(y => y.m.includes(S.gab[r.k].n)); if(!x) return;
+        const parceiro = x.m.find(n => n !== S.gab[r.k].n && cadeiraDe(n));
+        const k = (cadeiraDe(parceiro) || r.k) + ">" + r.k;
+        out[k] = (out[k] || 0) + d;
+      });
+    } finally{ SEM_SIN = false; }
+  }
+  return out;
+}
+function voarNumeros(){
+  const mesa = $("mesa"); if(!mesa || !S || !S.gab) return;
+  const agora = contribuicoes(), antes = S.fxAntes || {};
+  S.fxAntes = agora;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = mesa.getBoundingClientRect();
+  let n = 0;
+  for(const [k, v] of Object.entries(agora)){
+    const delta = Math.round(v - (antes[k] || 0));
+    if(!delta || n >= 14) continue;
+    const [de, para] = k.split(">");
+    const a = mesa.querySelector(`.cad-${de} .soquete`), b = mesa.querySelector(`.cad-${para} .pontos`);
+    if(!a || !b) continue;
+    const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+    const x0 = ra.left + ra.width/2 - box.left, y0 = ra.top + ra.height/2 - box.top;
+    const x1 = rb.left + rb.width/2 - box.left, y1 = rb.top + rb.height/2 - box.top;
+    const el = document.createElement("span");
+    el.className = "voa" + (delta < 0 ? " neg" : "");
+    el.textContent = (delta > 0 ? "+" : "−") + Math.abs(delta);
+    el.style.left = x0 + "px"; el.style.top = y0 + "px";
+    mesa.appendChild(el);
+    const atraso = n * 140, meioX = (x0 + x1)/2, meioY = Math.min(y0, y1) - 40;
+    el.animate([
+      {transform:"translate(-50%,-50%) scale(.4)", opacity:0},
+      {transform:"translate(-50%,-50%) scale(1.35)", opacity:1, offset:.18},
+      {transform:`translate(calc(-50% + ${meioX - x0}px), calc(-50% + ${meioY - y0}px)) scale(1.1)`, opacity:1, offset:.55},
+      {transform:`translate(calc(-50% + ${x1 - x0}px), calc(-50% + ${y1 - y0}px)) scale(.7)`, opacity:.2}
+    ], {duration:900, delay:atraso, easing:"cubic-bezier(.3,.7,.3,1)", fill:"both"}).onfinish = () => {
+      el.remove();
+      const alvo = mesa.querySelector(`.cad-${para} .pontos`);
+      if(alvo) alvo.animate([{transform:"scale(1.6)", color:delta > 0 ? "#7FE0AE" : "#E07A74"}, {transform:"scale(1)"}], {duration:380, easing:"ease-out"});
+    };
+    n++;
+  }
+}
 function renderMesa(){
   const cadeiras = ROLES.map(r=>{
     const fig = S.gab[r.k];
@@ -2302,6 +2388,7 @@ function renderMesa(){
     : `<div class="forca">${mediaTexto()}</div><div class="cap">Força no plenário</div>
        <div class="aura">${auraTexto()}</div>`;
   $("mesa").innerHTML = PLENARIO + `<div class="centro">${centro}</div>` + cadeiras;
+  voarNumeros();
   /* sinergia nova na cúpula: aviso na frente do plenário */
   S.sinVistas = S.sinVistas || [];
   const novaSin = sinergiasDe(S.gab).find(x => !S.sinVistas.includes(x.n));
@@ -2724,6 +2811,31 @@ function lineRow(gab, r, cls){
 $("vs-go").addEventListener("click",rodarEtapa);
 
 /* ======================= ETAPA ======================= */
+const FLASH = {
+  leitada: {ic:"🥛", t:"Leitada!"},
+  jesus:   {ic:"✨", t:"Ele vence"},
+  rasputin:{ic:"🧟", t:"Rasputin não morre"},
+  moises:  {ic:"🌊", t:"O mar se abre"}
+};
+/* quais momentos o duelo teve, na ordem em que aconteceram */
+function flashesDoDuelo(milagre, hk){
+  const txt = milagre || "", l = [];
+  const marcas = [["✨","jesus"],["🧟","rasputin"],["🌊","moises"],["🥛","leitada"]];
+  const pos = marcas.map(([e,k]) => [txt.indexOf(e), k]).filter(([i]) => i >= 0).sort((a,b) => a[0]-b[0]);
+  pos.forEach(([, k]) => l.push(k));
+  if(hk && !l.includes("leitada")) l.push("leitada");
+  return l;
+}
+function flashTela(k, atraso){
+  const f = FLASH[k]; if(!f) return;
+  setTimeout(() => {
+    const el = document.createElement("div");
+    el.className = "flash flash-" + k; el.setAttribute("aria-hidden", "true");
+    el.innerHTML = `<div class="fi">${f.ic}</div><div class="ft">${esc(f.t)}</div>`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 660);
+  }, atraso || 0);
+}
 function rodarEtapa(){
   const et = etapaAtual();
   $("st-etapa").textContent = etapaTxt();
@@ -2784,6 +2896,8 @@ function rodarEtapa(){
       const meu = S.gab[rk].s, dele = S.op[rk].s;
       const txt = (ganhou?ev.w:ev.l).replace(/\{v\}/g,meu).replace(/\{o\}/g,dele);
 
+      const flashes = flashesDoDuelo(milagre, hitkill || hitkillDele).slice(0, 3);
+      flashes.forEach((k, j) => flashTela(k, j * 640));
       linha.classList.remove("live");
       linha.classList.add(ganhou?"win":"loss");
       if(hitkill || hitkillDele){
@@ -2804,7 +2918,7 @@ function rodarEtapa(){
       if(ganhou) v++; else d++;
       $("sc-a").textContent = v; $("sc-b").textContent = d;
       i++;
-      setTimeout(passo, 950);
+      setTimeout(passo, 950 + flashes.length * 640);
       }
     }, 700);
   };
