@@ -764,6 +764,8 @@ span.face{
 #pvp-bar .pv-p strong{font-family:var(--f-disp);font-weight:900;font-size:1.15rem;color:var(--brass)}
 #pvp-bar .pv-p i{font-style:normal;color:var(--paper-3)}
 #pvp-bar .pv-s{color:var(--paper-2)}
+#pvp-bar .pv-sair{background:none;border:1px solid var(--line);color:var(--paper-3);font:inherit;font-size:.72rem;padding:2px 10px;border-radius:20px;cursor:pointer}
+#pvp-bar .pv-sair:hover{color:var(--paper);border-color:var(--paper-3)}
 #pvp-bar .pv-s.vez{color:var(--ink);background:var(--brass);padding:2px 10px;border-radius:20px;font-weight:700;animation:vez 1.2s ease-in-out infinite}
 @keyframes vez{50%{box-shadow:0 0 16px rgba(201,162,76,.8)}}
 .pvp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:24px}
@@ -3820,7 +3822,7 @@ function pvpIntent(a){
 }
 function pvpEnviar(){
   if(!PV.ref || !PV.M) return;
-  PV.ref.child("estado").set({m:pvpSer(PV.M), dlc:DLC, assoc:ASSOC, btc:BTC ? JSON.stringify(BTC) : "", ult:PV.ult});
+  PV.ref.child("estado").set({m:pvpSer(PV.M), fase:PV.M.fase, dlc:DLC, assoc:ASSOC, btc:BTC ? JSON.stringify(BTC) : "", ult:PV.ult});
 }
 function pvpReceberEstado(msg){
   const velho = PV.M;
@@ -3923,6 +3925,12 @@ async function pvpEntrarSala(codigo, retomar){
   try{ sala = (await ref.once("value")).val(); }
   catch(e){ if(gen === PV.gen) pvpLobbyMsg("Erro na conexão (" + (e.code || e.message) + ")."); return; }
   if(gen !== PV.gen) return;
+  if(retomar){
+    /* retomada automática só de partida em andamento; sala vazia ou partida encerrada volta para a home */
+    let fase = null;
+    try{ fase = sala && sala.estado ? (sala.estado.fase || pvpDes(sala.estado.m).fase) : null; }catch(e){}
+    if(!fase || fase === "fim"){ pvpGuardarSala(null); if(pvpAuto){ pvpSair(); return; } }
+  }
   if(!sala){ pvpGuardarSala(null); pvpLobbyMsg("Não existe sala com esse código."); return; }
   if(sala.host && sala.host.tk === tk){ pvpLobbyMsg("Voltando para a sua sala…"); pvpVirarHost(codigo, true, gen); return; }
   if(sala.convidado && sala.convidado.tk !== tk){ pvpLobbyMsg("Essa sala já tem dois jogadores."); return; }
@@ -3943,6 +3951,7 @@ function pvpCodigo(){
   const c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   return Array.from({length:5}, () => c[rnd(c.length)]).join("");
 }
+let pvpAuto = false;   /* true durante a retomada automática ao abrir a página */
 function pvpLobbyMsg(t){ $("pvp-msg").textContent = t; }
 /* larga a sala atual (ex.: a retomada automática) antes de criar ou entrar em outra */
 function pvpLargarSala(){
@@ -3974,9 +3983,12 @@ function pvpBarra(){
   b.hidden = false;
   b.innerHTML = `<span class="pv-t">⚔ PvP</span>
     <span class="pv-p"><b>${esc(E.nome)}</b> <i>${REGIMES[E.reg].ic}</i> <strong>${M.placar[PV.eu]}</strong> × <strong>${M.placar[outro(PV.eu)]}</strong> <i>${REGIMES[R.reg].ic}</i> <b>${esc(R.nome)}</b></span>
-    <span class="pv-s${M.turno === PV.eu && M.fase === "draft" ? " vez" : ""}">${esc(st)}</span>`;
+    <span class="pv-s${M.turno === PV.eu && M.fase === "draft" ? " vez" : ""}">${esc(st)}</span>
+    <button class="pv-sair" type="button">Sair da sala</button>`;
+  b.querySelector(".pv-sair").onclick = pvpSair;
 }
 function pvpRender(){
+  if(PV.M && PV.codigo) pvpGuardarSala(PV.M.fase === "fim" ? null : PV.codigo, PV.eu);
   pvpBarra();
   if(!PV.on || !PV.M || PV.animando) return;
   const M = PV.M;
@@ -4167,7 +4179,8 @@ $("pvp-voltar").addEventListener("click", pvpSair);
   if(guardada && (!sala || sala.toUpperCase() === guardada.codigo)){
     $("pvp-go").click(); $("pvp-cod-in").value = guardada.codigo;
     pvpLobbyMsg("Voltando para a sala " + guardada.codigo + "…");
-    pvpEntrarSala(guardada.codigo, true);
+    pvpAuto = true;
+    pvpEntrarSala(guardada.codigo, true).finally(() => { pvpAuto = false; });
   }
   else if(sala){ $("pvp-go").click(); $("pvp-cod-in").value = sala.toUpperCase(); pvpLobbyMsg("Você foi convidado para a sala " + sala.toUpperCase() + ". Escreva seu nome e o regime na tela inicial se quiser, depois clique em Entrar."); }
 })();
