@@ -741,6 +741,32 @@ span.face{
 .foot{margin-top:44px;padding-top:18px;border-top:1px solid var(--line-soft);
   font-family:var(--f-mono);font-size:.68rem;color:var(--paper-3);display:flex;gap:18px;flex-wrap:wrap}
 
+/* ---------- PvP ---------- */
+#pvp-bar{position:sticky;top:0;z-index:60;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:center;
+  padding:8px 16px;background:rgba(10,15,23,.94);border-bottom:1px solid var(--brass-lo);backdrop-filter:blur(6px);
+  font-family:var(--f-mono);font-size:.72rem;letter-spacing:.04em}
+#pvp-bar .pv-t{color:var(--brass);font-weight:700;letter-spacing:.14em}
+#pvp-bar .pv-p b{font-family:var(--f-disp);font-size:.9rem;letter-spacing:0}
+#pvp-bar .pv-p strong{font-family:var(--f-disp);font-weight:900;font-size:1.15rem;color:var(--brass)}
+#pvp-bar .pv-p i{font-style:normal;color:var(--paper-3)}
+#pvp-bar .pv-s{color:var(--paper-2)}
+#pvp-bar .pv-s.vez{color:var(--ink);background:var(--brass);padding:2px 10px;border-radius:20px;font-weight:700;animation:vez 1.2s ease-in-out infinite}
+@keyframes vez{50%{box-shadow:0 0 16px rgba(201,162,76,.8)}}
+.pvp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:24px}
+.pvp-card{border:1px solid var(--line);background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.pvp-card p{margin:0;font-size:.86rem;color:var(--paper-3)}
+.pvp-cod{font-family:var(--f-disp);font-weight:900;font-size:2.6rem;letter-spacing:.18em;color:var(--brass);line-height:1;margin:6px 0}
+#pvp-rival{margin-top:14px}
+.pv-rival{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:6px}
+.pv-cad{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 10px;
+  border:1px solid var(--line-soft);border-left:3px solid var(--oxblood);background:var(--surface)}
+.pv-cad .r{font-family:var(--f-mono);font-size:.55rem;letter-spacing:.12em;color:var(--cor)}
+.pv-cad .n{font-family:var(--f-disp);font-weight:600;font-size:.85rem;line-height:1.15}
+.pv-cad b{font-family:var(--f-mono);color:var(--oxblood)}
+.pv-cad .face{border-radius:50%}
+.flash-rodadaVitoria{background:radial-gradient(circle,rgba(92,164,130,.95),rgba(20,60,40,.92))}
+.flash-rodadaDerrota{background:radial-gradient(circle,rgba(176,74,70,.95),rgba(60,18,16,.92))}
+
 /* ---------- celular ---------- */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 button,.campo{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
@@ -835,6 +861,7 @@ button,.campo{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 }
 </style>
 
+<div id="pvp-bar" hidden></div>
 <div class="wrap">
 
 <!-- ============ INTRO ============ -->
@@ -847,6 +874,7 @@ button,.campo{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
     <div class="hero-actions">
       <input class="campo" id="nome" type="text" maxlength="22" autocomplete="off" spellcheck="false" placeholder="Seu nome (opcional)" aria-label="Seu nome">
       <button class="btn" id="go">Escolher os heróis</button>
+      <button class="btn btn-alt" id="pvp-go">⚔ PvP ao vivo</button>
       <span class="mono" style="font-size:.7rem;color:var(--paper-3)" id="roster-count"></span>
     </div>
     <svg class="bulcao" viewBox="0 0 160 16" preserveAspectRatio="none" aria-hidden="true"><defs><pattern id="azulejo" width="40" height="16" patternUnits="userSpaceOnUse"><path d="M0 16A16 16 0 0 1 16 0v16z" fill="#5A86C0" opacity=".55"/><path d="M20 0h8l-4 8z" fill="#C9A24C" opacity=".5"/><rect x="31" y="9" width="6" height="6" fill="#5A86C0" opacity=".38"/><path d="M40 0a16 16 0 0 0-8 16" fill="none" stroke="#5A86C0" stroke-opacity=".3" stroke-width="1.5"/></pattern></defs><rect width="160" height="16" fill="url(#azulejo)"/></svg>
@@ -967,6 +995,33 @@ button,.campo{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
     <button class="btn btn-alt" id="st-ress" style="display:none">✝️ Ressuscitar a cúpula</button>
     <button class="btn btn-alt" id="st-vida" style="display:none">🕊 Usar anistia</button>
     <button class="btn btn-alt" id="st-stop" style="display:none">Passar a faixa</button></div>
+</section>
+
+<!-- ============ PvP ============ -->
+<section class="screen" id="s-pvp">
+  <div id="pvp-lobby">
+    <div class="eyebrow">Um contra o outro</div>
+    <h2 style="margin-top:10px">PvP ao vivo</h2>
+    <p class="lede" style="margin-top:10px">Draft em turnos com o mesmo elenco (quem um escala o outro não pega), cada um com o seu regime, e cúpula contra cúpula numa <b>melhor de 7</b>. Entre as rodadas, as cartas de sempre — e a Roleta no lugar de virar a casaca.</p>
+    <p class="mono" style="font-size:.72rem;color:var(--paper-3);margin-top:10px">Jogando como: <span id="pvp-quem"></span> · nome e regime vêm da tela inicial</p>
+    <div class="pvp-grid">
+      <div class="pvp-card">
+        <div class="eyebrow">Criar sala</div>
+        <p>Você recebe um código para mandar ao amigo.</p>
+        <button class="btn" id="pvp-criar">Criar sala</button>
+        <div id="pvp-codigo"></div>
+      </div>
+      <div class="pvp-card">
+        <div class="eyebrow">Entrar numa sala</div>
+        <p>Digite o código que o seu amigo mandou.</p>
+        <input class="campo" id="pvp-cod-in" maxlength="8" autocomplete="off" spellcheck="false" placeholder="Código" aria-label="Código da sala" style="text-transform:uppercase">
+        <button class="btn" id="pvp-entrar">Entrar</button>
+      </div>
+    </div>
+    <p class="hint" id="pvp-msg" style="text-transform:none;letter-spacing:.02em"></p>
+    <div class="acao"><button class="btn-ghost" id="pvp-voltar">← Voltar</button></div>
+  </div>
+  <div id="pvp-espera" hidden></div>
 </section>
 
 <!-- ============ RECOMPENSA ============ -->
@@ -2461,6 +2516,7 @@ function renderPool(){
   }).join("");
   $("pool").querySelectorAll(".fig:not([disabled])").forEach(b=>{
     b.addEventListener("click",()=>{
+      if(PV.on && !(PV.M && PV.M.fase === "draft" && PV.M.turno === PV.eu)) return;
       S.sel = S.pool[+b.dataset.i]; S.mov = null;
       renderPool(); renderMesa();
       $("preview").innerHTML = dossieHTML(S.sel, melhorCadeira(S.sel).k, false);
@@ -2471,6 +2527,21 @@ function renderPool(){
 }
 
 function clicarCadeira(rk){
+  if(PV.on){
+    const M = PV.M; if(!M) return;
+    if(S.sel){
+      if(M.fase !== "draft" || M.turno !== PV.eu || S.gab[rk]) return;
+      const n = S.sel.n; S.sel = null; $("preview").innerHTML = "";
+      pvpIntent({t:"pick", n, rk}); return;
+    }
+    if(S.mov){
+      const de = S.mov; S.mov = null; $("preview").innerHTML = "";
+      if(de !== rk) pvpIntent({t:"swap", de, para:rk}); else pvpRender();
+      return;
+    }
+    if(S.gab[rk]){ S.mov = rk; $("preview").innerHTML = dossieHTML(S.gab[rk], rk, false); pvpRender(); }
+    return;
+  }
   const ocupada = !!S.gab[rk];
 
   /* 1. sentar alguém do elenco numa cadeira vazia */
@@ -2516,10 +2587,15 @@ function relCorpo(r){
         ${dono?`<span class="dono">◈ ${esc(dono)}</span>`:""}</span>`;
 }
 function renderRelis(){
+  if(PV.on && !S.relOpcoes){
+    $("relis").innerHTML = `<p style="margin:0;font-size:.86rem;color:var(--paper-3)">As relíquias aparecem quando as duas cúpulas estiverem completas.</p>`;
+    $("confirmar").disabled = true; return;
+  }
   if(!S.relOpcoes) S.relOpcoes = reliquiasParaCupula();
   $("relis").innerHTML = S.relOpcoes.map((r,i)=>
     `<button class="reli" data-i="${i}" aria-pressed="${S.rels[0]===r}">${relCorpo(r)}</button>`).join("");
   $("relis").querySelectorAll(".reli").forEach(b=>b.addEventListener("click",()=>{
+    if(PV.on){ if(!PV.M.prontos[PV.eu]) pvpIntent({t:"relic", i:+b.dataset.i}); return; }
     S.rels = [S.relOpcoes[+b.dataset.i]];
     $("confirmar").disabled = false;
     $("confirmar").textContent = "Confirmar e governar";
@@ -2572,6 +2648,7 @@ function girarTexto(el, opcoes, dur, cb){
 }
 
 function girar(soEnt, soPer){
+  if(PV.on){ pvpIntent({t:"spin", soEnt, soPer}); return; }
   if(S.girando) return;
   S.girando = true; S.sel = null; $("preview").innerHTML = "";
   renderDraft();
@@ -2610,7 +2687,7 @@ $("go").addEventListener("click",()=>{
   novoJogo(); show("s-draft"); renderDraft();
 });
 $("nome").addEventListener("keydown",e=>{ if(e.key==="Enter") $("go").click(); });
-$("confirmar").addEventListener("click",()=>{ if(!S.rels.length) return; S.mov=null; iniciarEtapa(); });
+$("confirmar").addEventListener("click",()=>{ if(!S.rels.length) return; S.mov=null; if(PV.on){ pvpIntent({t:"ready"}); return; } iniciarEtapa(); });
 $("spin").addEventListener("click",()=>girar(false,false));
 $("rr-e").addEventListener("click",()=>girar(true,false));
 $("rr-p").addEventListener("click",()=>girar(false,true));
@@ -2815,7 +2892,9 @@ const FLASH = {
   leitada: {ic:"🥛", t:"Leitada!"},
   jesus:   {ic:"✨", t:"Ele vence"},
   rasputin:{ic:"🧟", t:"Rasputin não morre"},
-  moises:  {ic:"🌊", t:"O mar se abre"}
+  moises:  {ic:"🌊", t:"O mar se abre"},
+  rodadaVitoria:{ic:"🏆", t:"Rodada sua"},
+  rodadaDerrota:{ic:"💀", t:"Rodada perdida"}
 };
 /* quais momentos o duelo teve, na ordem em que aconteceram */
 function flashesDoDuelo(milagre, hk){
@@ -2927,7 +3006,7 @@ function rodarEtapa(){
 
 /* No Julgamento, a última etapa, cada confronto é uma série melhor de 5 entre os dois
    líderes, como no LoLdle: a mesma chance por jogo, mas a série premia quem é mais forte. */
-const serie = () => S.etapa === ETAPAS.length - 1;
+const serie = () => !S.pvp && S.etapa === ETAPAS.length - 1;
 function jogarSerie(p){
   if(!serie()){ const g = Math.random() < p; return {ganhou:g, jogos:[g]}; }
   const jogos = []; let w = 0, l = 0;
@@ -2947,8 +3026,9 @@ const opTem = k => ROLES.some(x => S.op[x.k] && pasDuelo(S.op[x.k]) === k);
 const opTemNome = n => ROLES.some(x => S.op[x.k] && S.op[x.k].n === n);
 function jogarDuelo(rk, i, v, d){
   S.duelo = {i, v, d};
-  S.glitch = -10 + Math.random() * 50;          /* ANUSCU: −10 a +40 neste duelo */
-  const a = forca(S.gab,rk), b = forca(S.op,rk);
+  if(S.pvpA == null) S.glitch = -10 + Math.random() * 50;          /* ANUSCU: −10 a +40 neste duelo */
+  /* no PvP as forças chegam prontas, calculadas dos dois lados (forcaPvP) */
+  const a = S.pvpA != null ? S.pvpA : forca(S.gab,rk), b = S.pvpB != null ? S.pvpB : forca(S.op,rk);
   S.duelo = null;
   const meu = S.gab[rk], dele = S.op[rk];
   const tudo = g => serie() ? [g,g,g] : [g];
@@ -2959,7 +3039,7 @@ function jogarDuelo(rk, i, v, d){
     if(opVence)  return {ganhou:false, jogos:tudo(false), hk:null, msg:"✨ Jesus está do outro lado. Ele vence."};
     if((pasDe(meu) || {}).k === "leitada" && Math.random() < chanceHitKill())
       return {ganhou:true, jogos:tudo(true), hk:"meu", msg:"🥛 Kha'Zix deu uma leitada em " + (dele ? dele.s : "a oposição") + "!"};
-    if(pasDuelo(dele) === "leitada" && Math.random() < .22)
+    if(pasDuelo(dele) === "leitada" && Math.random() < (S.pvpChanceDele != null ? S.pvpChanceDele : .22))
       return {ganhou:false, jogos:tudo(false), hk:"dele", msg:"🥛 O Kha'Zix da oposição deu uma leitada em " + meu.s + "!"};
     const s = jogarSerie(chance(a,b));
     return {ganhou:s.ganhou, jogos:s.jogos, hk:null, msg:""};
@@ -3115,6 +3195,8 @@ function sortearManchete(){
 const manchete = () => (S && S.manchete && S.manchete.etapa === S.etapa) ? S.manchete : null;
 
 function cartaRw(c){
+  if(c.t === "roleta") return {ic:"🎰", n:"Roleta da Casaca",
+    d:"Gire a roleta: sai uma potência e um período, e <b>um herói livre dali</b> pode entrar no lugar de alguém da sua cúpula."};
   if(c.t === "recruta") return {ic:"🤝", n:"Virar a casaca",
     d:"Um herói da oposição que você acabou de derrotar troca de lado e entra no lugar de alguém da sua cúpula."};
   if(c.t === "rel"){
@@ -3133,9 +3215,10 @@ function cartaRw(c){
 function candidatosDe(c, vencida){
   if(c.t === "recruta") return ROLES.map(r => ({f:vencida[r.k], info:"jogou em " + ROLE[r.k].n}));
   if(c.t === "reforma") return c.cands.map(f => ({f, info:f.e + " · " + f.p}));
+  if(c.t === "roleta") return (c.cands || []).map(f => ({f, info:f.p + (f.y ? " · " + f.y : "")}));
   return [];
 }
-const trocaGente = c => !!c && (c.t === "recruta" || c.t === "reforma");
+const trocaGente = c => !!c && (c.t === "recruta" || c.t === "reforma" || c.t === "roleta");
 function mostrarRecompensa(vencida){
   sortearManchete();
   S.rw = {cartas:sortearRecompensas(), esc:null, vencida, recruta:null, sai:null};
@@ -3167,8 +3250,12 @@ function renderRecompensa(){
   const c = rw.esc === null ? null : rw.cartas[rw.esc];
   const cands = trocaGente(c) ? candidatosDe(c, rw.vencida) : [];
   let det = "";
+  if(c && c.t === "roleta" && !c.cands)
+    det = `<div class="eyebrow">Roleta da Casaca</div><button class="btn" id="rw-girar" style="width:100%">🎰 Girar a roleta</button>`;
+  else if(c && c.t === "roleta" && !cands.length)
+    det = `<div class="eyebrow">${esc(c.ent)} · ${esc(c.per)}</div><p class="lede">Ninguém livre aqui. Escolha outra carta.</p>`;
   if(cands.length){
-    det += `<div class="eyebrow">${c.t === "recruta" ? "Quem vira a casaca?" : "Quem entra no ministério?"}</div><div class="pool rw-lista">` + cands.map(({f, info}, i)=>{
+    det += `<div class="eyebrow">${c.t === "recruta" ? "Quem vira a casaca?" : c.t === "roleta" ? "🎰 " + esc(c.ent) + " · " + esc(c.per) + " — quem entra?" : "Quem entra no ministério?"}</div><div class="pool rw-lista">` + cands.map(({f, info}, i)=>{
       const b = melhorCadeira(f), p = pasDe(f), rar = raridade(f);
       return `<button class="fig" data-rec="${i}" aria-pressed="${rw.recruta===f}" style="--cor:var(--f-${b.k})">
         ${face(f)}
@@ -3188,6 +3275,7 @@ function renderRecompensa(){
     }
   }
   $("rw-detalhe").innerHTML = det;
+  if($("rw-girar")) $("rw-girar").addEventListener("click", () => { $("rw-girar").disabled = true; $("rw-girar").textContent = "Girando…"; pvpIntent({t:"rwSpin", esc:rw.esc}); });
   $("rw-detalhe").querySelectorAll("[data-rec]").forEach(b=>b.addEventListener("click",()=>{
     rw.recruta = cands[+b.dataset.rec].f; rw.sai = null; renderRecompensa();
   }));
@@ -3221,8 +3309,12 @@ function aplicarRecompensa(){
   S.rw = null;
   iniciarEtapa();
 }
-$("rw-go").addEventListener("click", ()=>{ if(S.rw && !$("rw-go").disabled) aplicarRecompensa(); });
-$("rw-pular").addEventListener("click", ()=>{ S.rw = null; iniciarEtapa(); });
+$("rw-go").addEventListener("click", ()=>{
+  if(!S.rw || $("rw-go").disabled) return;
+  if(PV.on){ const rw = S.rw; $("rw-go").disabled = true; pvpIntent({t:"card", esc:rw.esc, entra:rw.recruta ? rw.recruta.n : null, sai:rw.sai}); return; }
+  aplicarRecompensa();
+});
+$("rw-pular").addEventListener("click", ()=>{ if(PV.on){ pvpIntent({t:"skip"}); return; } S.rw = null; iniciarEtapa(); });
 
 /* ======================= FIM ======================= */
 function fim(venceuTudo){
@@ -3351,6 +3443,579 @@ $("end-copy").addEventListener("click", async ()=>{
   catch(e){ t.focus(); t.select(); $("end-copy").textContent = "Selecionado — copie"; }
 });
 $("again").addEventListener("click",()=>{ novoJogo(); show("s-draft"); renderDraft(); });
+
+/* ======================= PvP AO VIVO ======================= */
+/* Dois navegadores ligados direto (PeerJS). Quem cria a sala é o "host" e roda o motor:
+   sorteia roleta, cartas e duelos e manda o estado inteiro ao outro a cada mudança. O
+   convidado só manda intenções (girar, escalar, escolher carta). Draft em turnos com o
+   elenco compartilhado, cada um com o seu regime, melhor de 7 rodadas cúpula x cúpula,
+   e entre rodadas as cartas de sempre, com a Roleta no lugar de virar a casaca. */
+const PVP_RODADAS = 7, PVP_VITORIAS = 4;
+const PV = {on:false, host:false, peer:null, conn:null, eu:"A", M:null,
+            vistoSpin:{A:0, B:0}, vistoRodada:-1, animando:false, status:""};
+const outro = X => X === "A" ? "B" : "A";
+
+/* roda fn com S apontando para o jogador X (e a cúpula do outro como S.op) */
+function comFrame(X, fn){
+  const antes = S, M = PV.M;
+  S = M[X]; S.op = M[outro(X)].gab;
+  try{ return fn(); } finally{ S = antes; }
+}
+
+/* ---------- estado ↔ texto ---------- */
+const FIG_POR_NOME = new Map(F.map(f => [f.n, f]));
+const PVP_LOCAL = new Set(["sel","mov","girando","fxAntes","op","duelo","pvpA","pvpB","pvpChanceDele","sinVistas","sumidoNovo","esc","recruta","sai"]);
+function pvpSer(M){
+  const figs = new Set(F);
+  return JSON.stringify(M, function(k, v){
+    if(PVP_LOCAL.has(k) && this && this !== M) return undefined;
+    if(v && typeof v === "object"){
+      if(figs.has(v)) return {$f:v.n};
+      let i = RELIQUIAS.indexOf(v); if(i >= 0) return {$r:i};
+      i = REL_GENERICAS.indexOf(v); if(i >= 0) return {$g:i};
+      i = TROLLAGENS.indexOf(v); if(i >= 0) return {$t:i};
+    }
+    return v;
+  });
+}
+function pvpDes(txt){
+  return JSON.parse(txt, (k, v) => {
+    if(v && typeof v === "object"){
+      if(v.$f !== undefined) return FIG_POR_NOME.get(v.$f) || null;
+      if(v.$r !== undefined) return RELIQUIAS[v.$r];
+      if(v.$g !== undefined) return REL_GENERICAS[v.$g];
+      if(v.$t !== undefined) return TROLLAGENS[v.$t];
+    }
+    return v;
+  });
+}
+
+/* ---------- motor (só o host executa) ---------- */
+function pvpEstado(nome, reg){
+  const n0 = NOME, r0 = REG, s0 = S;
+  NOME = nome; REG = reg; novoJogo();
+  const st = S; S = s0; NOME = n0; REG = r0;
+  st.pvp = true; st.dlc = DLC;
+  return st;
+}
+function pvpNovaPartida(nomeA, regA, nomeB, regB){
+  const turno = Math.random() < .5 ? "A" : "B";
+  PV.M = {fase:"draft", turno, primeiro:turno, A:pvpEstado(nomeA, regA), B:pvpEstado(nomeB, regB),
+          placar:{A:0, B:0}, rodada:0, res:null, prontos:{A:false, B:false}, spin:{A:0, B:0},
+          dlc:DLC, assoc:ASSOC, btc:BTC, partida:(PV.M ? PV.M.partida + 1 : 1)};
+  PV.vistoSpin = {A:0, B:0}; PV.vistoRodada = -1;
+}
+const livreNo = (ent, per) => IDX[ent] && IDX[ent][per] && IDX[ent][per].some(f => !S.usados.includes(f.n));
+function pvpSortearPeriodo(evitar){
+  const pers = Object.keys(IDX[S.ent]);
+  let cand = pers.filter(x => x !== evitar && livreNo(S.ent, x));
+  if(!cand.length) cand = pers.filter(x => livreNo(S.ent, x));
+  if(!cand.length) cand = pers;
+  S.per = cand[rnd(cand.length)];
+}
+function pvpSortearEntidade(evitar){
+  /* no elenco compartilhado uma potência pode ficar sem ninguém livre: tenta outra */
+  for(let t = 0; t < 30; t++){
+    const e = sorteiaEntidade(evitar);
+    if(Object.keys(IDX[e]).some(p => livreNo(e, p))) return e;
+  }
+  return sorteiaEntidade(evitar);
+}
+function pvpProximoTurno(X){
+  const M = PV.M, Y = outro(X);
+  if(M[Y].rodada <= 5) M.turno = Y;
+  else if(M[X].rodada <= 5) M.turno = X;
+  else {
+    M.fase = "final"; M.turno = null;
+    ["A","B"].forEach(Z => comFrame(Z, () => { S.relOpcoes = reliquiasParaCupula(); S.rels = []; }));
+  }
+}
+function sortearRecompensasPvP(){
+  const cartas = [{t:"roleta"}];
+  const r = relNova(); if(r) cartas.push({t:"rel", r});
+  const rks = shuffle(ROLES.map(r => r.k));
+  const extras = shuffle([{t:"treino", rk:rks[0]}, {t:"aura"}, {t:"pesquisa"}, {t:"aposta"},
+                          {t:"reforma", cands:candidatosReforma()}]);
+  const n = relAtiva("fumagalli") ? 4 : 3;
+  while(cartas.length < n && extras.length) cartas.push(extras.pop());
+  return cartas;
+}
+/* força de uma cadeira de X contra Y: tudo de X (passivas, relíquias, treino, sinergias)
+   menos o que as passivas de Y tiram de X, como numa etapa normal — só que dos dois lados */
+function forcaPvP(X, rk, i, v, d){
+  const Y = outro(X);
+  const propria = comFrame(X, () => {
+    S.duelo = {i, v, d}; S.glitch = -10 + Math.random() * 50;
+    const f = forca(S.gab, rk); S.duelo = null; return f;
+  });
+  const tira = comFrame(Y, () => {
+    S.duelo = {i, v:d, d:v};
+    let p = penalOp(rk);
+    if(rk !== "lid" && S.op.lid){
+      const base = (rateR(S.op.lid, "lid") - 70) / 3 * REGIMES[S.reg].aura;
+      p -= auraDe(S.op) - base;
+    }
+    S.duelo = null; return p;
+  });
+  return propria - tira;
+}
+function notaNeutra(k, meu, dele, hk){
+  if(k === "jesus") return "✨ Jesus vence o duelo.";
+  if(k === "rasputin") return "🧟 Rasputin era para cair aqui. Não caiu.";
+  if(k === "moises") return "🌊 Moisés abre o mar e o duelo é jogado de novo.";
+  if(k === "leitada") return "🥛 " + (hk === "A" ? "Kha'Zix deu uma leitada em " + dele.s : "Kha'Zix deu uma leitada em " + meu.s) + "!";
+  return "";
+}
+function pvpRodada(){
+  const M = PV.M, r = M.rodada;
+  ["A","B"].forEach(X => comFrame(X, () => {
+    S.etapa = r; S.nocaute = false; S.marUsado = false; S.opMarUsado = false; S.afastados = [];
+    S.anuscuFora = naCupula("ANUSCU") && Math.random() < chanceAnuscuFora();
+    S.marlissonFalta = temPas("networking") && !relAtiva("joelheira") && Math.random() < .25;
+    S.troll = temPas("supremo") ? TROLLAGENS[rnd(TROLLAGENS.length)] : null;
+  }));
+  const ordem = shuffle(ROLES.map(x => x.k)), duelos = [];
+  let v = 0, d = 0;
+  for(let i = 0; i < 5 && v < 3 && d < 3; i++){
+    const rk = ordem[i];
+    const a = forcaPvP("A", rk, i, v, d), b = forcaPvP("B", rk, i, d, v);
+    const chanceB = comFrame("B", () => chanceHitKill());
+    const res = comFrame("A", () => {
+      S.pvpA = a; S.pvpB = b; S.pvpChanceDele = chanceB;
+      try{ return jogarDuelo(rk, i, v, d); } finally{ S.pvpA = S.pvpB = S.pvpChanceDele = null; }
+    });
+    const meu = M.A.gab[rk], dele = M.B.gab[rk];
+    const hk = res.hitkill ? "A" : res.hitkillDele ? "B" : null;
+    const notas = flashesDoDuelo(res.milagre, !!hk).map(k => notaNeutra(k, meu, dele, hk));
+    if(/Nocaute/.test(res.milagre)) notas.push("🥊 Nocaute de " + meu.s + ": " + M.B.nome + " sente o golpe pelo resto da rodada.");
+    if(!res.ganhou && !M.B.nocaute && comFrame("B", () => (pasDe(dele) || {}).k === "nocaute")){
+      M.B.nocaute = true; notas.push("🥊 Nocaute de " + dele.s + ": " + M.A.nome + " sente o golpe pelo resto da rodada.");
+    }
+    duelos.push({rk, ev:rnd(EVENTOS[rk].length), a, b, ganhou:res.ganhou, hk, flashes:flashesDoDuelo(res.milagre, !!hk), notas});
+    if(res.ganhou) v++; else d++;
+  }
+  const venc = v >= 3 ? "A" : "B";
+  M.placar[venc]++;
+  M.A.hist.push({nome:"Rodada " + (r+1), v, d, passou:venc === "A"});
+  M.B.hist.push({nome:"Rodada " + (r+1), v:d, d:v, passou:venc === "B"});
+  M.res = {r, ordem, duelos, v, d, venc,
+           gab:{A:{...M.A.gab}, B:{...M.B.gab}}, avisos:{A:M.A.aviso || "", B:M.B.aviso || ""},
+           extras:{A:pvpAvisosRodada("A"), B:pvpAvisosRodada("B")}};
+  M.A.aviso = ""; M.B.aviso = "";
+  M.rodada++;
+  M.prontos = {A:false, B:false};
+  if(M.placar.A >= PVP_VITORIAS || M.placar.B >= PVP_VITORIAS || M.rodada >= PVP_RODADAS){
+    M.fase = "fim";
+  } else {
+    M.fase = "cartas";
+    ["A","B"].forEach(X => comFrame(X, () => {
+      S.etapa = M.rodada; sortearManchete();
+      S.rw = {cartas:sortearRecompensasPvP(), esc:null, recruta:null, sai:null};
+    }));
+  }
+}
+function pvpAvisosRodada(X){
+  return comFrame(X, () => {
+    const l = [];
+    if(S.anuscuFora) l.push("👾 ANUSCU abandonou o grupo nesta rodada.");
+    if(S.marlissonFalta) l.push("🦵 Marlisson faltou nesta rodada.");
+    if(S.troll) l.push("🤡 Claudio " + S.troll.t);
+    const m = manchete(); if(m && (m.v !== undefined || m.aura)) l.push(m.ic + " " + m.n);
+    if(S.pesquisa === S.etapa) l.push("📊 Pesquisa favorável: +" + RW_PESQUISA + " em tudo.");
+    return l;
+  });
+}
+/* uma intenção de um jogador; devolve false se não valia */
+function pvpAcao(X, a){
+  const M = PV.M; if(!M) return false;
+  const st = M[X], Y = outro(X);
+  if(a.t === "spin"){
+    if(M.fase !== "draft" || M.turno !== X) return false;
+    return comFrame(X, () => {
+      if(a.soPer){ if(!S.ent || S.rrP <= 0) return false; S.rrP--; pvpSortearPeriodo(S.per); }
+      else {
+        if(a.soEnt){ if(!S.ent || S.rrE <= 0) return false; S.rrE--; }
+        else if(S.pool.length) return false;
+        S.ent = pvpSortearEntidade(a.soEnt ? S.ent : null); pvpSortearPeriodo(null);
+      }
+      S.pool = IDX[S.ent][S.per].slice().sort((p,q) => ovrDe(q) - ovrDe(p));
+      M.spin[X]++;
+      return true;
+    });
+  }
+  if(a.t === "pick"){
+    if(M.fase !== "draft" || M.turno !== X) return false;
+    const fig = st.pool.find(f => f.n === a.n);
+    if(!fig || st.usados.includes(fig.n) || st.gab[a.rk] || !ROLE[a.rk]) return false;
+    st.gab[a.rk] = fig; st.usados.push(fig.n); M[Y].usados.push(fig.n);
+    st.pool = []; st.ent = null; st.per = null; st.relOpcoes = null; st.rodada++;
+    pvpProximoTurno(X);
+    return true;
+  }
+  if(a.t === "swap"){
+    if(M.fase !== "draft" && M.fase !== "final") return false;
+    if(!ROLE[a.de] || !ROLE[a.para] || a.de === a.para) return false;
+    const t = st.gab[a.de]; st.gab[a.de] = st.gab[a.para]; st.gab[a.para] = t;
+    return true;
+  }
+  if(a.t === "relic"){
+    if(M.fase !== "final" || M.prontos[X] || !st.relOpcoes || !st.relOpcoes[a.i]) return false;
+    st.rels = [st.relOpcoes[a.i]];
+    return true;
+  }
+  if(a.t === "ready"){
+    if(M.fase !== "final" || !st.rels.length) return false;
+    M.prontos[X] = true;
+    if(M.prontos[Y]) pvpRodada();
+    return true;
+  }
+  if(a.t === "rwSpin"){
+    if(M.fase !== "cartas" || !st.rw || M.prontos[X]) return false;
+    const c = st.rw.cartas[a.esc]; if(!c || c.t !== "roleta" || c.cands) return false;
+    comFrame(X, () => {
+      S.ent = pvpSortearEntidade(null); pvpSortearPeriodo(null);
+      c.ent = S.ent; c.per = S.per;
+      c.cands = IDX[S.ent][S.per].filter(f => !S.usados.includes(f.n)).sort((p,q) => ovrDe(q) - ovrDe(p));
+      S.ent = null; S.per = null;
+    });
+    return true;
+  }
+  if(a.t === "card" || a.t === "skip"){
+    if(M.fase !== "cartas" || !st.rw || M.prontos[X]) return false;
+    if(a.t === "card"){
+      const c = st.rw.cartas[a.esc]; if(!c) return false;
+      let entra = null;
+      if(trocaGente(c)){
+        entra = FIG_POR_NOME.get(a.entra);
+        const ok = entra && ROLE[a.sai] && !st.usados.includes(entra.n) &&
+                   (c.t === "roleta" ? (c.cands || []).includes(entra) : c.cands.includes(entra));
+        if(!ok) return false;
+      }
+      comFrame(X, () => aplicarCarta(c, entra, a.sai));
+      if(entra) M[Y].usados.push(entra.n);
+    }
+    st.rw = null; M.prontos[X] = true;
+    if(M.prontos[Y]) pvpRodada();
+    return true;
+  }
+  if(a.t === "revanche"){
+    if(M.fase !== "fim") return false;
+    const A = M.A, B = M.B, prim = M.primeiro;
+    pvpNovaPartida(A.nome, A.reg, B.nome, B.reg);
+    PV.M.turno = PV.M.primeiro = outro(prim);
+    return true;
+  }
+  return false;
+}
+
+/* ---------- rede ---------- */
+function pvpIntent(a){
+  if(!PV.on) return;
+  if(PV.host){ if(pvpAcao(PV.eu, a)) pvpEnviar(); pvpRender(); }
+  else if(PV.conn && PV.conn.open) PV.conn.send({t:"acao", a});
+}
+function pvpEnviar(){
+  if(PV.conn && PV.conn.open) PV.conn.send({t:"estado", m:pvpSer(PV.M), dlc:DLC, assoc:ASSOC, btc:BTC});
+}
+function pvpReceberEstado(msg){
+  const velho = PV.M;
+  if(msg.dlc !== DLC || msg.assoc !== ASSOC){ DLC = msg.dlc; ASSOC = msg.assoc; montarIndice(); }
+  if(msg.btc) definirBtc(msg.btc.pct, msg.btc.real);
+  const M = pvpDes(msg.m);
+  if(velho && velho.partida === M.partida){
+    ["A","B"].forEach(X => {
+      const o = velho[X], n = M[X];
+      n.sel = o.sel && !n.usados.includes(o.sel.n) ? o.sel : null;
+      n.mov = o.mov; n.fxAntes = o.fxAntes; n.sinVistas = o.sinVistas;
+      n.sumidoNovo = !o.sumido && !!n.sumido;
+      if(o.rw && n.rw && o.rw.cartas.length === n.rw.cartas.length){ n.rw.esc = o.rw.esc; n.rw.recruta = o.rw.recruta; n.rw.sai = o.rw.sai; }
+    });
+  } else { PV.vistoSpin = {A:0, B:0}; PV.vistoRodada = -1; }
+  PV.M = M;
+  pvpRender();
+}
+function pvpCodigo(){
+  const c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  return Array.from({length:5}, () => c[rnd(c.length)]).join("");
+}
+function pvpCarregarPeer(){
+  if(window.Peer) return Promise.resolve();
+  return new Promise((ok, erro) => {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.5/peerjs.min.js";
+    s.onload = ok; s.onerror = () => erro(new Error("não carregou a biblioteca de conexão"));
+    document.head.appendChild(s);
+  });
+}
+function pvpLigarConexao(conn){
+  PV.conn = conn;
+  conn.on("data", msg => {
+    if(!msg || typeof msg !== "object") return;
+    if(PV.host){
+      if(msg.t === "oi"){
+        pvpNovaPartida(NOME || "Anfitrião", REG, String(msg.nome || "Convidado").slice(0,22), REGIMES[msg.reg] ? msg.reg : "dem");
+        pvpEnviar(); pvpRender();
+      } else if(msg.t === "acao"){
+        if(pvpAcao("B", msg.a)) pvpEnviar();
+        pvpRender();
+      }
+    } else if(msg.t === "estado") pvpReceberEstado(msg);
+  });
+  conn.on("close", () => { PV.status = "A conexão caiu. Saia e crie uma sala nova."; pvpBarra(); });
+  conn.on("error", () => { PV.status = "Erro na conexão."; pvpBarra(); });
+}
+async function pvpCriarSala(){
+  pvpLobbyMsg("Abrindo a sala…");
+  try{ await pvpCarregarPeer(); }catch(e){ pvpLobbyMsg("Não deu para carregar a conexão. Confira a internet."); return; }
+  NOME = $("nome").value.trim().replace(/\s+/g," ").slice(0,22);
+  const tentar = (n) => {
+    const codigo = pvpCodigo();
+    const peer = new Peer("cem-anos-" + codigo);
+    peer.on("open", () => {
+      PV.peer = peer; PV.host = true; PV.eu = "A";
+      const link = location.origin + location.pathname + "?sala=" + codigo;
+      $("pvp-codigo").innerHTML = `<div class="pvp-cod">${codigo}</div>
+        <button class="btn-ghost" id="pvp-copiar">Copiar link da sala</button>`;
+      $("pvp-copiar").onclick = async () => { try{ await navigator.clipboard.writeText(link); $("pvp-copiar").textContent = "Link copiado"; }catch(e){ prompt("Copie o link:", link); } };
+      pvpLobbyMsg("Mande o código (ou o link) para o seu amigo. A partida começa quando ele entrar.");
+    });
+    peer.on("connection", conn => {
+      if(PV.conn){ conn.close(); return; }
+      conn.on("open", () => { PV.on = true; pvpLigarConexao(conn); });
+    });
+    peer.on("error", e => {
+      if(e.type === "unavailable-id" && n < 3){ peer.destroy(); tentar(n + 1); }
+      else pvpLobbyMsg("Erro ao abrir a sala (" + e.type + ").");
+    });
+  };
+  tentar(0);
+}
+async function pvpEntrarSala(codigo){
+  codigo = String(codigo || "").trim().toUpperCase();
+  if(codigo.length < 4){ pvpLobbyMsg("Digite o código da sala."); return; }
+  pvpLobbyMsg("Conectando…");
+  try{ await pvpCarregarPeer(); }catch(e){ pvpLobbyMsg("Não deu para carregar a conexão. Confira a internet."); return; }
+  NOME = $("nome").value.trim().replace(/\s+/g," ").slice(0,22);
+  const peer = new Peer();
+  PV.peer = peer; PV.host = false; PV.eu = "B";
+  peer.on("open", () => {
+    const conn = peer.connect("cem-anos-" + codigo, {reliable:true});
+    const espera = setTimeout(() => { if(!PV.on) pvpLobbyMsg("A sala não respondeu. Confira o código; se estiver certo, tentem trocar de rede (4G ↔ Wi-Fi)."); }, 12000);
+    conn.on("open", () => {
+      clearTimeout(espera); PV.on = true; pvpLigarConexao(conn);
+      conn.send({t:"oi", nome:NOME || "Convidado", reg:REG});
+      pvpLobbyMsg("Conectado. Esperando a partida começar…");
+    });
+  });
+  peer.on("error", e => pvpLobbyMsg(e.type === "peer-unavailable" ? "Não existe sala com esse código." : "Erro na conexão (" + e.type + ")."));
+}
+function pvpLobbyMsg(t){ $("pvp-msg").textContent = t; }
+function pvpSair(){
+  try{ PV.conn && PV.conn.close(); PV.peer && PV.peer.destroy(); }catch(e){}
+  location.href = location.origin + location.pathname;
+}
+
+/* ---------- tela ---------- */
+const eu = () => PV.M[PV.eu], rival = () => PV.M[outro(PV.eu)];
+function pvpBarra(){
+  const b = $("pvp-bar"); if(!b) return;
+  if(!PV.on || !PV.M){ b.hidden = !PV.status; b.innerHTML = PV.status ? `<span>${esc(PV.status)}</span>` : ""; return; }
+  const M = PV.M, E = eu(), R = rival();
+  let st = PV.status;
+  if(!st){
+    if(M.fase === "draft") st = M.turno === PV.eu ? "Sua vez de escalar" : "Vez de " + R.nome;
+    else if(M.fase === "final") st = M.prontos[PV.eu] ? "Esperando " + R.nome + " confirmar" : "Escolha a relíquia e confirme";
+    else if(M.fase === "cartas") st = M.prontos[PV.eu] ? "Esperando " + R.nome + " escolher a carta" : "Escolha a sua carta";
+    else if(M.fase === "fim") st = "Fim de partida";
+  }
+  b.hidden = false;
+  b.innerHTML = `<span class="pv-t">⚔ PvP</span>
+    <span class="pv-p"><b>${esc(E.nome)}</b> <i>${REGIMES[E.reg].ic}</i> <strong>${M.placar[PV.eu]}</strong> × <strong>${M.placar[outro(PV.eu)]}</strong> <i>${REGIMES[R.reg].ic}</i> <b>${esc(R.nome)}</b></span>
+    <span class="pv-s${M.turno === PV.eu && M.fase === "draft" ? " vez" : ""}">${esc(st)}</span>`;
+}
+function pvpRender(){
+  pvpBarra();
+  if(!PV.on || !PV.M || PV.animando) return;
+  const M = PV.M;
+  S = eu();
+  if(M.res && M.res.r !== PV.vistoRodada){ pvpAnimarRodada(M.res); return; }
+  if(M.fase === "draft" || M.fase === "final"){ if(!$("s-draft").classList.contains("on")) show("s-draft"); pvpRenderDraft(); }
+  else if(M.fase === "cartas"){
+    if(S.rw){ if(!$("s-reward").classList.contains("on")) show("s-reward"); pvpRenderCartas(); }
+    else pvpEspera("Carta escolhida", "Esperando " + rival().nome + " escolher a carta dele.");
+  }
+  else if(M.fase === "fim") pvpFim();
+}
+function pvpEspera(t, d){
+  show("s-pvp");
+  $("pvp-lobby").hidden = true; $("pvp-espera").hidden = false;
+  $("pvp-espera").innerHTML = `<h2>${esc(t)}</h2><p class="lede">${esc(d)}</p>`;
+}
+function pvpRenderDraft(){
+  const M = PV.M, E = eu(), meuTurno = M.fase === "draft" && M.turno === PV.eu;
+  const dono = M.turno && M[M.turno];
+  /* a roleta de quem está jogando gira nas duas telas */
+  if(M.fase === "draft" && M.turno && M.spin[M.turno] > PV.vistoSpin[M.turno]){
+    PV.vistoSpin[M.turno] = M.spin[M.turno];
+    PV.animando = true; dono.girando = true;
+    const ent = dono.ent, per = dono.per;
+    renderDraft(); pvpDraftExtras(meuTurno);
+    $("pool-head").hidden = true;
+    $("pool").innerHTML = `<div class="pool-empty"><span class="ic">🎰</span><span>Girando a roleta${meuTurno ? "" : " de " + esc(dono.nome)}…</span></div>`;
+    ["spin","rr-e","rr-p"].forEach(id => $(id).disabled = true);
+    girarTexto($("val-e"), ENTIDADES, 800, () => {
+      $("val-e").textContent = ent;
+      girarTexto($("val-p"), Object.keys(IDX[ent]), 700, () => {
+        $("val-p").textContent = per;
+        dono.girando = false; PV.animando = false; pvpRender();
+      });
+    });
+    return;
+  }
+  renderDraft();
+  pvpDraftExtras(meuTurno);
+}
+function pvpDraftExtras(meuTurno){
+  const M = PV.M, E = eu(), R = rival();
+  $("redraft").style.display = "none";
+  if(M.fase === "draft"){
+    const dono = M[M.turno];
+    $("draft-round").textContent = meuTurno ? "Sua vez · rodada " + E.rodada + " de 5" : "Vez de " + R.nome + " · rodada " + R.rodada + " de 5";
+    if(!meuTurno){
+      S = dono;
+      $("val-e").textContent = dono.ent || "—"; $("val-p").textContent = dono.per || "—";
+      const ph = $("pool-head");
+      if(dono.pool.length){ ph.hidden = false; ph.innerHTML = `<span class="q">${esc(dono.ent)} · ${esc(dono.per)}</span><span class="c">${esc(R.nome)} está escolhendo</span>`; }
+      else ph.hidden = true;
+      if(dono.pool.length) renderPool(); else $("pool").innerHTML = `<div class="pool-empty"><span class="ic">⏳</span><span>${esc(R.nome)} vai girar a roleta.</span></div>`;
+      S = E;
+      $("pool").querySelectorAll("button").forEach(b => b.disabled = true);
+      ["spin","rr-e","rr-p"].forEach(id => $(id).disabled = true);
+      $("hint").textContent = "Esperando " + R.nome + "…";
+      $("reroll-count").textContent = "seus rerolls · potência " + E.rrE + " · período " + E.rrP;
+    } else if(!E.pool.length && !E.girando) $("hint").textContent = "Sua vez: gire a roleta!";
+  } else {
+    const pronto = M.prontos[PV.eu];
+    $("draft-round").textContent = "Cúpulas escaladas";
+    $("confirmar").disabled = pronto || !E.rels.length;
+    $("confirmar").textContent = pronto ? "Esperando " + R.nome + "…" : E.rels.length ? "Confirmar e ir para o duelo" : "Escolha uma relíquia";
+  }
+  /* a cúpula do rival, sempre à vista */
+  let box = $("pvp-rival");
+  if(!box){ box = document.createElement("div"); box.id = "pvp-rival"; $("mesa").after(box); }
+  const forcas = comFrame(outro(PV.eu), () => ROLES.map(r => S.gab[r.k] ? Math.round(forca(S.gab, r.k)) : null));
+  box.innerHTML = `<div class="fora-head">Cúpula de ${esc(R.nome)} · ${REGIMES[R.reg].n}</div>
+    <div class="pv-rival">${ROLES.map((r, i) => { const f = R.gab[r.k];
+      return `<div class="pv-cad" style="--cor:var(--f-${r.k})">${f ? face(f,"sm") : `<span class="face sm">${r.ab}</span>`}
+        <div><div class="r">${r.ab}</div><div class="n">${f ? esc(f.s) : "vago"}</div></div><b>${forcas[i] ?? ""}</b></div>`; }).join("")}</div>`;
+}
+function pvpRenderCartas(){
+  const M = PV.M;
+  $("rw-etapa").textContent = "Entre rodadas · a próxima é a rodada " + (M.rodada + 1);
+  $("rw-anos").textContent = M.placar[PV.eu] + " × " + M.placar[outro(PV.eu)];
+  const m = S.manchete;
+  $("rw-manchete").innerHTML = m ? `<span class="ic">${m.ic}</span><div><div class="k">Manchete da próxima rodada</div>
+    <div class="n">${esc(m.n)}</div><div class="d">${m.d}</div></div>` : "";
+  renderRecompensa();
+}
+function pvpAnimarRodada(res){
+  PV.animando = true;
+  const M = PV.M, souA = PV.eu === "A", E = eu(), R = rival();
+  const meuGab = res.gab[PV.eu], deleGab = res.gab[outro(PV.eu)];
+  show("s-stage");
+  $("st-etapa").textContent = "PvP · melhor de " + PVP_RODADAS;
+  $("st-anos").textContent = "";
+  $("st-title").textContent = "Rodada " + (res.r + 1);
+  $("st-myname").textContent = E.nome; $("st-opname").textContent = R.nome;
+  $("sc-a").textContent = "0"; $("sc-b").textContent = "0";
+  ["st-next","st-retry","st-ress","st-vida","st-stop"].forEach(id => $(id).style.display = "none");
+  const av = [].concat(res.extras[PV.eu] || [], res.avisos[PV.eu] ? [res.avisos[PV.eu]] : []);
+  $("arena").innerHTML = (av.length ? `<p class="lede" style="margin:0 0 6px">${av.map(esc).join(" ")}</p>` : "") +
+    res.duelos.map((dz, i) => {
+      const meu = meuGab[dz.rk], dele = deleGab[dz.rk], ev = EVENTOS[dz.rk][dz.ev];
+      return `<div class="duelo" id="d${i}">
+        <div class="lado esq">${face(meu)}<div class="who">${esc(meu.s)}</div><span class="marca esq"></span></div>
+        <div class="num esq">—</div>
+        <div class="meio" style="--cor:var(--f-${dz.rk})"><div class="fn">${ROLE[dz.rk].n}</div><div class="ev">${esc(ev.e)}</div></div>
+        <div class="num dir">—</div>
+        <div class="lado dir"><span class="marca dir"></span><div class="who">${esc(dele.s)}</div>${face(dele)}</div>
+      </div>`;
+    }).join("");
+  let i = 0, v = 0, d = 0;
+  const passo = () => {
+    if(i >= res.duelos.length){
+      const ganhei = res.venc === PV.eu;
+      const btn = $("st-next"); btn.style.display = "";
+      const acabou = M.fase === "fim";
+      btn.textContent = acabou ? "Ver o resultado" : (ganhei ? "Rodada sua · escolher carta" : "Rodada de " + R.nome + " · escolher carta");
+      btn.onclick = () => { PV.vistoRodada = res.r; PV.animando = false; pvpRender(); };
+      flashTela(ganhei ? "rodadaVitoria" : "rodadaDerrota");
+      mostrar(btn);
+      return;
+    }
+    const dz = res.duelos[i], linha = $("d" + i);
+    const ganhou = souA ? dz.ganhou : !dz.ganhou;
+    const a = souA ? dz.a : dz.b, b = souA ? dz.b : dz.a;
+    const meu = meuGab[dz.rk], dele = deleGab[dz.rk], ev = EVENTOS[dz.rk][dz.ev];
+    linha.classList.add("live"); mostrar(linha);
+    setTimeout(() => {
+      linha.querySelector(".num.esq").textContent = Math.round(a);
+      linha.querySelector(".num.dir").textContent = Math.round(b);
+      dz.flashes.slice(0, 3).forEach((k, j) => flashTela(k, j * 640));
+      linha.classList.remove("live"); linha.classList.add(ganhou ? "win" : "loss");
+      const hkEmMim = dz.hk && dz.hk !== PV.eu, hkNele = dz.hk && dz.hk === PV.eu;
+      if(hkEmMim || hkNele){
+        const rosto = linha.querySelector(hkNele ? ".lado.dir .face" : ".lado.esq .face");
+        if(rosto){
+          const w = document.createElement("span"); w.className = "hitkill";
+          rosto.replaceWith(w); w.appendChild(rosto);
+          w.insertAdjacentHTML("beforeend", '<svg class="leite" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 9c3-6 10-7 14-4 4-3 12-2 14 4 3 3 1 8-2 9l1 9c0 2-3 2-3 0l-1-7-3 1-1 12c0 2-3 2-3 0l-1-11-4 0-1 6c0 2-3 2-3 0l0-7c-4-1-8-5-7-11z"/><circle cx="34" cy="31" r="1.6"/><circle cx="8" cy="30" r="1.2"/></svg>');
+        }
+      }
+      linha.querySelector(".marca." + (ganhou ? "esq" : "dir")).textContent = ganhou ? "✓" : "✕";
+      const n = document.createElement("div");
+      n.className = "narra"; n.textContent = (ganhou ? ev.w : ev.l).replace(/\{v\}/g, meu.s).replace(/\{o\}/g, dele.s);
+      if(dz.notas.length){ const s = document.createElement("span"); s.className = "milagre"; s.textContent = dz.notas.join(" "); n.appendChild(s); }
+      linha.appendChild(n);
+      if(ganhou) v++; else d++;
+      $("sc-a").textContent = v; $("sc-b").textContent = d;
+      i++;
+      setTimeout(passo, 950 + Math.min(3, dz.flashes.length) * 640);
+    }, 700);
+  };
+  setTimeout(passo, 600);
+}
+function pvpFim(){
+  const M = PV.M, ganhei = M.placar[PV.eu] > M.placar[outro(PV.eu)];
+  show("s-pvp");
+  $("pvp-lobby").hidden = true; $("pvp-espera").hidden = false;
+  const E = eu(), R = rival();
+  $("pvp-espera").innerHTML = `<div class="verdict">
+      <div class="eyebrow dim">Fim da partida</div>
+      <div class="grade">${ganhei ? "VITÓRIA" : "DERROTA"}</div>
+      <div class="years">${esc(E.nome)} <b>${M.placar[PV.eu]}</b> × <b>${M.placar[outro(PV.eu)]}</b> ${esc(R.nome)}</div>
+    </div>
+    <div class="track">${E.hist.map(h => `<div class="track-cell ${h.passou ? "win" : "loss"}"><div class="k">${esc(h.nome)}</div><div class="m">${h.passou ? "✓" : "✕"}</div><div class="s">${h.v}–${h.d}</div></div>`).join("")}</div>
+    <div class="acao"><button class="btn" id="pvp-revanche">Revanche</button><button class="btn btn-alt" id="pvp-sair2">Sair</button></div>`;
+  $("pvp-revanche").onclick = () => { $("pvp-revanche").disabled = true; $("pvp-revanche").textContent = "Pedindo revanche…"; pvpIntent({t:"revanche"}); };
+  $("pvp-sair2").onclick = pvpSair;
+  $("pvp-espera").querySelector(".grade").style.fontSize = "clamp(3rem,13vw,6rem)";
+}
+
+/* ---------- ganchos nos controles de sempre ---------- */
+$("pvp-go").addEventListener("click", () => {
+  show("s-pvp"); $("pvp-lobby").hidden = false; $("pvp-espera").hidden = true;
+  $("pvp-quem").textContent = ($("nome").value.trim() || "Sem nome") + " · " + REGIMES[REG].n;
+});
+$("pvp-criar").addEventListener("click", pvpCriarSala);
+$("pvp-entrar").addEventListener("click", () => pvpEntrarSala($("pvp-cod-in").value));
+$("pvp-cod-in").addEventListener("keydown", e => { if(e.key === "Enter") $("pvp-entrar").click(); });
+$("pvp-voltar").addEventListener("click", pvpSair);
+(() => {
+  const sala = new URLSearchParams(location.search).get("sala");
+  if(sala){ $("pvp-go").click(); $("pvp-cod-in").value = sala.toUpperCase(); pvpLobbyMsg("Você foi convidado para a sala " + sala.toUpperCase() + ". Escreva seu nome e o regime na tela inicial se quiser, depois clique em Entrar."); }
+})();
+
 
 novoJogo();
 </script>
