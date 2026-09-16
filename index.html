@@ -311,6 +311,20 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .flash-jesus{background:radial-gradient(circle,rgba(255,236,160,.95),rgba(214,160,40,.88))}
 .flash-jesus .ft{color:#4A3408;text-shadow:0 0 24px rgba(255,255,255,.9)}
 .flash-rasputin{background:radial-gradient(circle,rgba(90,40,110,.93),rgba(20,8,26,.95))}
+.flash-blitz,.flash-amarelo{background:radial-gradient(circle,rgba(255,214,60,.94),rgba(150,90,10,.9))}
+.flash-blitz .ft,.flash-amarelo .ft{color:#2A1A00;text-shadow:0 0 18px rgba(255,255,255,.7)}
+.flash-conta{background:radial-gradient(circle,rgba(90,70,60,.94),rgba(30,20,16,.95))}
+.flash-cinquenta{background:radial-gradient(circle,rgba(70,170,120,.94),rgba(10,70,50,.92))}
+.flash-inimigo{background:radial-gradient(circle,rgba(200,60,50,.93),rgba(70,10,10,.94))}
+.flash-render{background:radial-gradient(circle,rgba(120,140,170,.94),rgba(30,40,60,.95))}
+.flash-cura{background:radial-gradient(circle,rgba(160,240,210,.95),rgba(40,150,120,.9))}
+.flash-cura .ft{color:#0C3A2C;text-shadow:none}
+.flash-pavio{background:radial-gradient(circle,rgba(255,110,40,.95),rgba(140,20,10,.94))}
+.flash-nocaute{background:radial-gradient(circle,rgba(230,40,50,.95),rgba(60,0,10,.95))}
+.flash-glitch{background:repeating-linear-gradient(0deg,rgba(176,124,255,.94) 0 6px,rgba(20,10,40,.94) 6px 12px)}
+.flash-virada{background:radial-gradient(circle,rgba(92,164,230,.96),rgba(14,40,90,.95))}
+.flash-zebra{background:repeating-linear-gradient(115deg,rgba(250,250,250,.95) 0 38px,rgba(15,15,15,.95) 38px 76px)}
+.flash-zebra .ft{color:#fff;text-shadow:0 0 0 #000,3px 3px 0 #000,-3px -3px 0 #000}
 .flash-moises{background:linear-gradient(90deg,rgba(28,90,170,.95),rgba(10,30,70,.6) 45%,rgba(10,30,70,.6) 55%,rgba(28,90,170,.95))}
 @keyframes flash{0%{opacity:0}12%{opacity:1}72%{opacity:1}100%{opacity:0}}
 @keyframes flash-ic{0%{transform:scale(.2) rotate(-20deg)}45%{transform:scale(1.15) rotate(4deg)}100%{transform:scale(1)}}
@@ -2893,16 +2907,43 @@ const FLASH = {
   jesus:   {ic:"✨", t:"Ele vence"},
   rasputin:{ic:"🧟", t:"Rasputin não morre"},
   moises:  {ic:"🌊", t:"O mar se abre"},
+  nocaute: {ic:"🥊", t:"Nocaute"},
+  glitch:  {ic:"👾", t:"ANUSCU bugou"},
+  blitz:   {ic:"⚡", t:"Blitzkrieg"},
+  conta:   {ic:"💣", t:"A Blitzkrieg cobra a conta"},
+  cinquenta:{ic:"🏗️", t:"50 anos em 5"},
+  inimigo: {ic:"🎯", t:"Conhecer o inimigo"},
+  render:  {ic:"✌️", t:"Nunca se render"},
+  amarelo: {ic:"⚡", t:"Flash Amarelo"},
+  cura:    {ic:"⚕️", t:"Rafael cura a cúpula"},
+  pavio:   {ic:"🤬", t:"Chico Bento explodiu"},
+  virada:  {ic:"🔄", t:"Virada!"},
+  zebra:   {ic:"🦓", t:"Zebra!"},
   rodadaVitoria:{ic:"🏆", t:"Rodada sua"},
   rodadaDerrota:{ic:"💀", t:"Rodada perdida"}
 };
 /* quais momentos o duelo teve, na ordem em que aconteceram */
 function flashesDoDuelo(milagre, hk){
   const txt = milagre || "", l = [];
-  const marcas = [["✨","jesus"],["🧟","rasputin"],["🌊","moises"],["🥛","leitada"]];
+  const marcas = [["✨","jesus"],["🧟","rasputin"],["🌊","moises"],["🥛","leitada"],["🥊","nocaute"],["👾","glitch"]];
   const pos = marcas.map(([e,k]) => [txt.indexOf(e), k]).filter(([i]) => i >= 0).sort((a,b) => a[0]-b[0]);
   pos.forEach(([, k]) => l.push(k));
   if(hk && !l.includes("leitada")) l.push("leitada");
+  return l;
+}
+/* passivas de placar que entram em ação neste duelo (lado de S), antes do resultado.
+   Cura e Pavio Curto só piscam quando mudam, para não repetir a cada duelo. */
+function momentosDoDuelo(i, v, d){
+  if(i === 0){ S.curaVista = 0; S.pavioVisto = false; }
+  const l = [];
+  if(temPas("cinquenta") && S.etapa === 0 && i === 0) l.push("cinquenta");
+  if(temPas("inimigo") && i === 0) l.push("inimigo");
+  if(temPas("blitz") && i === 0) l.push("blitz");
+  if(temPas("blitz") && i === 3) l.push("conta");
+  if(temPas("cura") && d > 0 && S.curaVista !== d){ S.curaVista = d; l.push("cura"); }
+  if(temPas("pavio") && d > 0 && !S.pavioVisto){ S.pavioVisto = true; l.push("pavio"); }
+  if(temPas("render") && d - v >= 2) l.push("render");
+  if(temPas("flash") && v === 2 && d === 2) l.push("amarelo");
   return l;
 }
 function flashTela(k, atraso){
@@ -2955,7 +2996,7 @@ function rodarEtapa(){
     setTimeout(()=>{
       /* o placar da etapa vira contexto: Cura, Abre-Caminhos, Nunca Se Render e Flash
          Amarelo leem S.duelo. Os números da linha são atualizados com a força real. */
-      const {a, b, ganhou, milagre, jogos, hitkill, hitkillDele} = jogarDuelo(rk, i, v, d);
+      const {a, b, ganhou, milagre, jogos, hitkill, hitkillDele, momentos} = jogarDuelo(rk, i, v, d);
       linha.querySelector(".num.esq").textContent = Math.round(a);
       linha.querySelector(".num.dir").textContent = Math.round(b);
       if(jogos.length > 1){
@@ -2975,7 +3016,7 @@ function rodarEtapa(){
       const meu = S.gab[rk].s, dele = S.op[rk].s;
       const txt = (ganhou?ev.w:ev.l).replace(/\{v\}/g,meu).replace(/\{o\}/g,dele);
 
-      const flashes = flashesDoDuelo(milagre, hitkill || hitkillDele).slice(0, 3);
+      const flashes = momentos.concat(flashesDoDuelo(milagre, hitkill || hitkillDele)).slice(0, 4);
       flashes.forEach((k, j) => flashTela(k, j * 640));
       linha.classList.remove("live");
       linha.classList.add(ganhou?"win":"loss");
@@ -3026,6 +3067,7 @@ const opTem = k => ROLES.some(x => S.op[x.k] && pasDuelo(S.op[x.k]) === k);
 const opTemNome = n => ROLES.some(x => S.op[x.k] && S.op[x.k].n === n);
 function jogarDuelo(rk, i, v, d){
   S.duelo = {i, v, d};
+  const momentos = S.pvpA == null ? momentosDoDuelo(i, v, d) : [];
   if(S.pvpA == null) S.glitch = -10 + Math.random() * 50;          /* ANUSCU: −10 a +40 neste duelo */
   /* no PvP as forças chegam prontas, calculadas dos dois lados (forcaPvP) */
   const a = S.pvpA != null ? S.pvpA : forca(S.gab,rk), b = S.pvpB != null ? S.pvpB : forca(S.op,rk);
@@ -3078,7 +3120,7 @@ function jogarDuelo(rk, i, v, d){
   }
   if(meu.n === "ANUSCU" && relAtiva("glitch") && !S.anuscuFora && Math.abs(S.glitch) >= 15)
     notas.push(S.glitch > 0 ? "👾 ANUSCU bugou pra cima." : "👾 ANUSCU travou no pior momento.");
-  return {a, b, ganhou, milagre: notas.join(" "), jogos, hitkill, hitkillDele};
+  return {a, b, ganhou, milagre: notas.join(" "), jogos, hitkill, hitkillDele, momentos};
 }
 /* golpe não deixa anos parciais: na ditadura, cair é perder a etapa inteira */
 function anosDaEtapa(et, v, passou){
@@ -3563,6 +3605,7 @@ function notaNeutra(k, meu, dele, hk){
   if(k === "jesus") return "✨ Jesus vence o duelo.";
   if(k === "rasputin") return "🧟 Rasputin era para cair aqui. Não caiu.";
   if(k === "moises") return "🌊 Moisés abre o mar e o duelo é jogado de novo.";
+  if(k === "glitch") return "👾 ANUSCU bugou.";
   if(k === "leitada") return "🥛 " + (hk === "A" ? "Kha'Zix deu uma leitada em " + dele.s : "Kha'Zix deu uma leitada em " + meu.s) + "!";
   return "";
 }
@@ -3578,6 +3621,7 @@ function pvpRodada(){
   let v = 0, d = 0;
   for(let i = 0; i < 5 && v < 3 && d < 3; i++){
     const rk = ordem[i];
+    const momentos = [...comFrame("A", () => momentosDoDuelo(i, v, d)), ...comFrame("B", () => momentosDoDuelo(i, d, v))];
     const a = forcaPvP("A", rk, i, v, d), b = forcaPvP("B", rk, i, d, v);
     const chanceB = comFrame("B", () => chanceHitKill());
     const res = comFrame("A", () => {
@@ -3586,12 +3630,14 @@ function pvpRodada(){
     });
     const meu = M.A.gab[rk], dele = M.B.gab[rk];
     const hk = res.hitkill ? "A" : res.hitkillDele ? "B" : null;
-    const notas = flashesDoDuelo(res.milagre, !!hk).map(k => notaNeutra(k, meu, dele, hk));
+    const milagres = flashesDoDuelo(res.milagre, !!hk);
+    const notas = milagres.map(k => notaNeutra(k, meu, dele, hk)).filter(Boolean);
     if(/Nocaute/.test(res.milagre)) notas.push("🥊 Nocaute de " + meu.s + ": " + M.B.nome + " sente o golpe pelo resto da rodada.");
     if(!res.ganhou && !M.B.nocaute && comFrame("B", () => (pasDe(dele) || {}).k === "nocaute")){
-      M.B.nocaute = true; notas.push("🥊 Nocaute de " + dele.s + ": " + M.A.nome + " sente o golpe pelo resto da rodada.");
+      M.B.nocaute = true; milagres.push("nocaute"); notas.push("🥊 Nocaute de " + dele.s + ": " + M.A.nome + " sente o golpe pelo resto da rodada.");
     }
-    duelos.push({rk, ev:rnd(EVENTOS[rk].length), a, b, ganhou:res.ganhou, hk, flashes:flashesDoDuelo(res.milagre, !!hk), notas});
+    duelos.push({rk, ev:rnd(EVENTOS[rk].length), a, b, ganhou:res.ganhou, hk, flashes:[...new Set(momentos)].concat(milagres), notas,
+                 pA:(hk || milagres.some(k => k !== "nocaute" && k !== "glitch")) ? null : chance(a, b)});
     if(res.ganhou) v++; else d++;
   }
   const venc = v >= 3 ? "A" : "B";
@@ -4038,7 +4084,7 @@ function pvpAnimarRodada(res){
         <div class="lado dir"><span class="marca dir"></span><div class="who">${esc(dele.s)}</div>${face(dele)}</div>
       </div>`;
     }).join("");
-  let i = 0, v = 0, d = 0;
+  let i = 0, v = 0, d = 0, zeroDois = false;
   const passo = () => {
     if(i >= res.duelos.length){
       const ganhei = res.venc === PV.eu;
@@ -4058,7 +4104,13 @@ function pvpAnimarRodada(res){
     setTimeout(() => {
       linha.querySelector(".num.esq").textContent = Math.round(a);
       linha.querySelector(".num.dir").textContent = Math.round(b);
-      dz.flashes.slice(0, 3).forEach((k, j) => flashTela(k, j * 640));
+      /* só no PvP: ZEBRA quando você vence com menos de 30%, VIRADA quando sai de 0–2 para 3–2 */
+      const pMeu = dz.pA == null ? null : souA ? dz.pA : 1 - dz.pA;
+      const extras = [];
+      if(ganhou && pMeu != null && pMeu < .3) extras.push("zebra");
+      if(ganhou && v === 2 && d === 2 && zeroDois) extras.push("virada");
+      const flashes = dz.flashes.slice(0, 4 - extras.length).concat(extras);
+      flashes.forEach((k, j) => flashTela(k, j * 640));
       linha.classList.remove("live"); linha.classList.add(ganhou ? "win" : "loss");
       const hkEmMim = dz.hk && dz.hk !== PV.eu, hkNele = dz.hk && dz.hk === PV.eu;
       if(hkEmMim || hkNele){
@@ -4075,9 +4127,10 @@ function pvpAnimarRodada(res){
       if(dz.notas.length){ const s = document.createElement("span"); s.className = "milagre"; s.textContent = dz.notas.join(" "); n.appendChild(s); }
       linha.appendChild(n);
       if(ganhou) v++; else d++;
+      if(v === 0 && d === 2) zeroDois = true;
       $("sc-a").textContent = v; $("sc-b").textContent = d;
       i++;
-      setTimeout(passo, 950 + Math.min(3, dz.flashes.length) * 640);
+      setTimeout(passo, 950 + flashes.length * 640);
     }, 700);
   };
   setTimeout(passo, 600);
