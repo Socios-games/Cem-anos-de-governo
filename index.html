@@ -3445,7 +3445,7 @@ $("end-copy").addEventListener("click", async ()=>{
 $("again").addEventListener("click",()=>{ novoJogo(); show("s-draft"); renderDraft(); });
 
 /* ======================= PvP AO VIVO ======================= */
-/* Dois navegadores ligados direto (PeerJS). Quem cria a sala é o "host" e roda o motor:
+/* Dois navegadores ligados por uma sala no Firebase. Quem cria a sala é o "host" e roda o motor:
    sorteia roleta, cartas e duelos e manda o estado inteiro ao outro a cada mudança. O
    convidado só manda intenções (girar, escalar, escolher carta). Draft em turnos com o
    elenco compartilhado, cada um com o seu regime, melhor de 7 rodadas cúpula x cúpula,
@@ -3709,18 +3709,77 @@ function pvpAcao(X, a){
 }
 
 /* ---------- rede ---------- */
+/* Sem conexão direta entre os aparelhos: os dois falam com o Firebase Realtime Database
+   (servidor do Google, porta 443, com fallback de long-polling), que funciona em 4G e em
+   Wi-Fi de faculdade. Sala = salas/CODIGO:
+     estado    host grava o snapshot inteiro a cada mudança (convidado só lê)
+     acoes     convidado empilha intenções; host aplica em ordem e apaga
+     convidado {nome, reg, tk} de quem entrou
+     on/A on/B presença (onDisconnect marca false)
+   O SDK reenvia sozinho o que ficou preso numa queda, e a chave do push é gerada no
+   aparelho, então uma intenção nunca é aplicada duas vezes (host guarda a última em ult).
+   Se qualquer um recarregar a página, volta para a sala e recebe o estado de novo. */
+const FIREBASE = {projectId:"cem-anos-pvp", databaseURL:"https://cem-anos-pvp-default-rtdb.firebaseio.com", appId:"1:925242920845:web:dc087b1895b9e1816577c4"};
+const PVP_SALA_KEY = "cem-anos:pvp-sala";
+PV.ult = ""; PV.caiu = false; PV.rivalOn = true; PV.ref = null; PV.gen = 0;
+
+function pvpCarregarFirebase(){
+  if(!FIREBASE) return Promise.reject(new Error("sem config"));
+  if(window.firebase && firebase.database) return Promise.resolve();
+  const v = "10.14.1", url = n => `https://www.gstatic.com/firebasejs/${v}/firebase-${n}-compat.js`;
+  const carregar = src => new Promise((ok, erro) => {
+    const s = document.createElement("script"); s.src = src; s.onload = ok;
+    s.onerror = () => erro(new Error("não carregou a biblioteca de conexão"));
+    document.head.appendChild(s);
+  });
+  return carregar(url("app")).then(() => carregar(url("database"))).then(() => {
+    if(!firebase.apps.length) firebase.initializeApp(FIREBASE);
+  });
+}
+function pvpToken(){
+  try{
+    let t = localStorage.getItem("cem-anos:pvp-token");
+    if(!t){ t = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem("cem-anos:pvp-token", t); }
+    return t;
+  }catch(e){ return PV.tk || (PV.tk = Math.random().toString(36).slice(2)); }
+}
+function pvpGuardarSala(codigo, papel){
+  try{ codigo ? localStorage.setItem(PVP_SALA_KEY, JSON.stringify({codigo, papel, t:Date.now()})) : localStorage.removeItem(PVP_SALA_KEY); }catch(e){}
+}
+function pvpSalaGuardada(){
+  try{
+    const s = JSON.parse(localStorage.getItem(PVP_SALA_KEY));
+    return s && s.codigo && Date.now() - s.t < 6 * 3600e3 ? s : null;
+  }catch(e){ return null; }
+}
+
+/* presença: marca on/X enquanto conectado e avisa quando cai e volta */
+function pvpPresenca(){
+  const eu = PV.ref.child("on/" + PV.eu);
+  firebase.database().ref(".info/connected").on("value", s => {
+    const on = s.val() === true;
+    if(on){ eu.onDisconnect().set(false); eu.set(true); }
+    if(PV.on){ PV.caiu = !on; pvpBarra(); }
+  });
+  PV.ref.child("on/" + outro(PV.eu)).on("value", s => {
+    PV.rivalOn = s.val() !== false;
+    pvpBarra();
+  });
+}
+
 function pvpIntent(a){
   if(!PV.on) return;
   if(PV.host){ if(pvpAcao(PV.eu, a)) pvpEnviar(); pvpRender(); }
-  else if(PV.conn && PV.conn.open) PV.conn.send({t:"acao", a});
+  else PV.ref.child("acoes").push({a:JSON.stringify(a), tk:pvpToken()});
 }
 function pvpEnviar(){
-  if(PV.conn && PV.conn.open) PV.conn.send({t:"estado", m:pvpSer(PV.M), dlc:DLC, assoc:ASSOC, btc:BTC});
+  if(!PV.ref || !PV.M) return;
+  PV.ref.child("estado").set({m:pvpSer(PV.M), dlc:DLC, assoc:ASSOC, btc:BTC ? JSON.stringify(BTC) : "", ult:PV.ult});
 }
 function pvpReceberEstado(msg){
   const velho = PV.M;
   if(msg.dlc !== DLC || msg.assoc !== ASSOC){ DLC = msg.dlc; ASSOC = msg.assoc; montarIndice(); }
-  if(msg.btc) definirBtc(msg.btc.pct, msg.btc.real);
+  if(msg.btc){ const b = typeof msg.btc === "string" ? JSON.parse(msg.btc) : msg.btc; definirBtc(b.pct, b.real); }
   const M = pvpDes(msg.m);
   if(velho && velho.partida === M.partida){
     ["A","B"].forEach(X => {
@@ -3734,85 +3793,123 @@ function pvpReceberEstado(msg){
   PV.M = M;
   pvpRender();
 }
+
+/* depois de recarregar: pega o estado sem repetir a animação da última rodada */
+function pvpRetomarEstado(e){
+  PV.on = true; PV.animando = true;
+  pvpReceberEstado(e);
+  PV.animando = false;
+  PV.vistoRodada = PV.M.res ? PV.M.res.r : -1;
+  PV.vistoSpin = {A:PV.M.spin.A, B:PV.M.spin.B};
+  pvpRender();
+}
+
+/* host: começa quando o convidado aparece e aplica as intenções dele em ordem */
+function pvpVirarHost(codigo, retomar, gen){
+  const ref = PV.ref = firebase.database().ref("salas/" + codigo);
+  PV.host = true; PV.eu = "A"; PV.codigo = codigo;
+  pvpGuardarSala(codigo, "A");
+  pvpPresenca();
+  const ligar = () => {
+    ref.child("convidado").on("value", s => {
+      const c = s.val(); if(!c || PV.M || gen !== PV.gen) return;
+      PV.on = true;
+      pvpNovaPartida(NOME || "Anfitrião", REG, String(c.nome || "Convidado").slice(0,22), REGIMES[c.reg] ? c.reg : "dem");
+      pvpEnviar(); pvpRender();
+    });
+    ref.child("acoes").on("child_added", s => {
+      const k = s.key, v = s.val();
+      if(gen !== PV.gen) return;
+      s.ref.remove();
+      if(!PV.M || k <= PV.ult) return;
+      PV.ult = k;
+      let a; try{ a = JSON.parse(v.a); }catch(e){ return; }
+      pvpAcao("B", a);
+      pvpEnviar(); pvpRender();
+    });
+  };
+  if(!retomar){ ligar(); return; }
+  ref.child("estado").once("value").then(s => {
+    if(gen !== PV.gen) return;
+    const e = s.val();
+    if(e && e.m){ PV.ult = e.ult || ""; pvpRetomarEstado(e); }
+    ligar();
+  });
+}
+async function pvpCriarSala(){
+  pvpLargarSala();
+  const gen = PV.gen;
+  pvpLobbyMsg("Abrindo a sala…");
+  try{ await pvpCarregarFirebase(); }catch(e){ pvpLobbyMsg(FIREBASE ? "Não deu para carregar a conexão. Confira a internet." : "PvP ainda não configurado (falta o Firebase)."); return; }
+  if(gen !== PV.gen) return;
+  NOME = $("nome").value.trim().replace(/\s+/g," ").slice(0,22);
+  const tk = pvpToken();
+  const tentar = n => {
+    const codigo = pvpCodigo();
+    firebase.database().ref("salas/" + codigo).transaction(
+      cur => cur === null || (cur.criada && Date.now() - cur.criada > 12 * 3600e3)
+        ? {criada:Date.now(), host:{nome:NOME || "Anfitrião", tk}} : undefined,
+      (erro, ok) => {
+        if(gen !== PV.gen) return;
+        if(erro){ pvpLobbyMsg("Erro ao abrir a sala (" + (erro.code || erro.message) + ")."); return; }
+        if(!ok){ if(n < 5) tentar(n + 1); else pvpLobbyMsg("Não achei código livre. Tente de novo."); return; }
+        const link = location.origin + location.pathname + "?sala=" + codigo;
+        $("pvp-codigo").innerHTML = `<div class="pvp-cod">${codigo}</div>
+          <button class="btn-ghost" id="pvp-copiar">Copiar link da sala</button>`;
+        $("pvp-copiar").onclick = async () => { try{ await navigator.clipboard.writeText(link); $("pvp-copiar").textContent = "Link copiado"; }catch(e){ prompt("Copie o link:", link); } };
+        pvpLobbyMsg("Mande o código (ou o link) para o seu amigo. A partida começa quando ele entrar. Não feche esta aba.");
+        pvpVirarHost(codigo, false, gen);
+      }, false);
+  };
+  tentar(0);
+}
+async function pvpEntrarSala(codigo, retomar){
+  codigo = String(codigo || "").trim().toUpperCase();
+  if(codigo.length < 4){ pvpLobbyMsg("Digite o código da sala."); return; }
+  pvpLobbyMsg("Conectando…");
+  if(!retomar) pvpLargarSala();
+  const gen = PV.gen;
+  try{ await pvpCarregarFirebase(); }catch(e){ pvpLobbyMsg(FIREBASE ? "Não deu para carregar a conexão. Confira a internet." : "PvP ainda não configurado (falta o Firebase)."); return; }
+  if(gen !== PV.gen) return;
+  NOME = $("nome").value.trim().replace(/\s+/g," ").slice(0,22);
+  const ref = firebase.database().ref("salas/" + codigo), tk = pvpToken();
+  let sala;
+  try{ sala = (await ref.once("value")).val(); }
+  catch(e){ if(gen === PV.gen) pvpLobbyMsg("Erro na conexão (" + (e.code || e.message) + ")."); return; }
+  if(gen !== PV.gen) return;
+  if(!sala){ pvpGuardarSala(null); pvpLobbyMsg("Não existe sala com esse código."); return; }
+  if(sala.host && sala.host.tk === tk){ pvpLobbyMsg("Voltando para a sua sala…"); pvpVirarHost(codigo, true, gen); return; }
+  if(sala.convidado && sala.convidado.tk !== tk){ pvpLobbyMsg("Essa sala já tem dois jogadores."); return; }
+  if(sala.convidado) retomar = true;
+  PV.ref = ref; PV.host = false; PV.eu = "B"; PV.codigo = codigo;
+  pvpGuardarSala(codigo, "B");
+  pvpPresenca();
+  if(!sala.convidado) await ref.child("convidado").set({nome:NOME || "Convidado", reg:REG, tk});
+  if(gen !== PV.gen) return;
+  pvpLobbyMsg("Conectado. Esperando a partida começar…");
+  ref.child("estado").on("value", s => {
+    const e = s.val(); if(!e || !e.m || gen !== PV.gen) return;
+    if(!PV.M && retomar) pvpRetomarEstado(e);
+    else { PV.on = true; pvpReceberEstado(e); }
+  });
+}
 function pvpCodigo(){
   const c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   return Array.from({length:5}, () => c[rnd(c.length)]).join("");
 }
-function pvpCarregarPeer(){
-  if(window.Peer) return Promise.resolve();
-  return new Promise((ok, erro) => {
-    const s = document.createElement("script");
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.5/peerjs.min.js";
-    s.onload = ok; s.onerror = () => erro(new Error("não carregou a biblioteca de conexão"));
-    document.head.appendChild(s);
-  });
-}
-function pvpLigarConexao(conn){
-  PV.conn = conn;
-  conn.on("data", msg => {
-    if(!msg || typeof msg !== "object") return;
-    if(PV.host){
-      if(msg.t === "oi"){
-        pvpNovaPartida(NOME || "Anfitrião", REG, String(msg.nome || "Convidado").slice(0,22), REGIMES[msg.reg] ? msg.reg : "dem");
-        pvpEnviar(); pvpRender();
-      } else if(msg.t === "acao"){
-        if(pvpAcao("B", msg.a)) pvpEnviar();
-        pvpRender();
-      }
-    } else if(msg.t === "estado") pvpReceberEstado(msg);
-  });
-  conn.on("close", () => { PV.status = "A conexão caiu. Saia e crie uma sala nova."; pvpBarra(); });
-  conn.on("error", () => { PV.status = "Erro na conexão."; pvpBarra(); });
-}
-async function pvpCriarSala(){
-  pvpLobbyMsg("Abrindo a sala…");
-  try{ await pvpCarregarPeer(); }catch(e){ pvpLobbyMsg("Não deu para carregar a conexão. Confira a internet."); return; }
-  NOME = $("nome").value.trim().replace(/\s+/g," ").slice(0,22);
-  const tentar = (n) => {
-    const codigo = pvpCodigo();
-    const peer = new Peer("cem-anos-" + codigo);
-    peer.on("open", () => {
-      PV.peer = peer; PV.host = true; PV.eu = "A";
-      const link = location.origin + location.pathname + "?sala=" + codigo;
-      $("pvp-codigo").innerHTML = `<div class="pvp-cod">${codigo}</div>
-        <button class="btn-ghost" id="pvp-copiar">Copiar link da sala</button>`;
-      $("pvp-copiar").onclick = async () => { try{ await navigator.clipboard.writeText(link); $("pvp-copiar").textContent = "Link copiado"; }catch(e){ prompt("Copie o link:", link); } };
-      pvpLobbyMsg("Mande o código (ou o link) para o seu amigo. A partida começa quando ele entrar.");
-    });
-    peer.on("connection", conn => {
-      if(PV.conn){ conn.close(); return; }
-      conn.on("open", () => { PV.on = true; pvpLigarConexao(conn); });
-    });
-    peer.on("error", e => {
-      if(e.type === "unavailable-id" && n < 3){ peer.destroy(); tentar(n + 1); }
-      else pvpLobbyMsg("Erro ao abrir a sala (" + e.type + ").");
-    });
-  };
-  tentar(0);
-}
-async function pvpEntrarSala(codigo){
-  codigo = String(codigo || "").trim().toUpperCase();
-  if(codigo.length < 4){ pvpLobbyMsg("Digite o código da sala."); return; }
-  pvpLobbyMsg("Conectando…");
-  try{ await pvpCarregarPeer(); }catch(e){ pvpLobbyMsg("Não deu para carregar a conexão. Confira a internet."); return; }
-  NOME = $("nome").value.trim().replace(/\s+/g," ").slice(0,22);
-  const peer = new Peer();
-  PV.peer = peer; PV.host = false; PV.eu = "B";
-  peer.on("open", () => {
-    const conn = peer.connect("cem-anos-" + codigo, {reliable:true});
-    const espera = setTimeout(() => { if(!PV.on) pvpLobbyMsg("A sala não respondeu. Confira o código; se estiver certo, tentem trocar de rede (4G ↔ Wi-Fi)."); }, 12000);
-    conn.on("open", () => {
-      clearTimeout(espera); PV.on = true; pvpLigarConexao(conn);
-      conn.send({t:"oi", nome:NOME || "Convidado", reg:REG});
-      pvpLobbyMsg("Conectado. Esperando a partida começar…");
-    });
-  });
-  peer.on("error", e => pvpLobbyMsg(e.type === "peer-unavailable" ? "Não existe sala com esse código." : "Erro na conexão (" + e.type + ")."));
-}
 function pvpLobbyMsg(t){ $("pvp-msg").textContent = t; }
+/* larga a sala atual (ex.: a retomada automática) antes de criar ou entrar em outra */
+function pvpLargarSala(){
+  PV.gen++;
+  if(!PV.ref) return;
+  try{ PV.ref.child("on/" + PV.eu).set(false); ["convidado","acoes","estado","on/A","on/B"].forEach(k => PV.ref.child(k).off()); firebase.database().ref(".info/connected").off(); }catch(e){}
+  Object.assign(PV, {ref:null, on:false, host:false, M:null, ult:"", caiu:false, rivalOn:true, animando:false, vistoSpin:{A:0, B:0}, vistoRodada:-1});
+  pvpGuardarSala(null); pvpBarra();
+}
 function pvpSair(){
-  try{ PV.conn && PV.conn.close(); PV.peer && PV.peer.destroy(); }catch(e){}
-  location.href = location.origin + location.pathname;
+  pvpGuardarSala(null);
+  try{ if(PV.ref){ PV.ref.child("on/" + PV.eu).set(false); PV.ref.off(); } }catch(e){}
+  setTimeout(() => { location.href = location.origin + location.pathname; }, PV.ref ? 300 : 0);
 }
 
 /* ---------- tela ---------- */
@@ -3821,7 +3918,7 @@ function pvpBarra(){
   const b = $("pvp-bar"); if(!b) return;
   if(!PV.on || !PV.M){ b.hidden = !PV.status; b.innerHTML = PV.status ? `<span>${esc(PV.status)}</span>` : ""; return; }
   const M = PV.M, E = eu(), R = rival();
-  let st = PV.status;
+  let st = PV.caiu ? "Sem conexão — reconectando…" : !PV.rivalOn ? R.nome + " caiu — esperando voltar" : PV.status;
   if(!st){
     if(M.fase === "draft") st = M.turno === PV.eu ? "Sua vez de escalar" : "Vez de " + R.nome;
     else if(M.fase === "final") st = M.prontos[PV.eu] ? "Esperando " + R.nome + " confirmar" : "Escolha a relíquia e confirme";
@@ -4013,7 +4110,13 @@ $("pvp-cod-in").addEventListener("keydown", e => { if(e.key === "Enter") $("pvp-
 $("pvp-voltar").addEventListener("click", pvpSair);
 (() => {
   const sala = new URLSearchParams(location.search).get("sala");
-  if(sala){ $("pvp-go").click(); $("pvp-cod-in").value = sala.toUpperCase(); pvpLobbyMsg("Você foi convidado para a sala " + sala.toUpperCase() + ". Escreva seu nome e o regime na tela inicial se quiser, depois clique em Entrar."); }
+  const guardada = pvpSalaGuardada();
+  if(guardada && (!sala || sala.toUpperCase() === guardada.codigo)){
+    $("pvp-go").click(); $("pvp-cod-in").value = guardada.codigo;
+    pvpLobbyMsg("Voltando para a sala " + guardada.codigo + "…");
+    pvpEntrarSala(guardada.codigo, true);
+  }
+  else if(sala){ $("pvp-go").click(); $("pvp-cod-in").value = sala.toUpperCase(); pvpLobbyMsg("Você foi convidado para a sala " + sala.toUpperCase() + ". Escreva seu nome e o regime na tela inicial se quiser, depois clique em Entrar."); }
 })();
 
 
