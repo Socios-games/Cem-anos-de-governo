@@ -317,6 +317,14 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .flash-cinquenta{background:radial-gradient(circle,rgba(70,170,120,.94),rgba(10,70,50,.92))}
 .flash-inimigo{background:radial-gradient(circle,rgba(200,60,50,.93),rgba(70,10,10,.94))}
 .flash-render{background:radial-gradient(circle,rgba(120,140,170,.94),rgba(30,40,60,.95))}
+.flash-sismo{background:radial-gradient(circle,rgba(230,110,40,.94),rgba(80,20,8,.95))}
+.flash-lua{background:radial-gradient(circle,rgba(240,240,225,.95),rgba(40,46,70,.95))}
+.flash-lua .ft{color:#1B2033;text-shadow:0 0 22px rgba(255,255,255,.9)}
+.flash-inverno{background:radial-gradient(circle,rgba(220,240,255,.95),rgba(90,130,180,.92))}
+.flash-inverno .ft{color:#14304F;text-shadow:0 0 18px rgba(255,255,255,.8)}
+.flash-danca{background:radial-gradient(circle,rgba(240,90,160,.94),rgba(70,10,50,.95))}
+.flash-greve17,.flash-maio{background:radial-gradient(circle,rgba(30,30,30,.94),rgba(150,20,20,.94))}
+.pas-box .hoje,.pas-l .hoje{display:block;margin-top:4px;opacity:.9}
 .flash-cura{background:radial-gradient(circle,rgba(160,240,210,.95),rgba(40,150,120,.9))}
 .flash-cura .ft{color:#0C3A2C;text-shadow:none}
 .flash-pavio{background:radial-gradient(circle,rgba(255,110,40,.95),rgba(140,20,10,.94))}
@@ -1401,6 +1409,23 @@ f("Montezuma II","Montezuma","América Latina","Impérios Pré-Colombianos","150
 f("Atahualpa","Atahualpa","América Latina","Impérios Pré-Colombianos","1532–1533",68,60,44,78,56,74);
 f("Cuauhtémoc","Cuauhtémoc","América Latina","Impérios Pré-Colombianos","1520–1521",84,58,50,90,44,74);
 
+/* --- Anarquismo: nem deus nem amo. Muito carisma e visão, gestão quase nenhuma — e
+   detestam coroa e quartel (regime "anq", ver AFIN). Quase todos têm passiva que lê o
+   mundo real do dia, do jeito do Bitcoin do Murilo (ver O MUNDO REAL). --- */
+f("Mikhail Bakunin","Bakunin","Anarquismo","Os Clássicos","1840–1876",88,62,84,80,30,86);
+f("Pierre-Joseph Proudhon","Proudhon","Anarquismo","Os Clássicos","1840–1865",62,70,90,35,60,85);
+f("Piotr Kropotkin","Kropotkin","Anarquismo","Os Clássicos","1872–1921",66,60,94,38,62,87);
+f("Errico Malatesta","Malatesta","Anarquismo","Os Clássicos","1871–1932",78,72,80,60,44,76);
+f("Emma Goldman","Emma Goldman","Anarquismo","Os Clássicos","1889–1940",92,68,80,55,42,82);
+f("Nestor Makhno","Makhno","Anarquismo","Revolucionários","1917–1921",76,58,60,93,45,78);
+f("Buenaventura Durruti","Durruti","Anarquismo","Revolucionários","1920–1936",84,52,62,90,40,76);
+f("Louise Michel","Louise Michel","Anarquismo","Revolucionários","1871–1905",86,50,78,74,36,77);
+f("Lucy Parsons","Lucy Parsons","Anarquismo","Revolucionários","1886–1942",85,58,70,62,48,70);
+f("Edgard Leuenroth","Leuenroth","Anarquismo","No Brasil","1906–1968",78,74,68,52,66,66);
+f("José Oiticica","Oiticica","Anarquismo","No Brasil","1912–1957",70,70,80,50,52,60);
+f("Maria Lacerda de Moura","Maria Lacerda","Anarquismo","No Brasil","1918–1945",80,62,86,36,50,62);
+f("Neno Vasco","Neno Vasco","Anarquismo","No Brasil","1901–1920",62,76,78,34,60,55);
+
 /* ======================= DLC BRAZIL'S CHAMPIONS ======================= */
 /* Quem não é gente comum: o sagrado, o inferno e Konoha. Só entram com o DLC ligado,
    saem raríssimos na roleta e nunca jogam pela oposição (ver DLC_ENT e montarOposicao).
@@ -1496,6 +1521,11 @@ const RELIQUIAS = [
   {ic:"💻", n:"O Hack",                dono:"Raiam Santos",              ef:"Tem um atalho para tudo. Inclusive para o Planalto."},
   {ic:"🦁", n:"A Autoconfiança",       dono:"Renato Trezoitão",          ef:"Lenda viva, segundo quem entende do assunto."},
   {ic:"📚", n:"O Capital",             dono:"Karl Marx",                 ef:"Três volumes. Quase ninguém chegou ao terceiro."},
+  {ic:"🏴", n:"A Bandeira Negra",      dono:"Mikhail Bakunin",           ef:"Nem deus nem amo. Nem pano colorido."},
+  {ic:"🍞", n:"A Conquista do Pão",    dono:"Piotr Kropotkin",           ef:"Pão para todos antes de brioche para alguns."},
+  {ic:"🐎", n:"A Tachanka",            dono:"Nestor Makhno",             ef:"Uma carroça, quatro cavalos e uma metralhadora virada para trás."},
+  {ic:"💃", n:"Os Sapatos de Baile",   dono:"Emma Goldman",              ef:"Se eu não puder dançar, não é a minha revolução."},
+  {ic:"📰", n:"A Plebe",               dono:"Edgard Leuenroth",          ef:"O jornal que parou São Paulo em 1917."},
   {ic:"🏚️", n:"O Bunker",              dono:"Adolf Hitler", k:"bunker",   ef:"Concreto armado: +12 na função dele, e a oposição perde <b>5 em Guerra</b>."},
   {ic:"✝️", n:"A Ressurreição",        dono:"Jesus Cristo", k:"ressurreicao", especial:true,
                                        ef:"Uma vez por partida, se a cúpula cair, ela <b>ressuscita</b>: a etapa é rejogada com oposição nova."},
@@ -1621,7 +1651,9 @@ const AFIN = {
   mon:{mon: 6, dit:-1, dem:-4},
   dit:{mon:-1, dit: 6, dem:-4},
   dem:{mon:-4, dit:-4, dem: 6},
-  cam:{mon: 0, dit: 0, dem: 0}
+  cam:{mon: 0, dit: 0, dem: 0},
+  /* anarquistas: coroa e quartel são o inimigo; na democracia ao menos dá para fazer greve */
+  anq:{mon:-5, dit:-6, dem: 3}
 };
 const REG_PERIODO = {
   "Brasil|Império":"mon", "Brasil|República":"dit", "Brasil|Nova República":"dem",
@@ -1648,6 +1680,7 @@ const REG_PERIODO = {
   "América Latina|Libertadores":"dem", "América Latina|Revoluções e Caudilhos":"dit",
   "América Latina|Impérios Pré-Colombianos":"mon",
   "Brasil|Redes Sociais":"cam",            /* influenciador serve a qualquer regime */
+  "Anarquismo|Os Clássicos":"anq", "Anarquismo|Revolucionários":"anq", "Anarquismo|No Brasil":"anq",
   /* o DLC está acima da política dos homens */
   "O Sagrado|Profetas e Mestres":"cam", "O Sagrado|Anjos":"cam",
   "O Inferno|Demônios":"cam", "Konoha|Hokages":"cam", "Associação|FMUSP":"cam"
@@ -1771,6 +1804,31 @@ const PASSIVAS = {
   "Albert Einstein":    {k:"relatividade", ic:"🕰️", n:"Relatividade", d:"Etapas vencidas rendem 10% mais anos."},
   "Adolf Hitler":       {k:"blitz",     ic:"⚡", n:"Blitzkrieg", d:"Começa atropelando: <b>+10</b> nos dois primeiros duelos de cada etapa. Do quarto em diante a conta chega: −3."},
   "Grigori Rasputin":   {k:"rasputin",  ic:"🧟", n:"Difícil de Matar", d:"O primeiro duelo que ele perderia na partida, ele vence."},
+  /* O mundo real (v25): passivas que leem o dia de hoje, como o Bitcoin do Murilo. O texto
+     daqui é a regra; atualizarMundo() pendura nele o "Hoje:" com o número que está valendo. */
+  "Fernando Henrique Cardoso":{k:"real", ic:"💵", n:"Plano Real", d:"Segue o <b>dólar do dia</b> (cotação real): se o real se valorizou, ele ganha <b>+4 em tudo por 1%</b> que o dólar caiu; se o dólar subiu, perde (−6 a +8)."},
+  "Donald Trump":       {k:"tarifaco",  ic:"🦅", n:"Tarifaço", d:"O contrário do FHC: <b>dólar subindo é America First</b>. +4 em tudo por 1% que o dólar subiu contra o real hoje; dólar caindo, ele perde (−6 a +8)."},
+  "John F. Kennedy":    {k:"lua",       ic:"🌕", n:"Rumo à Lua", d:"Segue a <b>fase da Lua de hoje</b>: até <b>+8 em tudo</b> na lua cheia, nada na lua nova."},
+  "Dom Pedro II":       {k:"astronomo", ic:"🌌", n:"O Imperador Astrônomo", d:"Olha o <b>céu de Petrópolis agora</b> (previsão do tempo de verdade). À noite, de céu limpo, até <b>+10 em Desenvolvimento e +4 no resto</b>; nublado, nada. De dia ele lê: +4 em Desenvolvimento."},
+  "Napoleão Bonaparte": {k:"campanha",  ic:"❄️", n:"Campanha da Rússia", d:"Depende da <b>temperatura agora em Moscou</b>: no calor, até <b>+8 em Guerra</b>; abaixo de 5 °C o inverno começa a cobrar, até <b>−10</b>."},
+  "Josef Stálin":       {k:"inverno",   ic:"🥶", n:"General Inverno", d:"Também lê <b>Moscou agora</b>: +1 em Guerra por grau abaixo de 10 °C (até <b>+12</b>)."},
+  "Luiz Inácio Lula da Silva":{k:"polarL", ic:"📈", n:"Polarização", d:"Quem foi <b>mais lido na Wikipédia ontem</b>, Lula ou Bolsonaro, ganha <b>+6 em tudo</b>; quem perdeu a audiência, +1. Com os dois na cúpula, a briga trava a Articulação (−6)."},
+  "Jair Bolsonaro":     {k:"polarB",    ic:"📉", n:"Polarização", d:"Quem foi <b>mais lido na Wikipédia ontem</b>, Bolsonaro ou Lula, ganha <b>+6 em tudo</b>; quem perdeu a audiência, +1. Com os dois na cúpula, a briga trava a Articulação (−6)."},
+  "Barão de Mauá":      {k:"juros",     ic:"🏦", n:"Banqueiro do Império", d:"Banqueiro gosta de juro alto: <b>+1 em Economia por ponto da Selic de hoje acima de 6%</b> (até +8)."},
+  /* Anarquismo */
+  "Mikhail Bakunin":    {k:"destruicao", ic:"🌋", n:"Paixão Destruidora", d:"\"A paixão pela destruição é uma paixão criadora.\" O <b>maior terremoto do planeta nas últimas 24 h</b> sacode a oposição: <b>−2 em tudo por grau acima de 4</b> (até −10)."},
+  "Pierre-Joseph Proudhon":{k:"roubo",  ic:"💸", n:"A Propriedade É um Roubo", d:"Odeia juros: quanto mais alta a <b>Selic de hoje</b>, mais o povo ouve ele. <b>+1 em tudo a cada 2 pontos acima de 7%</b>, e o dobro em Economia."},
+  "Piotr Kropotkin":    {k:"mutua",     ic:"🐜", n:"Ajuda Mútua", d:"Ninguém fica para trás: toda função <b>abaixo da média da cúpula sobe até a média</b> (no máximo +8)."},
+  "Errico Malatesta":   {k:"semadj",    ic:"🧳", n:"Anarquia Sem Adjetivos", d:"Não tem função fixa: em <b>qualquer cadeira joga com a melhor nota dele</b>."},
+  "Emma Goldman":       {k:"danca",     ic:"💃", n:"Se Eu Não Puder Dançar", d:"Segue o <b>relógio de Brasília</b>: de noite, <b>+5 em tudo</b>; sexta ou sábado à noite, <b>+10</b>. De dia, +1."},
+  "Nestor Makhno":      {k:"estepe",    ic:"🌬️", n:"Vento da Estepe", d:"A tachanka corre com o vento: <b>+1 em Guerra a cada 3 km/h de vento agora em Huliaipole</b>, Ucrânia (até +12)."},
+  "Buenaventura Durruti":{k:"coluna",   ic:"🚩", n:"A Coluna Durruti", d:"Para cada anarquista na cúpula, contando ele: <b>+4 em Guerra e +2 em tudo</b>."},
+  "Louise Michel":      {k:"barricada", ic:"🌹", n:"As Barricadas", d:"Olha o <b>tempo em Paris agora</b>: chovendo, as barricadas seguram e a oposição <b>perde 6 em Guerra</b>; tempo firme, a Comuna sai às ruas: <b>+5 em Articulação e Liderança</b>."},
+  "Lucy Parsons":       {k:"maio",      ic:"🗓️", n:"Primeiro de Maio", d:"Quanto mais perto do <b>1º de Maio</b> no calendário de hoje, mais forte: <b>+10 em tudo</b> no dia, 1 a menos a cada 18 dias de distância."},
+  "Edgard Leuenroth":   {k:"greve17",   ic:"🏭", n:"A Greve de 1917", d:"Greve só para fábrica aberta: <b>em dia útil, das 8h às 18h de Brasília</b>, a oposição perde <b>7 em Economia e em Desenvolvimento</b>. Fora do expediente, 2."},
+  "José Oiticica":      {k:"verbete",   ic:"📖", n:"Ação Direta", d:"Professor que espalha a ideia: <b>+1 em tudo a cada 250 leituras do verbete \"Anarquismo\" na Wikipédia ontem</b> (até +8)."},
+  "Maria Lacerda de Moura":{k:"lacerda", ic:"✒️", n:"Religião do Amor", d:"<b>+2 em tudo para cada mulher na cúpula</b>, contando ela."},
+  "Neno Vasco":         {k:"internacional", ic:"🎶", n:"A Internacional", d:"Traduziu a Internacional para o português e o país inteiro canta junto: <b>+3 em tudo</b>, e <b>as sinergias da oposição não valem nada</b>."},
   /* Associação */
   "Eduardo Alves":      {k:"patch",     ic:"📝", n:"Patch Notes", d:"+1 em todas as funções para cada herói com passiva na cúpula, contando ele."},
   "Murilo Baruella":    {k:"hodl",      ic:"₿",  n:"HODL", d:"O humor dele segue o <b>Bitcoin do dia</b>: todos os status mudam 5 vezes a variação (Bitcoin +1% → +5%; em baixa, vacas magras). E +1 em Economia para cada etapa vencida."},
@@ -1786,6 +1844,11 @@ const PASSIVAS = {
   "ANUSCU":             {k:"missingno", ic:"🎒", n:"Item Duplicado", d:"+4 em todas as funções. Se ele abandonar o grupo, o save buga a seu favor: <b>a oposição perde 6 em tudo</b> naquela etapa. Com <b>Eduardo Lopes</b> na cúpula ele abandona bem mais (+20% por etapa)."},
   "Matheus Oliveira":   {k:"greve",     ic:"✊", n:"Greve Geral", d:"A oposição perde 4 em Economia."}
 };
+/* Religião do Amor (Maria Lacerda de Moura) conta as mulheres da cúpula */
+const MULHERES = new Set(["Princesa Isabel","Dilma Rousseff","Virgínia Fonseca","Cleópatra VII","Hatshepsut","Boudica",
+  "Joana d'Arc","Elizabeth I","Rainha Vitória","Margaret Thatcher","Catarina, a Grande","Angela Merkel","Wu Zetian",
+  "Indira Gandhi","Eva Perón","Isabel de Castela","Nzinga de Matamba","Emma Goldman","Louise Michel","Lucy Parsons",
+  "Maria Lacerda de Moura","Tsunade"]);
 /* Claudio: uma trollagem sorteada antes de cada etapa, em montarOposicao. Na média ajuda
    bastante, mas às vezes sobra para a própria cúpula. */
 const TROLLAGENS = [
@@ -1845,6 +1908,33 @@ function bonusPas(rk){
   if(temPas("conquistador") && rk === "gue") v += 4;
   if(temPas("resenha")) v += 2 * contaNaCupula(f => f.e === "Associação" && f.n !== "ANUSCU");
   if(temPas("supremo") && rk !== "lid" && S.gab[rk] && S.gab[rk].n === "Claudio") v += 10;
+  /* o mundo real (ver MR): o que o dia de hoje dá ou tira */
+  if(temPas("real")){ const x = MR.real(); v += x < 0 ? neg(x) : x; }
+  if(temPas("tarifaco")){ const x = MR.tarifaco(); v += x < 0 ? neg(x) : x; }
+  if(temPas("lua")) v += MR.lua();
+  if(temPas("astronomo")){ const a = MR.astronomo(); v += rk === "des" ? a.des : a.resto; }
+  if(temPas("campanha") && rk === "gue"){ const x = MR.campanha(); v += x < 0 ? neg(x) : x; }
+  if(temPas("inverno") && rk === "gue") v += MR.inverno();
+  if(temPas("polarL")) v += MR.lulaLidera() ? 6 : 1;
+  if(temPas("polarB")) v += MR.lulaLidera() ? 1 : 6;
+  if(temPas("polarL") && temPas("polarB") && rk === "arp") v += neg(-6);
+  if(temPas("juros") && rk === "eco") v += MR.juros();
+  if(temPas("roubo")) v += MR.roubo() * (rk === "eco" ? 2 : 1);
+  if(temPas("danca")) v += MR.danca();
+  if(temPas("estepe") && rk === "gue") v += MR.estepe();
+  if(temPas("maio")) v += MR.maio();
+  if(temPas("verbete")) v += MR.verbete();
+  if(temPas("barricada") && !MUNDO.paris.chuva && (rk === "arp" || rk === "lid")) v += 5;
+  if(temPas("coluna")) v += (rk === "gue" ? 6 : 2) * contaNaCupula(f => f.e === "Anarquismo");
+  if(temPas("internacional")) v += 3;
+  if(temPas("lacerda")) v += 2 * contaNaCupula(f => MULHERES.has(f.n));
+  /* Ajuda Mútua: quem está abaixo da média da cúpula sobe até ela (lê a base, como Wu Wei) */
+  if(temPas("mutua") && S.gab[rk]){
+    const ocup = ROLES.filter(x => S.gab[x.k]);
+    const media = ocup.reduce((t, x) => t + forcaBase(S.gab, x.k), 0) / ocup.length;
+    const fb = forcaBase(S.gab, rk);
+    if(fb < media) v += Math.min(8, media - fb);
+  }
   /* entre etapas: manchete da etapa e Pesquisa Favorável */
   const m = manchete();
   if(m && m.rk && (m.rk === rk || m.rk === "all")) v += m.v < 0 ? neg(m.v) : m.v;
@@ -1873,6 +1963,11 @@ function penalOp(rk){
   if(trolou("pizza")) v += 5;
   if(temPas("fedor")) v += 5;
   if(S.nocaute) v += 4;
+  if(temPas("destruicao")) v += MR.destruicao();
+  if(temPas("barricada") && MUNDO.paris.chuva && rk === "gue") v += 6;
+  if(temPas("greve17") && (rk === "eco" || rk === "des")) v += MR.greve17();
+  /* A Internacional: as sinergias da oposição não valem (só as que ajudam; o racha continua) */
+  if(temPas("internacional") && S.op && S.op[rk]) v += Math.max(0, bonusSinergia(S.op, rk));
   const m = manchete();
   if(m && m.op && (m.op === rk || m.op === "all")) v += m.v;
   return v;
@@ -1967,6 +2062,165 @@ function humorSorteado(){
   }
   definirBtc(humorSorteado(), false);
 })();
+
+/* ======================= O MUNDO REAL ======================= */
+/* Do jeito do Bitcoin do Murilo: passivas que leem o mundo de verdade no dia em que se joga.
+   Cada dado vem de uma API pública, sem chave e com CORS; sem rede, fica um palpite sorteado
+   pela data (o mesmo para todo mundo no mesmo dia) e o texto avisa. A Lua e o relógio são
+   contas locais, sempre no horário de Brasília para as duas pontas do PvP verem o mesmo. */
+function hashDia(sal){
+  let h = 2166136261;
+  for(const c of new Date().toISOString().slice(0, 10) + "|" + sal){ h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
+  return (h >>> 0) / 4294967296;
+}
+const entre = (a, b, sal) => a + (b - a) * hashDia(sal);
+const limita = (x, a, b) => Math.max(a, Math.min(b, x));
+/* média de Moscou por mês: o palpite do General Inverno não sai absurdo nem sem rede */
+const MOSCOU_MES = [-6.5,-6.7,-1,6.7,13.2,17,19.2,17,11.3,5.6,-1.2,-5.2];
+const MUNDO = {
+  dolar:  {v:+entre(-1.2, 1.2, "dolar").toFixed(2), real:false},     /* variação do dólar em reais hoje, % */
+  selic:  {v:+entre(10.5, 15, "selic").toFixed(2), real:false},      /* meta Selic, % ao ano */
+  sismo:  {v:+entre(4.6, 6.6, "sismo").toFixed(1), onde:"", real:false},
+  moscou: {v:Math.round(MOSCOU_MES[new Date().getMonth()] + entre(-5, 5, "moscou")), real:false},
+  estepe: {v:Math.round(entre(4, 32, "estepe")), real:false},          /* vento em Huliaipole, km/h */
+  paris:  {chuva:hashDia("paris") < .3, real:false},
+  petro:  {nuvens:Math.round(entre(0, 100, "petro")), real:false},     /* cobertura de nuvens em Petrópolis, % */
+  wiki:   {lula:Math.round(entre(3000, 9000, "lula")), bolso:Math.round(entre(3000, 9000, "bolso")),
+           anarq:Math.round(entre(400, 2000, "anarq")), real:false}
+};
+/* horário de Brasília (UTC−3, sem horário de verão desde 2019) lido com getUTC* */
+const agoraBR = () => new Date(Date.now() - 3 * 3600e3);
+function luaHoje(){
+  const sin = 29.530588853, ref = Date.UTC(2000, 0, 6, 18, 14);     /* uma lua nova conhecida */
+  const idade = (((Date.now() - ref) / 864e5) % sin + sin) % sin;
+  const ilum = (1 - Math.cos(2 * Math.PI * idade / sin)) / 2;
+  const nome = ilum > .95 ? "cheia" : ilum < .05 ? "nova" : idade < sin / 2 ? "crescente" : "minguante";
+  return {ilum, nome};
+}
+const noiteBR = h => h >= 19 || h < 5;
+const expedienteBR = () => { const d = agoraBR(), w = d.getUTCDay(), h = d.getUTCHours(); return w >= 1 && w <= 5 && h >= 8 && h < 18; };
+function diasAteMaio(){
+  const d = agoraBR(), y = d.getUTCFullYear(), hoje = Date.UTC(y, d.getUTCMonth(), d.getUTCDate());
+  return Math.min(...[y - 1, y, y + 1].map(a => Math.abs(Date.UTC(a, 4, 1) - hoje) / 864e5));
+}
+/* MR: quanto cada passiva do mundo real vale agora */
+const MR = {
+  real:     () => limita(Math.round(-MUNDO.dolar.v * 4), -6, 8),
+  tarifaco: () => limita(Math.round(MUNDO.dolar.v * 4), -6, 8),
+  lua:      () => Math.round(8 * luaHoje().ilum),
+  astronomo:() => {
+    const limpo = (100 - MUNDO.petro.nuvens) / 100, h = agoraBR().getUTCHours();
+    return (h >= 18 || h < 6) ? {des:Math.round(10 * limpo), resto:Math.round(4 * limpo), noite:true} : {des:4, resto:0, noite:false};
+  },
+  campanha: () => limita(Math.round((MUNDO.moscou.v - 5) / 2), -10, 8),
+  inverno:  () => limita(Math.round(10 - MUNDO.moscou.v), 0, 12),
+  lulaLidera: () => MUNDO.wiki.lula >= MUNDO.wiki.bolso,
+  juros:    () => limita(Math.round(MUNDO.selic.v - 6), 0, 8),
+  destruicao: () => limita(Math.round((MUNDO.sismo.v - 4) * 2), 0, 10),
+  roubo:    () => Math.max(0, Math.round((MUNDO.selic.v - 7) / 2)),
+  danca:    () => {
+    const d = agoraBR(), w = d.getUTCDay(), h = d.getUTCHours();
+    if(!noiteBR(h)) return 1;
+    const sabadou = h >= 19 ? (w === 5 || w === 6) : (w === 6 || w === 0);   /* madrugada conta como a noite anterior */
+    return sabadou ? 10 : 5;
+  },
+  estepe:   () => limita(Math.round(MUNDO.estepe.v / 3), 0, 12),
+  maio:     () => Math.max(0, 10 - Math.floor(diasAteMaio() / 18)),
+  greve17:  () => expedienteBR() ? 7 : 2,
+  verbete:  () => limita(Math.round(MUNDO.wiki.anarq / 250), 0, 8)
+};
+const sinal = x => (x > 0 ? "+" : x < 0 ? "−" : "±") + Math.abs(x);
+const num = (x, c) => x.toFixed(c).replace(".", ",");
+const pct = x => (x >= 0 ? "+" : "−") + num(Math.abs(x), 2) + "%";
+const graus = x => (x < 0 ? "−" : "") + Math.abs(x) + " °C";
+const palpite = x => x.real ? "" : " <i>(sem conexão: palpite do dia)</i>";
+/* o "Hoje:" de cada passiva, com o número que está valendo */
+const MR_HOJE = {
+  "Fernando Henrique Cardoso": () => "dólar " + pct(MUNDO.dolar.v) + palpite(MUNDO.dolar) + " → <b>" + sinal(MR.real()) + " em tudo</b>.",
+  "Donald Trump":       () => "dólar " + pct(MUNDO.dolar.v) + palpite(MUNDO.dolar) + " → <b>" + sinal(MR.tarifaco()) + " em tudo</b>.",
+  "John F. Kennedy":    () => "lua " + luaHoje().nome + ", " + Math.round(luaHoje().ilum * 100) + "% iluminada → <b>" + sinal(MR.lua()) + " em tudo</b>.",
+  "Dom Pedro II":       () => { const a = MR.astronomo(); return (a.noite ? "noite em Petrópolis, " + MUNDO.petro.nuvens + "% de nuvens" : "dia em Petrópolis, ele está lendo") + palpite(MUNDO.petro) + " → <b>" + sinal(a.des) + " em Desenvolvimento" + (a.resto ? ", " + sinal(a.resto) + " no resto" : "") + "</b>."; },
+  "Napoleão Bonaparte": () => "Moscou a " + graus(MUNDO.moscou.v) + palpite(MUNDO.moscou) + " → <b>" + sinal(MR.campanha()) + " em Guerra</b>.",
+  "Josef Stálin":       () => "Moscou a " + graus(MUNDO.moscou.v) + palpite(MUNDO.moscou) + " → <b>" + sinal(MR.inverno()) + " em Guerra</b>.",
+  "Luiz Inácio Lula da Silva": () => polarTxt(),
+  "Jair Bolsonaro":     () => polarTxt(),
+  "Barão de Mauá":      () => "Selic " + num(MUNDO.selic.v, 2) + "%" + palpite(MUNDO.selic) + " → <b>" + sinal(MR.juros()) + " em Economia</b>.",
+  "Mikhail Bakunin":    () => "terremoto de " + num(MUNDO.sismo.v, 1) + (MUNDO.sismo.onde ? " (" + esc(MUNDO.sismo.onde) + ")" : "") + palpite(MUNDO.sismo) + " → <b>oposição " + sinal(-MR.destruicao()) + " em tudo</b>.",
+  "Pierre-Joseph Proudhon": () => "Selic " + num(MUNDO.selic.v, 2) + "%" + palpite(MUNDO.selic) + " → <b>" + sinal(MR.roubo()) + " em tudo, " + sinal(2 * MR.roubo()) + " em Economia</b>.",
+  "Emma Goldman":       () => { const v = MR.danca(); return (v === 10 ? "noite de fim de semana, tem baile" : v === 5 ? "é noite em Brasília" : "é dia em Brasília") + " → <b>" + sinal(v) + " em tudo</b>."; },
+  "Nestor Makhno":      () => "vento de " + MUNDO.estepe.v + " km/h em Huliaipole" + palpite(MUNDO.estepe) + " → <b>" + sinal(MR.estepe()) + " em Guerra</b>.",
+  "Louise Michel":      () => (MUNDO.paris.chuva ? "chove em Paris → <b>oposição −6 em Guerra</b>" : "tempo firme em Paris → <b>+5 em Articulação e Liderança</b>") + palpite(MUNDO.paris) + ".",
+  "Lucy Parsons":       () => Math.round(diasAteMaio()) + " dias do 1º de Maio → <b>" + sinal(MR.maio()) + " em tudo</b>.",
+  "Edgard Leuenroth":   () => (expedienteBR() ? "fábricas abertas, greve geral" : "fora do expediente") + " → <b>oposição " + sinal(-MR.greve17()) + " em Economia e Desenvolvimento</b>.",
+  "José Oiticica":      () => MUNDO.wiki.anarq.toLocaleString("pt-BR") + " leituras de \"Anarquismo\" ontem" + palpite(MUNDO.wiki) + " → <b>" + sinal(MR.verbete()) + " em tudo</b>."
+};
+function polarTxt(){
+  const w = MUNDO.wiki;
+  return "ontem, Lula " + w.lula.toLocaleString("pt-BR") + " × Bolsonaro " + w.bolso.toLocaleString("pt-BR") + " leituras" + palpite(w) +
+         " → <b>" + (MR.lulaLidera() ? "Lula" : "Bolsonaro") + " está em alta</b>.";
+}
+const PAS_BASE = {};
+function atualizarMundo(){
+  for(const [n, f] of Object.entries(MR_HOJE)){
+    if(!PASSIVAS[n]) continue;
+    if(!(n in PAS_BASE)) PAS_BASE[n] = PASSIVAS[n].d;
+    try{ PASSIVAS[n].d = PAS_BASE[n] + " <span class=\"hoje\">Hoje: " + f() + "</span>"; }catch(e){}
+  }
+}
+/* linha da tela de confronto: o mundo real de quem está na cúpula, sem HTML */
+function mundoTxt(){
+  const l = [];
+  for(const r of ROLES){
+    const fig = S.gab[r.k], p = pasDe(fig);
+    if(p && MR_HOJE[fig.n]) l.push(p.ic + " " + fig.s + ": " + MR_HOJE[fig.n]().replace(/<[^>]+>/g, ""));
+  }
+  return [...new Set(l)].join(" ");
+}
+async function pegarJSON(url){
+  const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 6000);
+  try{ const r = await fetch(url, {signal:ctl.signal}); if(!r.ok) throw new Error(r.status); return await r.json(); }
+  finally{ clearTimeout(tm); }
+}
+async function primeiro(fontes){
+  for(const [url, ler] of fontes){
+    try{ const v = ler(await pegarJSON(url)); if(v != null && (typeof v !== "number" || Number.isFinite(v))) return v; }catch(e){}
+  }
+  return null;
+}
+const ymd = d => d.toISOString().slice(0, 10).replace(/-/g, "");
+/* leituras de ontem (ou do último dia que a Wikimedia já fechou) de um verbete da Wikipédia em português */
+function leituras(titulo){
+  const fim = new Date(Date.now() - 864e5), ini = new Date(Date.now() - 8 * 864e5);
+  return ["https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/pt.wikipedia/all-access/user/" +
+          encodeURIComponent(titulo) + "/daily/" + ymd(ini) + "00/" + ymd(fim) + "00",
+          j => j.items.length ? j.items[j.items.length - 1].views : null];
+}
+atualizarMundo();
+(async () => {
+  const pronto = (k, v) => { if(v != null){ MUNDO[k] = Object.assign({}, MUNDO[k], v, {real:true}); atualizarMundo(); } };
+  const tempo = (lat, lon, campos) => "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current=" + campos;
+  await Promise.all([
+    primeiro([["https://economia.awesomeapi.com.br/json/last/USD-BRL", j => +j.USDBRL.pctChange]])
+      .then(v => pronto("dolar", v == null ? null : {v:+v.toFixed(2)})),
+    primeiro([["https://brasilapi.com.br/api/taxas/v1/selic", j => +j.valor],
+              ["https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json", j => +String(j[0].valor).replace(",", ".")]])
+      .then(v => pronto("selic", v == null ? null : {v})),
+    primeiro([["https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson", j => {
+        const q = j.features.reduce((m, f) => !m || f.properties.mag > m.properties.mag ? f : m, null);
+        return q ? {v:+q.properties.mag.toFixed(1), onde:q.properties.place || ""} : {v:2.5, onde:""};
+      }]]).then(v => pronto("sismo", v)),
+    primeiro([[tempo(55.7558, 37.6173, "temperature_2m"), j => j.current.temperature_2m]])
+      .then(v => pronto("moscou", v == null ? null : {v:Math.round(v)})),
+    primeiro([[tempo(47.6625, 36.2560, "wind_speed_10m"), j => j.current.wind_speed_10m]])
+      .then(v => pronto("estepe", v == null ? null : {v:Math.round(v)})),
+    primeiro([[tempo(48.8566, 2.3522, "precipitation,weather_code"), j => j.current.precipitation > 0 || j.current.weather_code >= 51]])
+      .then(v => pronto("paris", v == null ? null : {chuva:v})),
+    primeiro([[tempo(-22.5112, -43.1779, "cloud_cover"), j => j.current.cloud_cover]])
+      .then(v => pronto("petro", v == null ? null : {nuvens:Math.round(v)})),
+    Promise.all([primeiro([leituras("Luiz_Inácio_Lula_da_Silva")]), primeiro([leituras("Jair_Bolsonaro")]), primeiro([leituras("Anarquismo")])])
+      .then(([lula, bolso, anarq]) => { if(lula != null && bolso != null && anarq != null) pronto("wiki", {lula, bolso, anarq}); })
+  ]);
+})();
 function ovrDe(fig){
   if(fig.n === "Murilo Baruella" && BTC){
     const m = btcMult(), g = {...fig, car:fig.car*m, ast:fig.ast*m, vis:fig.vis*m, fer:fig.fer*m, ges:fig.ges*m};
@@ -2034,7 +2288,9 @@ function rateR(fig, rk){
   const bon = REGIMES[S.reg].bonus;
   if(sumiu(fig)) return 40;
   if(fig.n === "Marlisson" && S.marlissonFalta && ROLES.some(x => S.gab[x.k] === fig)) return 40;   /* faltou */                     /* Jesus × Eduardo Lopes: cadeira vazia */
-  let v = rate(fig,rk) + afinidade(fig) + (bon[rk] || 0);
+  /* Anarquia Sem Adjetivos: sentado na sua cúpula, Malatesta joga com a melhor nota em qualquer cadeira */
+  const semAdj = fig.n === "Errico Malatesta" && fig.n !== DESLIGA && ROLES.some(x => S.gab[x.k] === fig);
+  let v = (semAdj ? Math.max(...ROLES.map(x => rate(fig, x.k))) : rate(fig,rk)) + afinidade(fig) + (bon[rk] || 0);
   if(fig.n === "Murilo Baruella") v = humorMurilo(v, rk, fig);
   /* o Pod da Associação: +10% nos status do Eduardo Lopes e do Chico Bento */
   if((fig.n === "Eduardo Lopes" || fig.n === "Chico Bento") && relAtiva("pod") && ROLES.some(x => S.gab[x.k] === fig))
@@ -2109,7 +2365,12 @@ const SINERGIAS = [
   {ic:"🐍", n:"O Nilo e Roma",           m:["Júlio César","Cleópatra VII"], b:5, d:"Roma e o Egito do mesmo lado"},
   {ic:"🐎", n:"Pai e Filho da Macedônia", m:["Filipe II da Macedônia","Alexandre, o Grande"], b:5, d:"a falange do pai e o império do filho"},
   {ic:"🤝", n:"Pacto Molotov–Ribbentrop", m:["Adolf Hitler","Josef Stálin"], b:6, pacto:true, d:"+6 em tudo nas duas primeiras etapas; depois o pacto rompe e os dois perdem 8"},
-  {ic:"📖", n:"A Lei e a Graça",          m:["Jesus Cristo","Moisés"], b:5, d:"os mandamentos e o sermão da montanha"}
+  {ic:"📖", n:"A Lei e a Graça",          m:["Jesus Cristo","Moisés"], b:5, d:"os mandamentos e o sermão da montanha"},
+  {ic:"Ⓐ",  n:"Anarquia Sem Adjetivos",   m:["Piotr Kropotkin","Errico Malatesta","Emma Goldman"], b:4, d:"o príncipe, o eletricista e a dançarina do anarquismo"},
+  {ic:"🏭", n:"A Greve Geral de 1917",    m:["Edgard Leuenroth","José Oiticica","Neno Vasco"], b:4, d:"o jornal, a cátedra e a canção que pararam São Paulo"},
+  {ic:"⚔️", n:"Os Dois Camponeses",       m:["Nestor Makhno","Emiliano Zapata"], b:5, d:"Terra e Liberdade, na Ucrânia e no México"},
+  /* racha: vale sempre negativo — os dois juntos brigam (Haia, 1872) */
+  {ic:"💥", n:"O Racha da Internacional", m:["Karl Marx","Mikhail Bakunin"], b:-6, racha:true, d:"−6 em tudo para os dois: expulsaram um ao outro da Primeira Internacional"}
 ].filter(x => x.m.every(n => F.some(f => f.n === n)));
 function sinergiasDe(gab){
   if(!gab || !S || SEM_SIN) return [];
@@ -2272,7 +2533,9 @@ function afinSelo(fig){
   const a = afinidade(fig), rf = regimeDe(fig);
   const cls = a > 0 ? "mais" : a < 0 ? "menos" : "";
   const txt = a === 0 ? "±0" : (a > 0 ? "+" : "−") + Math.abs(a);
-  return `<span class="afin ${cls}" title="${rf==="cam"?"Camaleão: serve a qualquer regime":REGIMES[rf].n}">${rf==="cam"?"◆":REGIMES[rf].ic} ${txt}</span>`;
+  const tit = rf === "cam" ? "Camaleão: serve a qualquer regime" : rf === "anq" ? "Anarquista: odeia coroa e quartel" : REGIMES[rf].n;
+  const ic = rf === "cam" ? "◆" : rf === "anq" ? "Ⓐ" : REGIMES[rf].ic;
+  return `<span class="afin ${cls}" title="${tit}">${ic} ${txt}</span>`;
 }
 
 /* retrato embutido; se faltar algum, cai nas iniciais */
@@ -2292,7 +2555,7 @@ function sinCartaHTML(fig, oposicao){
   return SINERGIAS.filter(x => x.m.includes(fig.n)).map(x => {
     const outros = x.m.filter(n => n !== fig.n).map(n => F.find(f => f.n === n).s);
     const ativa = !oposicao && S && S.gab && ROLES.some(r => S.gab[r.k] && S.gab[r.k] !== fig && x.m.includes(S.gab[r.k].n));
-    const efeito = x.pacto ? x.d : "+" + x.b + " em tudo para quem estiver junto — " + x.d + (x.m.length === 3 ? " (com os três, +3 a mais)" : "");
+    const efeito = x.pacto || x.racha ? x.d : "+" + x.b + " em tudo para quem estiver junto — " + x.d + (x.m.length === 3 ? " (com os três, +3 a mais)" : "");
     return `<div class="pas-box sin-box${ativa?" ativa":""}"><b>${x.ic} Sinergia: ${esc(x.n)}</b> — com ${outros.map(esc).join(" ou ")}: ${esc(efeito)}.${ativa ? " <b>Parceiro já na cúpula!</b>" : ""}</div>`;
   }).join("");
 }
@@ -2620,6 +2883,7 @@ function renderRelis(){
 }
 
 function renderDraft(){
+  atualizarMundo();                      /* relógio, Lua e o que já chegou da rede */
   $("draft-eyebrow").textContent = "Draft · " + REGIMES[S.reg].n;
   const pronto = S.rodada > 5;
   $("rodadas").innerHTML = [1,2,3,4,5].map(i=>
@@ -2825,6 +3089,8 @@ function iniciarEtapa(){
     (temPas("missingno") ? ", mas o save bugou a seu favor: oposição −6 em tudo." : ".");
   if(S.troll) sub += " 🤡 Claudio " + S.troll.t;
   if(naCupula("Murilo Baruella") && BTC) sub += " " + btcTxt();
+  atualizarMundo();
+  const mt = mundoTxt(); if(mt) sub += " " + mt;
   if(relAtiva("zap")){
     const z = zapDaEtapa();
     sub += z.mandou
@@ -2919,6 +3185,12 @@ const FLASH = {
   amarelo: {ic:"⚡", t:"Flash Amarelo"},
   cura:    {ic:"⚕️", t:"Rafael cura a cúpula"},
   pavio:   {ic:"🤬", t:"Chico Bento explodiu"},
+  sismo:   {ic:"🌋", t:"A terra treme"},
+  lua:     {ic:"🌕", t:"Lua cheia"},
+  inverno: {ic:"❄️", t:"General Inverno"},
+  danca:   {ic:"💃", t:"Hoje tem baile"},
+  greve17: {ic:"🏭", t:"Greve geral!"},
+  maio:    {ic:"✊", t:"Primeiro de Maio"},
   virada:  {ic:"🔄", t:"Virada!"},
   zebra:   {ic:"🦓", t:"Zebra!"},
   rodadaVitoria:{ic:"🏆", t:"Rodada sua"},
@@ -2941,6 +3213,15 @@ function momentosDoDuelo(i, v, d){
   if(temPas("cinquenta") && S.etapa === 0 && i === 0) l.push("cinquenta");
   if(temPas("inimigo") && i === 0) l.push("inimigo");
   if(temPas("blitz") && i === 0) l.push("blitz");
+  /* o mundo real só pisca quando está forte de verdade, no primeiro duelo */
+  if(i === 0){
+    if(temPas("destruicao") && MR.destruicao() >= 5) l.push("sismo");
+    if(temPas("lua") && MR.lua() >= 7) l.push("lua");
+    if((temPas("inverno") && MR.inverno() >= 8) || (temPas("campanha") && MR.campanha() <= -5)) l.push("inverno");
+    if(temPas("danca") && MR.danca() === 10) l.push("danca");
+    if(temPas("greve17") && expedienteBR()) l.push("greve17");
+    if(temPas("maio") && MR.maio() >= 8) l.push("maio");
+  }
   if(temPas("blitz") && i === 3) l.push("conta");
   if(temPas("cura") && d > 0 && S.curaVista !== d){ S.curaVista = d; l.push("cura"); }
   if(temPas("pavio") && d > 0 && !S.pavioVisto){ S.pavioVisto = true; l.push("pavio"); }
@@ -3822,12 +4103,14 @@ function pvpIntent(a){
 }
 function pvpEnviar(){
   if(!PV.ref || !PV.M) return;
-  PV.ref.child("estado").set({m:pvpSer(PV.M), fase:PV.M.fase, dlc:DLC, assoc:ASSOC, btc:BTC ? JSON.stringify(BTC) : "", ult:PV.ult});
+  PV.ref.child("estado").set({m:pvpSer(PV.M), fase:PV.M.fase, dlc:DLC, assoc:ASSOC, btc:BTC ? JSON.stringify(BTC) : "", mundo:JSON.stringify(MUNDO), ult:PV.ult});
 }
 function pvpReceberEstado(msg){
   const velho = PV.M;
   if(msg.dlc !== DLC || msg.assoc !== ASSOC){ DLC = msg.dlc; ASSOC = msg.assoc; montarIndice(); }
   if(msg.btc){ const b = typeof msg.btc === "string" ? JSON.parse(msg.btc) : msg.btc; definirBtc(b.pct, b.real); }
+  /* o mundo real do host vale para os dois: a mesma Selic, o mesmo terremoto, a mesma Moscou */
+  if(msg.mundo){ try{ Object.assign(MUNDO, JSON.parse(msg.mundo)); atualizarMundo(); }catch(e){} }
   const M = pvpDes(msg.m);
   if(velho && velho.partida === M.partida){
     ["A","B"].forEach(X => {
