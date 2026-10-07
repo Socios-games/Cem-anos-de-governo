@@ -441,7 +441,8 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .gb-log ul{margin:6px 0 0;padding-left:18px;font-size:.8rem;color:var(--paper-2);line-height:1.6} .gb-log{margin-top:18px}
 .gb-row .gb-vs{white-space:nowrap}
 @media (max-width:860px){.gb-grid{grid-template-columns:1fr}.gb-row{grid-template-columns:2rem minmax(0,1fr) auto minmax(0,1fr) 3.2rem;gap:6px;padding:8px 6px}
-  .gb-row .face{display:none}.gb-dilema{grid-template-columns:1fr}.gb-dilema>.ic{display:none}}
+  .gb-row .face{display:none}.gb-dilema{grid-template-columns:1fr}.gb-dilema>.ic{display:none}
+  .gb-ops .gb-op{flex:1 1 calc(50% - 8px);min-width:0;padding:8px 10px}}
 #rw-detalhe .eyebrow{margin:18px 0 8px}
 .rw-lista{max-height:none}
 .rw-lista .fig[aria-pressed="true"]{background:var(--surface-3);box-shadow:inset 3px 0 0 var(--brass)}
@@ -841,6 +842,16 @@ span.face{
 .pv-cad b{font-family:var(--f-mono);color:var(--oxblood)}
 .pv-cad .face{border-radius:50%}
 .flash-rodadaVitoria{background:radial-gradient(circle,rgba(92,164,130,.95),rgba(20,60,40,.92))}
+.pv-truco .t{font-family:var(--f-disp);font-weight:900;font-size:1.05rem}
+.pv-truco p{font-size:.8rem;color:var(--paper-3);margin:6px 0 0;line-height:1.45}
+.pv-truco.pede .t{color:#E0645A}
+.pv-grampo{margin-top:14px;padding:10px 14px;border:1px dashed var(--brass-lo);border-radius:8px;font-size:.84rem}
+.flash-ofensiva{background:radial-gradient(circle,rgba(230,90,60,.94),rgba(90,20,10,.95))}
+.flash-bloqueio{background:radial-gradient(circle,rgba(150,180,210,.95),rgba(30,50,80,.95))}
+.flash-truco2,.flash-truco3,.flash-truco4{background:radial-gradient(circle,rgba(250,240,220,.97),rgba(150,30,30,.95))}
+.flash-truco2 .ft,.flash-truco3 .ft,.flash-truco4 .ft{color:#5A0E0E;text-shadow:0 0 18px #fff;font-size:clamp(3rem,13vw,6rem)}
+.flash-corro{background:radial-gradient(circle,rgba(220,220,220,.95),rgba(70,70,70,.95))}
+.flash-corro .ft{color:#222;text-shadow:none}
 .flash-rodadaDerrota{background:radial-gradient(circle,rgba(176,74,70,.95),rgba(60,18,16,.92))}
 
 /* ---------- celular ---------- */
@@ -1078,7 +1089,7 @@ button,.campo{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   <div id="pvp-lobby">
     <div class="eyebrow">Um contra o outro</div>
     <h2 style="margin-top:10px">PvP ao vivo</h2>
-    <p class="lede" style="margin-top:10px">Draft em turnos com o mesmo elenco (quem um escala o outro não pega), cada um com o seu regime, e cúpula contra cúpula numa <b>melhor de 7</b>. Entre as rodadas, as cartas de sempre — e a Roleta no lugar de virar a casaca.</p>
+    <p class="lede" style="margin-top:10px">Draft em turnos com o mesmo elenco (quem um escala o outro não pega), cada um com o seu regime, e cúpula contra cúpula até alguém fazer <b>4 pontos</b>. Antes de cada rodada, um <b>plano secreto</b> (onde atacar, onde se proteger) e, se tiver coragem, <b>TRUCO</b>: a rodada passa a valer mais — e o outro aceita, corre ou pede seis. Entre as rodadas, as cartas de sempre; quem perdeu ganha uma a mais.</p>
     <p class="mono" style="font-size:.72rem;color:var(--paper-3);margin-top:10px">Jogando como: <span id="pvp-quem"></span> · nome e regime vêm da tela inicial</p>
     <div class="pvp-grid">
       <div class="pvp-card">
@@ -3424,7 +3435,13 @@ const FLASH = {
   virada:  {ic:"🔄", t:"Virada!"},
   zebra:   {ic:"🦓", t:"Zebra!"},
   rodadaVitoria:{ic:"🏆", t:"Rodada sua"},
-  rodadaDerrota:{ic:"💀", t:"Rodada perdida"}
+  rodadaDerrota:{ic:"💀", t:"Rodada perdida"},
+  ofensiva:{ic:"🎯", t:"Ofensiva!"},
+  bloqueio:{ic:"🛡️", t:"Bloqueou!"},
+  truco2:  {ic:"🃏", t:"Truco!"},
+  truco3:  {ic:"🃏", t:"Seis!"},
+  truco4:  {ic:"🃏", t:"Nove!"},
+  corro:   {ic:"🏃", t:"Correu!"}
 };
 /* quais momentos o duelo teve, na ordem em que aconteceram */
 function flashesDoDuelo(milagre, hk){
@@ -3779,6 +3796,7 @@ function cartaRw(c){
   if(c.t === "pesquisa") return {ic:"📊", n:"Pesquisa Favorável", d:"O instituto é amigo: <b>+" + RW_PESQUISA + " em todas as funções</b>, só na próxima etapa."};
   if(c.t === "dossie") return {ic:"🕵️", n:"O Dossiê", d:"Você sabe demais sobre alguém: <b>o nome mais forte</b> da próxima oposição é afastado antes da etapa."};
   if(c.t === "aposta") return {ic:"🎲", n:"Tudo ou Nada", d:"Cara ou coroa numa função sorteada: <b>+" + RW_APOSTA[0] + " permanentes</b>, ou <b>" + RW_APOSTA[1] + "</b>."};
+  if(c.t === "grampo") return {ic:"🎧", n:"O Grampo", d:"Na próxima rodada você <b>vê o plano do rival</b> assim que o plano for travado — onde vai atacar e o que vai proteger."};
   if(c.t === "reforma") return {ic:"🔄", n:"Reforma Ministerial", d:"Três nomes novos, de qualquer lugar do mapa: um deles pode entrar no lugar de alguém da cúpula."};
   return {ic:"🕊", n:"Anistia", d:"Uma segunda chance guardada: se a cúpula cair, a etapa é rejogada com oposição nova."};
 }
@@ -3867,6 +3885,7 @@ function aplicarCarta(c, entra, sai){
   else if(c.t === "aura") S.auraExtra += RW_AURA;
   else if(c.t === "pesquisa") S.pesquisa = S.etapa;
   else if(c.t === "dossie") S.dossie = S.etapa;
+  else if(c.t === "grampo") S.grampo = S.etapa;
   else if(c.t === "aposta"){
     const rk = ROLES[rnd(ROLES.length)].k, ok = Math.random() < .5, v = RW_APOSTA[ok ? 0 : 1];
     S.treino[rk] = (S.treino[rk] || 0) + v;
@@ -4360,7 +4379,13 @@ $("again").addEventListener("click",()=>{ novoJogo(); show("s-draft"); renderDra
    convidado só manda intenções (girar, escalar, escolher carta). Draft em turnos com o
    elenco compartilhado, cada um com o seu regime, melhor de 7 rodadas cúpula x cúpula,
    e entre rodadas as cartas de sempre, com a Roleta no lugar de virar a casaca. */
-const PVP_RODADAS = 7, PVP_VITORIAS = 4;
+/* v28: primeiro a 4 PONTOS (o truco faz uma rodada valer até 4); PVP_RODADAS é só a trava */
+const PVP_RODADAS = 12, PVP_VITORIAS = 4;
+/* Plano secreto da rodada: Ofensiva numa função do rival (−PLANO_ATQ nela), Escudo numa sua
+   (+PLANO_ESC). Ofensiva no Escudo é bloqueada e volta: −PLANO_CONTRA em quem atacou. */
+const PLANO_ATQ = 8, PLANO_ESC = 3, PLANO_CONTRA = 4;
+/* Truco: 1 → 2 (Truco!) → 3 (Seis!) → 4 (Nove!). Quem corre entrega o valor já aceito. */
+const TRUCO_MAX = 4, TRUCO_NOME = {2:"Truco!", 3:"Seis!", 4:"Nove!"};
 const PV = {on:false, host:false, peer:null, conn:null, eu:"A", M:null,
             vistoSpin:{A:0, B:0}, vistoRodada:-1, animando:false, status:""};
 const outro = X => X === "A" ? "B" : "A";
@@ -4440,13 +4465,14 @@ function pvpProximoTurno(X){
     ["A","B"].forEach(Z => comFrame(Z, () => { S.relOpcoes = reliquiasParaCupula(); S.rels = []; }));
   }
 }
-function sortearRecompensasPvP(){
+function sortearRecompensasPvP(reacao){
   const cartas = [{t:"roleta"}];
   const r = relNova(); if(r) cartas.push({t:"rel", r});
   const rks = shuffle(ROLES.map(r => r.k));
-  const extras = shuffle([{t:"treino", rk:rks[0]}, {t:"aura"}, {t:"pesquisa"}, {t:"aposta"},
+  const extras = shuffle([{t:"treino", rk:rks[0]}, {t:"aura"}, {t:"pesquisa"}, {t:"aposta"}, {t:"grampo"},
                           {t:"reforma", cands:candidatosReforma()}]);
-  const n = relAtiva("fumagalli") ? 4 : 3;
+  /* reação: quem perdeu a rodada leva uma carta a mais na mesa */
+  const n = (relAtiva("fumagalli") ? 4 : 3) + (reacao || 0);
   while(cartas.length < n && extras.length) cartas.push(extras.pop());
   return cartas;
 }
@@ -4491,7 +4517,7 @@ function pvpRodada(){
   for(let i = 0; i < 5 && v < 3 && d < 3; i++){
     const rk = ordem[i];
     const momentos = [...comFrame("A", () => momentosDoDuelo(i, v, d)), ...comFrame("B", () => momentosDoDuelo(i, d, v))];
-    const a = forcaPvP("A", rk, i, v, d), b = forcaPvP("B", rk, i, d, v);
+    const a = forcaPvP("A", rk, i, v, d) + ajPlano("A", rk), b = forcaPvP("B", rk, i, d, v) + ajPlano("B", rk);
     const chanceB = comFrame("B", () => chanceHitKill());
     const res = comFrame("A", () => {
       S.pvpA = a; S.pvpB = b; S.pvpChanceDele = chanceB;
@@ -4505,29 +4531,73 @@ function pvpRodada(){
     if(!res.ganhou && !M.B.nocaute && comFrame("B", () => (pasDe(dele) || {}).k === "nocaute")){
       M.B.nocaute = true; milagres.push("nocaute"); notas.push("🥊 Nocaute de " + dele.s + ": " + M.A.nome + " sente o golpe pelo resto da rodada.");
     }
+    /* o plano secreto, revelado no duelo em que pegou */
+    ["A","B"].forEach(X => {
+      const Y = outro(X), P = M.plano[X], Q = M.plano[Y];
+      if(P.of !== rk) return;
+      if(Q.es === rk){ milagres.push("bloqueio"); notas.push("🛡️ " + M[Y].nome + " estava protegendo " + ROLE[rk].n + ": a ofensiva de " + M[X].nome + " volta, −" + PLANO_CONTRA + "."); }
+      else { milagres.push("ofensiva"); notas.push("🎯 Ofensiva de " + M[X].nome + " em " + ROLE[rk].n + ": −" + PLANO_ATQ + " para " + M[Y].nome + "."); }
+    });
     duelos.push({rk, ev:rnd(EVENTOS[rk].length), a, b, ganhou:res.ganhou, hk, flashes:[...new Set(momentos)].concat(milagres), notas,
-                 pA:(hk || milagres.some(k => k !== "nocaute" && k !== "glitch")) ? null : chance(a, b)});
+                 pA:(hk || milagres.some(k => !["nocaute","glitch","ofensiva","bloqueio"].includes(k))) ? null : chance(a, b)});
     if(res.ganhou) v++; else d++;
   }
-  const venc = v >= 3 ? "A" : "B";
-  M.placar[venc]++;
-  M.A.hist.push({nome:"Rodada " + (r+1), v, d, passou:venc === "A"});
-  M.B.hist.push({nome:"Rodada " + (r+1), v:d, d:v, passou:venc === "B"});
-  M.res = {r, ordem, duelos, v, d, venc,
+  const venc = v >= 3 ? "A" : "B", valor = M.truco.valor;
+  M.placar[venc] += valor;
+  M.A.hist.push({nome:"Rodada " + (r+1), v, d, passou:venc === "A", valor});
+  M.B.hist.push({nome:"Rodada " + (r+1), v:d, d:v, passou:venc === "B", valor});
+  M.res = {r, ordem, duelos, v, d, venc, valor, plano:{A:{...M.plano.A}, B:{...M.plano.B}},
            gab:{A:{...M.A.gab}, B:{...M.B.gab}}, avisos:{A:M.A.aviso || "", B:M.B.aviso || ""},
            extras:{A:pvpAvisosRodada("A"), B:pvpAvisosRodada("B")}};
   M.A.aviso = ""; M.B.aviso = "";
+  pvpPosRodada(venc);
+}
+/* depois de uma rodada (jogada ou corrida): fim de partida, ou cartas — quem perdeu leva uma a mais */
+function pvpPosRodada(venc){
+  const M = PV.M;
   M.rodada++;
   M.prontos = {A:false, B:false};
+  M.plano = null;
   if(M.placar.A >= PVP_VITORIAS || M.placar.B >= PVP_VITORIAS || M.rodada >= PVP_RODADAS){
     M.fase = "fim";
   } else {
     M.fase = "cartas";
     ["A","B"].forEach(X => comFrame(X, () => {
       S.etapa = M.rodada; sortearManchete();
-      S.rw = {cartas:sortearRecompensasPvP(), esc:null, recruta:null, sai:null};
+      S.rw = {cartas:sortearRecompensasPvP(X === venc ? 0 : 1), esc:null, recruta:null, sai:null};
     }));
   }
+}
+/* antes de cada rodada: plano secreto e truco */
+function pvpAbrirPlano(){
+  const M = PV.M;
+  M.fase = "plano";
+  M.prontos = {A:false, B:false};
+  M.plano = {A:{of:null, es:null, ok:false}, B:{of:null, es:null, ok:false}};
+  M.truco = {valor:1, prop:null, pend:null, ult:null, n:0};
+}
+function pvpTalvezRodada(){
+  const M = PV.M;
+  if(M.plano.A.ok && M.plano.B.ok && !M.truco.pend) pvpRodada();
+}
+/* X correu do truco: o outro leva o valor já aceito, e a rodada nem se joga */
+function pvpCorrer(X){
+  const M = PV.M, Y = outro(X), valor = M.truco.valor, r = M.rodada;
+  M.placar[Y] += valor;
+  M[Y].hist.push({nome:"Rodada " + (r+1), v:0, d:0, passou:true, valor, corrida:true});
+  M[X].hist.push({nome:"Rodada " + (r+1), v:0, d:0, passou:false, valor, corrida:true});
+  M.res = {r, corrida:true, quem:X, venc:Y, valor, proposta:M.truco.prop, duelos:[], plano:{A:{...M.plano.A}, B:{...M.plano.B}}};
+  pvpPosRodada(Y);
+}
+/* o que o plano dá ou tira de X numa função */
+function ajPlano(X, rk){
+  const P = PV.M && PV.M.plano; if(!P) return 0;
+  const eu = P[X], ele = P[outro(X)];
+  let v = 0;
+  if(eu.es === rk) v += PLANO_ESC;
+  if(ele.of === rk && eu.es !== rk) v -= PLANO_ATQ;
+  if(eu.of === rk && ele.es === rk) v -= PLANO_CONTRA;
+  return v;
 }
 function pvpAvisosRodada(X){
   return comFrame(X, () => {
@@ -4581,7 +4651,42 @@ function pvpAcao(X, a){
   if(a.t === "ready"){
     if(M.fase !== "final" || !st.rels.length) return false;
     M.prontos[X] = true;
-    if(M.prontos[Y]) pvpRodada();
+    if(M.prontos[Y]) pvpAbrirPlano();
+    return true;
+  }
+  if(a.t === "plano"){
+    const P = M.plano && M.plano[X];
+    if(M.fase !== "plano" || !P || P.ok) return false;
+    if((a.of && !ROLE[a.of]) || (a.es && !ROLE[a.es])) return false;
+    if(a.of) P.of = a.of;
+    if(a.es) P.es = a.es;
+    return true;
+  }
+  if(a.t === "travar"){
+    const P = M.plano && M.plano[X];
+    if(M.fase !== "plano" || !P || !P.of || !P.es || P.ok || M.truco.pend === X) return false;
+    P.ok = true; pvpTalvezRodada();
+    return true;
+  }
+  if(a.t === "truco"){
+    const T = M.truco;
+    if(M.fase !== "plano" || (T.pend && T.pend !== X) || (!T.pend && T.ult === X)) return false;
+    const base = T.pend ? T.prop : T.valor;          /* quem devolve o truco aceita o que veio */
+    if(base >= TRUCO_MAX) return false;
+    if(T.pend) T.valor = T.prop;
+    T.prop = base + 1; T.pend = Y; T.ult = X; T.n++;
+    return true;
+  }
+  if(a.t === "aceito"){
+    const T = M.truco;
+    if(M.fase !== "plano" || T.pend !== X) return false;
+    T.valor = T.prop; T.prop = null; T.pend = null;
+    pvpTalvezRodada();
+    return true;
+  }
+  if(a.t === "corro"){
+    if(M.fase !== "plano" || M.truco.pend !== X) return false;
+    pvpCorrer(X);
     return true;
   }
   if(a.t === "rwSpin"){
@@ -4610,7 +4715,7 @@ function pvpAcao(X, a){
       if(entra) M[Y].usados.push(entra.n);
     }
     st.rw = null; M.prontos[X] = true;
-    if(M.prontos[Y]) pvpRodada();
+    if(M.prontos[Y]) pvpAbrirPlano();
     return true;
   }
   if(a.t === "revanche"){
@@ -4847,6 +4952,8 @@ function pvpBarra(){
     if(M.fase === "draft") st = M.turno === PV.eu ? "Sua vez de escalar" : "Vez de " + R.nome;
     else if(M.fase === "final") st = M.prontos[PV.eu] ? "Esperando " + R.nome + " confirmar" : "Escolha a relíquia e confirme";
     else if(M.fase === "cartas") st = M.prontos[PV.eu] ? "Esperando " + R.nome + " escolher a carta" : "Escolha a sua carta";
+    else if(M.fase === "plano") st = M.truco.pend === PV.eu ? R.nome + " pediu " + TRUCO_NOME[M.truco.prop] + " Responda"
+      : M.truco.pend ? "Esperando " + R.nome + " responder o truco" : M.plano[PV.eu].ok ? "Plano travado · esperando " + R.nome : "Monte o plano da rodada";
     else if(M.fase === "fim") st = "Fim de partida";
   }
   b.hidden = false;
@@ -4863,6 +4970,12 @@ function pvpRender(){
   const M = PV.M;
   S = eu();
   if(M.res && M.res.r !== PV.vistoRodada){ pvpAnimarRodada(M.res); return; }
+  /* truco pedido: a tela cheia aparece para os dois, uma vez por pedido */
+  if(M.fase === "plano" && M.truco.n){
+    const k = M.rodada + ":" + M.truco.n;
+    if(PV.vistoTruco !== k && M.truco.prop){ PV.vistoTruco = k; flashTela("truco" + M.truco.prop); }
+  }
+  if(M.fase === "plano"){ pvpRenderPlano(); return; }
   if(M.fase === "draft" || M.fase === "final"){ if(!$("s-draft").classList.contains("on")) show("s-draft"); pvpRenderDraft(); }
   else if(M.fase === "cartas"){
     if(S.rw){ if(!$("s-reward").classList.contains("on")) show("s-reward"); pvpRenderCartas(); }
@@ -4933,6 +5046,70 @@ function pvpDraftExtras(meuTurno){
       return `<div class="pv-cad" style="--cor:var(--f-${r.k})">${f ? face(f,"sm") : `<span class="face sm">${r.ab}</span>`}
         <div><div class="r">${r.ab}</div><div class="n">${f ? esc(f.s) : "vago"}</div></div><b>${forcas[i] ?? ""}</b></div>`; }).join("")}</div>`;
 }
+/* ---------- o plano secreto e o truco ---------- */
+function pvpChanceRodada(ps){
+  let dp = [1];
+  for(const p of ps){ const n = new Array(dp.length + 1).fill(0); dp.forEach((x, i) => { n[i] += x * (1 - p); n[i + 1] += x * p; }); dp = n; }
+  return dp.slice(3).reduce((a, b) => a + b, 0);
+}
+function pvpRenderPlano(){
+  const M = PV.M, X = PV.eu, Y = outro(X), E = eu(), R = rival(), P = M.plano[X], Q = M.plano[Y], T = M.truco;
+  show("s-pvp");
+  $("pvp-lobby").hidden = true; $("pvp-espera").hidden = false;
+  /* forças sem o plano do rival (que você não conhece), mas com o seu */
+  const linhas = ROLES.map(r => {
+    const a = forcaPvP(X, r.k, 0, 0, 0) + (P.es === r.k ? PLANO_ESC : 0);
+    const b = forcaPvP(Y, r.k, 0, 0, 0) - (P.of === r.k ? PLANO_ATQ : 0);
+    return {r, a, b, p:chance(a, b)};
+  });
+  const ch = pvpChanceRodada(linhas.map(l => l.p));
+  const grampo = E.grampo === M.rodada;
+  const vejo = grampo && Q.ok;
+  const btn = (attr, on, dis, html) => `<button class="gb-op${on ? " on" : ""}" ${attr} ${dis ? "disabled" : ""}>${html}</button>`;
+  const travado = P.ok;
+  let truco = "";
+  if(T.pend === X){
+    truco = `<div class="pv-truco pede"><div class="t">🃏 ${esc(R.nome)} pediu ${TRUCO_NOME[T.prop]}</div>
+      <p>A rodada passa a valer <b>${T.prop} pontos</b>. Se correr, ${esc(R.nome)} leva <b>${T.valor}</b> agora e a rodada nem se joga.</p>
+      <div class="gb-ops">${btn('data-pv="aceito"', false, false, "<b>Aceito</b><span>vale " + T.prop + "</span>")}
+        ${btn('data-pv="corro"', false, false, "<b>Corro</b><span>" + esc(R.nome) + " leva " + T.valor + "</span>")}
+        ${T.prop < TRUCO_MAX ? btn('data-pv="truco"', false, false, "<b>" + TRUCO_NOME[T.prop + 1] + "</b><span>aceita e devolve: vale " + (T.prop + 1) + "</span>") : ""}</div></div>`;
+  } else if(T.pend === Y){
+    truco = `<div class="pv-truco"><div class="t">🃏 Você pediu ${TRUCO_NOME[T.prop]}</div><p>Esperando ${esc(R.nome)} aceitar, correr ou devolver.</p></div>`;
+  } else {
+    const pode = T.ult !== X && T.valor < TRUCO_MAX;
+    truco = `<div class="pv-truco"><div class="t">Esta rodada vale ${T.valor} ${T.valor > 1 ? "pontos" : "ponto"}</div>
+      ${pode ? btn('data-pv="truco"', false, false, "<b>🃏 " + TRUCO_NOME[T.valor + 1] + "</b><span>a rodada passa a valer " + (T.valor + 1) + " se " + esc(R.nome) + " aceitar</span>")
+             : `<p>${T.valor >= TRUCO_MAX ? "Já está no máximo." : "Agora só " + esc(R.nome) + " pode aumentar."}</p>`}</div>`;
+  }
+  $("pvp-espera").innerHTML = `<div class="eyebrow">Rodada ${M.rodada + 1} · primeiro a ${PVP_VITORIAS} pontos · ${M.placar[X]} × ${M.placar[Y]}</div>
+    <h2>Plano da rodada</h2>
+    <p class="lede" style="margin-top:8px">Em segredo: uma <b>ofensiva</b> numa função de ${esc(R.nome)} (−${PLANO_ATQ} nela) e um <b>escudo</b> numa sua (+${PLANO_ESC}). Se a ofensiva cair no escudo de ${esc(R.nome)}, é bloqueada e volta: −${PLANO_CONTRA} em quem atacou. ${esc(R.nome)} está pensando o mesmo de você.</p>
+    <div class="gb-topo"><div class="gb-box"><div class="k">Chance da rodada</div><div class="v ${ch >= .6 ? "bom" : ch < .4 ? "ruim" : ""}">${Math.round(ch * 100)}%</div>
+      <div class="s">com o seu plano, sem saber o de ${esc(R.nome)}</div></div>${`<div class="gb-box">${truco}</div>`}</div>
+    <div class="gb-intel" style="margin-top:18px;max-width:760px">${linhas.map(l => {
+      const meu = E.gab[l.r.k], dele = R.gab[l.r.k], cls = l.p >= .6 ? "bom" : l.p <= .4 ? "ruim" : "";
+      return `<div class="gb-row ${cls}" style="--cor:var(--f-${l.r.k})"><div class="fn">${l.r.ab}</div>
+        <div class="lado">${face(meu,"sm")}<span class="nm">${esc(meu.s)}${P.es === l.r.k ? " 🛡️" : ""}</span></div>
+        <div class="gb-vs"><b>${Math.round(l.a)}</b><span>×</span><b>${Math.round(l.b)}</b></div>
+        <div class="lado dir"><span class="nm">${P.of === l.r.k ? "🎯 " : ""}${esc(dele.s)}</span>${face(dele,"sm")}</div>
+        <div class="pc"><i style="width:${Math.round(l.p * 100)}%"></i><span>${Math.round(l.p * 100)}%</span></div></div>`; }).join("")}</div>
+    <div class="gb-grid">
+      <div><div class="eyebrow">🎯 Ofensiva: onde atacar ${esc(R.nome)}</div><div class="gb-ops">${ROLES.map(r =>
+        btn(`data-of="${r.k}" style="--cor:var(--f-${r.k})"`, P.of === r.k, travado, `<b>${r.n}</b><span>${esc(R.gab[r.k].s)} −${PLANO_ATQ}</span>`)).join("")}</div></div>
+      <div><div class="eyebrow">🛡️ Escudo: o que proteger</div><div class="gb-ops">${ROLES.map(r =>
+        btn(`data-es="${r.k}" style="--cor:var(--f-${r.k})"`, P.es === r.k, travado, `<b>${r.n}</b><span>${esc(E.gab[r.k].s)} +${PLANO_ESC}</span>`)).join("")}</div></div>
+    </div>
+    ${grampo ? `<div class="pv-grampo">🎧 <b>Grampo:</b> ${vejo ? esc(R.nome) + " vai atacar <b>" + ROLE[Q.of].n + "</b> e proteger <b>" + ROLE[Q.es].n + "</b>." : "assim que " + esc(R.nome) + " travar, você ouve o plano dele aqui."}</div>` : ""}
+    <p class="gb-nota">${Q.ok ? "✔ " + esc(R.nome) + " já travou o plano." : "⏳ " + esc(R.nome) + " ainda está planejando."}</p>
+    <div class="acao"><button class="btn" data-pv="travar" ${!P.of || !P.es || travado || T.pend === X ? "disabled" : ""}>${travado ? "Plano travado · esperando " + esc(R.nome) : !P.of || !P.es ? "Escolha a ofensiva e o escudo" : "Travar o plano"}</button></div>`;
+  $("pvp-espera").querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    const d = b.dataset;
+    if(d.of) pvpIntent({t:"plano", of:d.of});
+    else if(d.es) pvpIntent({t:"plano", es:d.es});
+    else if(d.pv) pvpIntent({t:d.pv});
+  }));
+}
 function pvpRenderCartas(){
   const M = PV.M;
   $("rw-etapa").textContent = "Entre rodadas · a próxima é a rodada " + (M.rodada + 1);
@@ -4945,15 +5122,33 @@ function pvpRenderCartas(){
 function pvpAnimarRodada(res){
   PV.animando = true;
   const M = PV.M, souA = PV.eu === "A", E = eu(), R = rival();
+  if(res.corrida){
+    /* alguém correu do truco: não tem duelo, só o placar andando */
+    const fui = res.quem === PV.eu;
+    show("s-stage");
+    $("st-etapa").textContent = "PvP · primeiro a " + PVP_VITORIAS + " pontos";
+    $("st-anos").textContent = ""; $("st-title").textContent = "Rodada " + (res.r + 1);
+    $("st-myname").textContent = E.nome; $("st-opname").textContent = R.nome;
+    $("sc-a").textContent = M.placar[PV.eu]; $("sc-b").textContent = M.placar[outro(PV.eu)];
+    ["st-next","st-retry","st-ress","st-vida","st-stop"].forEach(id => $(id).style.display = "none");
+    $("arena").innerHTML = `<p class="lede" style="text-align:center;font-size:1.2rem">🏃 ${fui ? "Você correu" : esc(R.nome) + " correu"} do ${TRUCO_NOME[res.proposta]} — ${fui ? esc(R.nome) + " leva" : "você leva"} <b>${res.valor} ${res.valor > 1 ? "pontos" : "ponto"}</b> sem jogar.</p>`;
+    flashTela("corro");
+    const btn = $("st-next"); btn.style.display = "";
+    btn.textContent = M.fase === "fim" ? "Ver o resultado" : "Escolher carta";
+    btn.onclick = () => { PV.vistoRodada = res.r; PV.animando = false; pvpRender(); };
+    return;
+  }
   const meuGab = res.gab[PV.eu], deleGab = res.gab[outro(PV.eu)];
   show("s-stage");
-  $("st-etapa").textContent = "PvP · melhor de " + PVP_RODADAS;
+  $("st-etapa").textContent = "PvP · primeiro a " + PVP_VITORIAS + " pontos" + (res.valor > 1 ? " · 🃏 rodada valendo " + res.valor : "");
   $("st-anos").textContent = "";
   $("st-title").textContent = "Rodada " + (res.r + 1);
   $("st-myname").textContent = E.nome; $("st-opname").textContent = R.nome;
   $("sc-a").textContent = "0"; $("sc-b").textContent = "0";
   ["st-next","st-retry","st-ress","st-vida","st-stop"].forEach(id => $(id).style.display = "none");
-  const av = [].concat(res.extras[PV.eu] || [], res.avisos[PV.eu] ? [res.avisos[PV.eu]] : []);
+  const pm = res.plano[PV.eu], pr = res.plano[outro(PV.eu)];
+  const av = [].concat(res.extras[PV.eu] || [], res.avisos[PV.eu] ? [res.avisos[PV.eu]] : [],
+    ["🎯 Você atacou " + ROLE[pm.of].n + " e protegeu " + ROLE[pm.es].n + ". " + R.nome + " atacou " + ROLE[pr.of].n + " e protegeu " + ROLE[pr.es].n + "."]);
   $("arena").innerHTML = (av.length ? `<p class="lede" style="margin:0 0 6px">${av.map(esc).join(" ")}</p>` : "") +
     res.duelos.map((dz, i) => {
       const meu = meuGab[dz.rk], dele = deleGab[dz.rk], ev = EVENTOS[dz.rk][dz.ev];
@@ -4971,7 +5166,8 @@ function pvpAnimarRodada(res){
       const ganhei = res.venc === PV.eu;
       const btn = $("st-next"); btn.style.display = "";
       const acabou = M.fase === "fim";
-      btn.textContent = acabou ? "Ver o resultado" : (ganhei ? "Rodada sua · escolher carta" : "Rodada de " + R.nome + " · escolher carta");
+      const pts = res.valor > 1 ? " (+" + res.valor + ")" : "";
+      btn.textContent = acabou ? "Ver o resultado" : (ganhei ? "Rodada sua" + pts + " · escolher carta" : "Rodada de " + R.nome + pts + " · escolher carta");
       btn.onclick = () => { PV.vistoRodada = res.r; PV.animando = false; pvpRender(); };
       flashTela(ganhei ? "rodadaVitoria" : "rodadaDerrota");
       mostrar(btn);
@@ -5017,16 +5213,16 @@ function pvpAnimarRodada(res){
   setTimeout(passo, 600);
 }
 function pvpFim(){
-  const M = PV.M, ganhei = M.placar[PV.eu] > M.placar[outro(PV.eu)];
+  const M = PV.M, ganhei = M.placar[PV.eu] > M.placar[outro(PV.eu)], empate = M.placar[PV.eu] === M.placar[outro(PV.eu)];
   show("s-pvp");
   $("pvp-lobby").hidden = true; $("pvp-espera").hidden = false;
   const E = eu(), R = rival();
   $("pvp-espera").innerHTML = `<div class="verdict">
       <div class="eyebrow dim">Fim da partida</div>
-      <div class="grade">${ganhei ? "VITÓRIA" : "DERROTA"}</div>
+      <div class="grade">${empate ? "EMPATE" : ganhei ? "VITÓRIA" : "DERROTA"}</div>
       <div class="years">${esc(E.nome)} <b>${M.placar[PV.eu]}</b> × <b>${M.placar[outro(PV.eu)]}</b> ${esc(R.nome)}</div>
     </div>
-    <div class="track">${E.hist.map(h => `<div class="track-cell ${h.passou ? "win" : "loss"}"><div class="k">${esc(h.nome)}</div><div class="m">${h.passou ? "✓" : "✕"}</div><div class="s">${h.v}–${h.d}</div></div>`).join("")}</div>
+    <div class="track">${E.hist.map(h => `<div class="track-cell ${h.passou ? "win" : "loss"}"><div class="k">${esc(h.nome)}</div><div class="m">${h.passou ? "✓" : "✕"}${h.valor > 1 ? "<small>×" + h.valor + "</small>" : ""}</div><div class="s">${h.corrida ? "correu" : h.v + "–" + h.d}</div></div>`).join("")}</div>
     <div class="acao"><button class="btn" id="pvp-revanche">Revanche</button><button class="btn btn-alt" id="pvp-sair2">Sair</button></div>`;
   $("pvp-revanche").onclick = () => { $("pvp-revanche").disabled = true; $("pvp-revanche").textContent = "Pedindo revanche…"; pvpIntent({t:"revanche"}); };
   $("pvp-sair2").onclick = pvpSair;
