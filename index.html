@@ -440,6 +440,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 #gb-detalhe{margin-top:14px} #gb-detalhe .eyebrow{margin:12px 0 8px}
 .gb-log ul{margin:6px 0 0;padding-left:18px;font-size:.8rem;color:var(--paper-2);line-height:1.6} .gb-log{margin-top:18px}
 .gb-row .gb-vs{white-space:nowrap}
+.gb-row.so{grid-template-columns:2.6rem minmax(0,1fr) auto}
 .gb-row.bom .gb-vs b:first-child{color:var(--jade)} .gb-row.ruim .gb-vs b:first-child{color:var(--oxblood)}
 .gb-box .v.gb-et{font-size:1.3rem;margin-top:8px}
 .gb-acao.nova{animation:gb-nova .7s ease-out}
@@ -1139,11 +1140,11 @@ button,.campo{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
     <div class="mono" style="font-size:.7rem;color:var(--paper-3)" id="gb-anos"></div>
   </div>
   <h2>O Gabinete</h2>
-  <p class="lede" style="margin-top:10px">A próxima oposição já está escalada. Na pauta, quatro ofertas: comprou uma, aparece outra. O capital que você não gastar rende juros — guarde para a hora certa. E os ministros cansam a cada etapa.</p>
+  <p class="lede" style="margin-top:10px">Quem vem do outro lado, você só descobre quando a etapa começar. Na pauta, quatro ofertas: comprou uma, aparece outra. O capital que você não gastar rende juros — guarde para a hora certa. E os ministros cansam a cada etapa.</p>
   <div class="gb-topo"><div class="gb-box" id="gb-cp"></div><div class="gb-box" id="gb-chance"></div></div>
   <div class="rw-manchete gb-dilema" id="gb-dilema"></div>
   <div class="gb-grid">
-    <div><div class="eyebrow">A próxima oposição, duelo por duelo</div><div id="gb-intel" class="gb-intel"></div></div>
+    <div><div class="eyebrow">Sua cúpula, cadeira por cadeira</div><div id="gb-intel" class="gb-intel"></div></div>
     <div><div class="eyebrow">A pauta · comprou, entra outra no lugar</div><div id="gb-acoes" class="gb-acoes"></div><div id="gb-detalhe"></div></div>
   </div>
   <div id="gb-log" class="gb-log"></div>
@@ -3935,7 +3936,7 @@ const ACOES = {
   remanejar:{ic:"🔀", n:"Remanejar",          custo:1, fixo:true, d:() => "<b>Troque dois ministros de cadeira</b> para encaixar melhor contra quem vem."},
   aura:     {ic:"🎙️", n:"Horário Nobre",      custo:4, d:() => "<b>+1,5 permanentes</b> na aura do seu chefe — vale nas quatro pastas."},
   pesquisa: {ic:"📊", n:"Pesquisa Favorável", custo:3, umaVez:true, d:() => "<b>+6 em tudo</b>, só na próxima etapa."},
-  dossie:   {ic:"🕵️", n:"O Dossiê",           custo:4, umaVez:true, d:() => { const f = maisForteOp(); return "Afasta <b>" + (f ? esc(f.s) : "o mais forte") + "</b> da próxima oposição; entra o reserva."; }},
+  dossie:   {ic:"🕵️", n:"O Dossiê",           custo:4, umaVez:true, d:() => "Afasta <b>o nome mais forte</b> da próxima oposição antes de ela entrar; entra o reserva."},
   recruta:  {ic:"🤝", n:"Virar a Casaca",     custo:4, umaVez:true, d:() => "Alguém da oposição que você acabou de derrotar <b>troca de lado</b> e entra no lugar de um ministro."},
   reforma:  {ic:"🔄", n:"Reforma Ministerial",custo:3, umaVez:true, d:() => "Três nomes novos de qualquer lugar do mapa: <b>um pode entrar</b> no lugar de um ministro."},
   rel:      {ic:"🏺", n:"Relíquia",           custo:5, umaVez:true, d:() => { const r = S.gb && S.gb.rel; return r ? r.ic + " <b>" + esc(r.n) + "</b>: " + r.ef : "Nenhuma relíquia à vista."; }},
@@ -4190,17 +4191,17 @@ function desgSelo(f){
   const d = desgDe(f);
   return d ? `<span class="gb-desg" title="desgaste: −${num(d * DESG_PESO, 1)} em tudo">😮‍💨${d}</span>` : "";
 }
+/* v30: a oposição que vem fica em segredo até a etapa começar — o Gabinete mostra só a sua
+   cúpula. Ela já está montada por trás (o Dossiê tira alguém dela), mas você não vê quem. */
 function intelHTML(){
   return ROLES.map(r => {
-    const meu = S.gab[r.k], dele = S.op[r.k], a = forca(S.gab, r.k), b = forca(S.op, r.k);
-    const cls = a - b >= 4 ? "bom" : b - a >= 4 ? "ruim" : "";
-    return `<div class="gb-row ${cls}" style="--cor:var(--f-${r.k})">
+    const meu = S.gab[r.k];
+    return `<div class="gb-row so" style="--cor:var(--f-${r.k})">
       <div class="fn">${r.ab}</div>
       <div class="lado">${face(meu,"sm")}<span class="nm">${esc(meu.s)} ${desgSelo(meu)}</span></div>
-      <div class="gb-vs"><b>${Math.round(a)}</b><span>×</span><b>${Math.round(b)}</b></div>
-      <div class="lado dir"><span class="nm">${esc(dele.s)}</span>${face(dele,"sm")}</div>
+      <div class="gb-vs"><b>${Math.round(forca(S.gab, r.k))}</b></div>
     </div>`;
-  }).join("") + (S.afastados && S.afastados.length ? `<p class="gb-nota">Fora da oposição: ${S.afastados.map(a => esc(a.fig.s)).join(", ")}.</p>` : "");
+  }).join("") + (S.gb && S.gb.feitas.dossie ? `<p class="gb-nota">🕵️ O dossiê já tirou alguém da próxima oposição. Quem, você descobre na etapa.</p>` : "");
 }
 /* em vez de chance, a força que fica na cadeira: "84 → 88" */
 function forcaDepois(fn, rks){
