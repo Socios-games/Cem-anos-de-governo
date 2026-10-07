@@ -323,6 +323,13 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .flash-inverno{background:radial-gradient(circle,rgba(220,240,255,.95),rgba(90,130,180,.92))}
 .flash-inverno .ft{color:#14304F;text-shadow:0 0 18px rgba(255,255,255,.8)}
 .flash-danca{background:radial-gradient(circle,rgba(240,90,160,.94),rgba(70,10,50,.95))}
+.flash-chamas{background:radial-gradient(circle,rgba(255,150,40,.95),rgba(120,20,0,.95))}
+.flash-salto{background:radial-gradient(circle,rgba(220,40,40,.94),rgba(110,80,0,.94))}
+.flash-raio{background:radial-gradient(circle,rgba(250,250,200,.96),rgba(40,50,90,.95))}
+.flash-raio .ft{color:#1A1F3A;text-shadow:0 0 22px #fff}
+.flash-armada{background:radial-gradient(circle,rgba(90,150,200,.94),rgba(10,30,60,.95))}
+.flash-idos{background:radial-gradient(circle,rgba(160,20,30,.95),rgba(30,0,0,.96))}
+.flash-yes{background:radial-gradient(circle,rgba(70,120,220,.94),rgba(150,20,40,.92))}
 .flash-greve17,.flash-maio{background:radial-gradient(circle,rgba(30,30,30,.94),rgba(150,20,20,.94))}
 .pas-box .hoje,.pas-l .hoje{display:block;margin-top:4px;opacity:.9}
 .flash-cura{background:radial-gradient(circle,rgba(160,240,210,.95),rgba(40,150,120,.9))}
@@ -1758,7 +1765,8 @@ function etapaAtual(){
    o modo DLC ficar só um pouco mais fácil que o jogo limpo. Na monarquia vale mais porque
    a aura dobrada de um chefe do DLC (Jesus, Naruto, Lúcifer) desequilibra. */
 /* calibragem separada com e sem DLC, alvo ~5% de vitória em cada regime */
-const BASE_FORTE = {dem:0.5, dit:0, mon:-2};
+/* v26: +1,25 em cada regime para compensar as passivas novas do jogo base (simulação) */
+const BASE_FORTE = {dem:1.75, dit:1.25, mon:-0.75};
 const DLC_FORTE = {dem:1.5, dit:0, mon:2};
 function escalada(){
   const dl = (S.dlc ? DLC_FORTE[S.reg] : 0) + BASE_FORTE[S.reg];
@@ -1815,6 +1823,32 @@ const PASSIVAS = {
   "Luiz Inácio Lula da Silva":{k:"polarL", ic:"📈", n:"Polarização", d:"Quem foi <b>mais lido na Wikipédia ontem</b>, Lula ou Bolsonaro, ganha <b>+6 em tudo</b>; quem perdeu a audiência, +1. Com os dois na cúpula, a briga trava a Articulação (−6)."},
   "Jair Bolsonaro":     {k:"polarB",    ic:"📉", n:"Polarização", d:"Quem foi <b>mais lido na Wikipédia ontem</b>, Bolsonaro ou Lula, ganha <b>+6 em tudo</b>; quem perdeu a audiência, +1. Com os dois na cúpula, a briga trava a Articulação (−6)."},
   "Barão de Mauá":      {k:"juros",     ic:"🏦", n:"Banqueiro do Império", d:"Banqueiro gosta de juro alto: <b>+1 em Economia por ponto da Selic de hoje acima de 6%</b> (até +8)."},
+  /* v26: mais mundo real — clima e fuso de outras cidades, datas da história */
+  "Vladimir Putin":     {k:"gas",       ic:"🔥", n:"A Torneira do Gás", d:"Quanto mais frio em <b>Berlim agora</b>, mais a Europa depende dele: <b>+1 em tudo por grau abaixo de 12 °C</b> (até +8)."},
+  "Ramsés II":          {k:"ra",        ic:"☀️", n:"Filho de Rá", d:"O sol de <b>Luxor agora</b> é a força dele: <b>+1 em tudo a cada 4 °C acima de 10 °C</b> (até +8)."},
+  "Benjamin Franklin":  {k:"pipa",      ic:"🪁", n:"A Pipa e o Raio", d:"Olha o céu da <b>Filadélfia agora</b>: com <b>tempestade, +12 em Desenvolvimento e +4 no resto</b>; com chuva, +6 em Desenvolvimento; sem chuva, +1 em Desenvolvimento a cada 5 km/h de vento."},
+  "Elizabeth I":        {k:"armada",    ic:"🌊", n:"O Vento Protestante", d:"O vento afundou a Invencível Armada: a oposição perde <b>1 em Guerra a cada 3 km/h de vento agora em Londres</b> (até −10)."},
+  "Luís XIV":           {k:"reisol",    ic:"🌞", n:"O Rei Sol", d:"Com <b>sol em Versalhes</b> (relógio de Paris, das 7h às 19h), <b>+6 em tudo</b>. De noite o rei dorme: −2."},
+  "Harun al-Rashid":    {k:"milnoites", ic:"🪔", n:"As Mil e Uma Noites", d:"Quando é <b>noite em Bagdá</b> (19h às 5h de lá), Xerazade conta histórias: <b>+6 em tudo e +3 na aura</b>. De dia, +1."},
+  "Júlio César":        {k:"venividi",  ic:"🗡️", n:"Veni, Vidi, Vici", d:"<b>+6 nos três primeiros duelos</b> de cada etapa. Mas cuidado com os <b>Idos de Março</b>: se hoje for 15 de março no calendário de verdade, ele é esfaqueado e a cadeira joga vazia."},
+  "Tiradentes":         {k:"martir",    ic:"🪢", n:"Mártir da Inconfidência", d:"Se ele <b>perde o duelo dele</b>, vira mártir: <b>+6 em tudo</b> para a cúpula pelo resto da etapa. E no <b>21 de abril</b> de verdade, +10 em tudo o dia inteiro."},
+  "Alexandre, o Grande":{k:"jovem",     ic:"🏹", n:"Morreu aos 32", d:"Começa conquistando o mundo e se apaga: <b>+10, +7, +4, 0 e −4</b> em tudo, etapa por etapa."},
+  "Gengis Khan":        {k:"horda",     ic:"🐎", n:"A Horda", d:"Cada <b>duelo de Guerra vencido</b> na partida engrossa a horda: <b>+2 em tudo</b>, acumulando até +12."},
+  "Nero":               {k:"chamas",    ic:"🎻", n:"Roma em Chamas", d:"Se é para perder, que queime tudo: depois do <b>primeiro duelo perdido</b> na etapa, a oposição perde <b>6 em tudo</b> até o fim dela."},
+  "Cleópatra VII":      {k:"seducao",   ic:"🐍", n:"Sedução", d:"O chefe da oposição se apaixona: <b>a aura dele zera e metade dela vem para o seu lado</b>."},
+  "Nicolau Maquiavel":  {k:"dividir",   ic:"🦊", n:"Dividir para Reinar", d:"Antes de cada etapa, as <b>duas melhores pastas da oposição trocam de cadeira</b> e jogam fora de posição."},
+  "Deng Xiaoping":      {k:"gato",      ic:"🐈", n:"Gato Preto, Gato Branco", d:"Não importa a cor do gato: <b>ninguém da sua cúpula perde pela afinidade de regime</b>."},
+  "Dilma Rousseff":     {k:"pedalada",  ic:"🚲", n:"Pedalada", d:"<b>+10 em Economia nas duas primeiras etapas</b>. Da terceira em diante, a conta chega: <b>−8 em Economia</b>."},
+  "Fernando Collor":    {k:"confisco",  ic:"🏧", n:"O Confisco", d:"Confisca a poupança da oposição: <b>ela perde 8 em Economia</b>. O preço: −4 em Articulação."},
+  "Mao Tsé-Tung":       {k:"salto",     ic:"🎲", n:"O Grande Salto", d:"Antes de cada etapa, cara ou coroa: <b>+10 em tudo</b> ou <b>−6 em tudo</b>."},
+  "Mahatma Gandhi":     {k:"satyagraha",ic:"🕊️", n:"Não Violência", d:"A guerra perde o sentido: a oposição perde <b>10 em Guerra</b>, e a sua Guerra perde 4."},
+  "Marco Aurélio":      {k:"estoico",   ic:"📜", n:"Meditações", d:"Estoico: <b>nada de negativo pega na cadeira dele</b>, e com a etapa perdendo no placar, <b>+4 em tudo</b>."},
+  "Barack Obama":       {k:"yeswecan",  ic:"🗳️", n:"Yes We Can", d:"Embalo: <b>+2 em tudo para cada duelo já vencido</b> na etapa."},
+  "Francis Drake":      {k:"corsario",  ic:"🏴‍☠️", n:"Corsário da Rainha", d:"Cada duelo vencido na etapa é um galeão saqueado: a oposição perde <b>3 em Economia por vitória sua</b>."},
+  "Xi Jinping":         {k:"mandato",   ic:"♾️", n:"Sem Limite de Mandato", d:"<b>+2 em tudo</b>, e no modo sem fim <b>+3 a mais por etapa extra</b>: ele não sai nunca."},
+  "Pedro, o Grande":    {k:"janela",    ic:"🪟", n:"Janela para o Ocidente", d:"<b>+2 em tudo para cada figura ocidental</b> na cúpula (França, Britânia, Alemanha, Espanha, Itália, Estados Unidos)."},
+  "Cícero":             {k:"catilina",  ic:"🏛️", n:"Catilinárias", d:"Quousque tandem? A <b>aura do chefe da oposição cai 5</b> e ela perde 3 em Articulação."},
+  "Mansa Musa":         {k:"ouro",      ic:"🪙", n:"A Peregrinação do Ouro", d:"Espalha ouro por onde passa: <b>+3 em tudo para cada relíquia</b> na mesa da cúpula."},
   /* Anarquismo */
   "Mikhail Bakunin":    {k:"destruicao", ic:"🌋", n:"Paixão Destruidora", d:"\"A paixão pela destruição é uma paixão criadora.\" O <b>maior terremoto do planeta nas últimas 24 h</b> sacode a oposição: <b>−2 em tudo por grau acima de 4</b> (até −10)."},
   "Pierre-Joseph Proudhon":{k:"roubo",  ic:"💸", n:"A Propriedade É um Roubo", d:"Odeia juros: quanto mais alta a <b>Selic de hoje</b>, mais o povo ouve ele. <b>+1 em tudo a cada 2 pontos acima de 7%</b>, e o dobro em Economia."},
@@ -1844,6 +1878,8 @@ const PASSIVAS = {
   "ANUSCU":             {k:"missingno", ic:"🎒", n:"Item Duplicado", d:"+4 em todas as funções. Se ele abandonar o grupo, o save buga a seu favor: <b>a oposição perde 6 em tudo</b> naquela etapa. Com <b>Eduardo Lopes</b> na cúpula ele abandona bem mais (+20% por etapa)."},
   "Matheus Oliveira":   {k:"greve",     ic:"✊", n:"Greve Geral", d:"A oposição perde 4 em Economia."}
 };
+/* Janela para o Ocidente (Pedro, o Grande) */
+const OCIDENTE = new Set(["França","Império Britânico","Alemanha","Espanha","Itália","Estados Unidos"]);
 /* Religião do Amor (Maria Lacerda de Moura) conta as mulheres da cúpula */
 const MULHERES = new Set(["Princesa Isabel","Dilma Rousseff","Virgínia Fonseca","Cleópatra VII","Hatshepsut","Boudica",
   "Joana d'Arc","Elizabeth I","Rainha Vitória","Margaret Thatcher","Catarina, a Grande","Angela Merkel","Wu Zetian",
@@ -1885,8 +1921,9 @@ function bonusPas(rk){
   if(temPas("cinquenta") && S.etapa === 0) v += 8;
   if(temPas("instituicoes") && (rk === "eco" || rk === "des")) v += 6;
   if(temPas("sannin") && rk === "gue") v += 8;
-  /* Metrônomo: nada de negativo pega na cadeira do Alexandre */
-  const imune = relAtiva("metronomo") && S.gab[rk] && S.gab[rk].n === "Alexandre Almeida";
+  /* Metrônomo: nada de negativo pega na cadeira do Alexandre; Meditações, na do Marco Aurélio */
+  const imune = (relAtiva("metronomo") && S.gab[rk] && S.gab[rk].n === "Alexandre Almeida") ||
+                (temPas("estoico") && S.gab[rk] && S.gab[rk].n === "Marco Aurélio");
   const neg = x => imune ? 0 : x;
   if(temPas("ganancia") && (rk === "lid" || rk === "arp")) v += neg(-5);
   if(temPas("missingno")) v += 4;
@@ -1927,6 +1964,22 @@ function bonusPas(rk){
   if(temPas("barricada") && !MUNDO.paris.chuva && (rk === "arp" || rk === "lid")) v += 5;
   if(temPas("coluna")) v += (rk === "gue" ? 6 : 2) * contaNaCupula(f => f.e === "Anarquismo");
   if(temPas("internacional")) v += 3;
+  /* v26 */
+  if(temPas("gas")) v += MR.gas();
+  if(temPas("ra")) v += MR.ra();
+  if(temPas("pipa")){ const x = MR.pipa(); v += rk === "des" ? x.des : x.resto; }
+  if(temPas("reisol")) v += MR.reisol() ? 6 : neg(-2);
+  if(temPas("milnoites")) v += MR.milnoites() ? 6 : 1;
+  if(temPas("martir")){ if(S.martir) v += 6; if(diaDeTiradentes()) v += 10; }
+  if(temPas("jovem")){ const x = [10, 7, 4, 0, -4][Math.min(S.etapa, 4)]; v += x < 0 ? neg(x) : x; }
+  if(temPas("horda")) v += Math.min(12, 2 * (S.horda || 0));
+  if(temPas("pedalada") && rk === "eco") v += S.etapa < 2 ? 10 : neg(-8);
+  if(temPas("confisco") && rk === "arp") v += neg(-4);
+  if(temPas("salto")) v += S.salto ? 10 : neg(-6);
+  if(temPas("satyagraha") && rk === "gue") v += neg(-4);
+  if(temPas("mandato")) v += 2 + (semFim() ? 3 * (S.etapa - ETAPAS.length + 1) : 0);
+  if(temPas("janela")) v += 2 * contaNaCupula(f => OCIDENTE.has(f.e));
+  if(temPas("ouro")) v += 3 * S.rels.length;
   if(temPas("lacerda")) v += 2 * contaNaCupula(f => MULHERES.has(f.n));
   /* Ajuda Mútua: quem está abaixo da média da cúpula sobe até ela (lê a base, como Wu Wei) */
   if(temPas("mutua") && S.gab[rk]){
@@ -1948,6 +2001,9 @@ function bonusPas(rk){
     if(relAtiva("prato") && dz.i === 0) v += 6;
     if(temPas("blitz")) v += dz.i < 2 ? 10 : dz.i >= 3 ? neg(-3) : 0;
     if(relAtiva("timao") && dz.d === 2) v += 4;
+    if(temPas("venividi") && dz.i < 3) v += 6;
+    if(temPas("estoico") && dz.d > dz.v) v += 4;
+    if(temPas("yeswecan")) v += 2 * dz.v;
   }
   return v;
 }
@@ -1964,6 +2020,12 @@ function penalOp(rk){
   if(temPas("fedor")) v += 5;
   if(S.nocaute) v += 4;
   if(temPas("destruicao")) v += MR.destruicao();
+  if(temPas("armada") && rk === "gue") v += MR.armada();
+  if(temPas("chamas") && S.duelo && S.duelo.d > 0) v += 6;
+  if(temPas("confisco") && rk === "eco") v += 8;
+  if(temPas("satyagraha") && rk === "gue") v += 10;
+  if(temPas("corsario") && rk === "eco" && S.duelo) v += 3 * S.duelo.v;
+  if(temPas("catilina") && rk === "arp") v += 3;
   if(temPas("barricada") && MUNDO.paris.chuva && rk === "gue") v += 6;
   if(temPas("greve17") && (rk === "eco" || rk === "des")) v += MR.greve17();
   /* A Internacional: as sinergias da oposição não valem (só as que ajudam; o racha continua) */
@@ -2077,6 +2139,8 @@ const entre = (a, b, sal) => a + (b - a) * hashDia(sal);
 const limita = (x, a, b) => Math.max(a, Math.min(b, x));
 /* média de Moscou por mês: o palpite do General Inverno não sai absurdo nem sem rede */
 const MOSCOU_MES = [-6.5,-6.7,-1,6.7,13.2,17,19.2,17,11.3,5.6,-1.2,-5.2];
+const BERLIM_MES = [0.6,1.4,4.8,9.8,14.3,17.4,19.6,19,14.9,9.9,5.1,1.7];
+const LUXOR_MES  = [15,17,21,26,30,32,33,32,30,26,20,16];
 const MUNDO = {
   dolar:  {v:+entre(-1.2, 1.2, "dolar").toFixed(2), real:false},     /* variação do dólar em reais hoje, % */
   selic:  {v:+entre(10.5, 15, "selic").toFixed(2), real:false},      /* meta Selic, % ao ano */
@@ -2085,6 +2149,10 @@ const MUNDO = {
   estepe: {v:Math.round(entre(4, 32, "estepe")), real:false},          /* vento em Huliaipole, km/h */
   paris:  {chuva:hashDia("paris") < .3, real:false},
   petro:  {nuvens:Math.round(entre(0, 100, "petro")), real:false},     /* cobertura de nuvens em Petrópolis, % */
+  berlim: {v:Math.round(BERLIM_MES[new Date().getMonth()] + entre(-4, 4, "berlim")), real:false},
+  luxor:  {v:Math.round(LUXOR_MES[new Date().getMonth()] + entre(-4, 4, "luxor")), real:false},
+  filad:  {tempestade:hashDia("raio") < .08, chuva:hashDia("filad") < .3, vento:Math.round(entre(3, 30, "filadv")), real:false},
+  londres:{vento:Math.round(entre(5, 35, "londres")), real:false},
   wiki:   {lula:Math.round(entre(3000, 9000, "lula")), bolso:Math.round(entre(3000, 9000, "bolso")),
            anarq:Math.round(entre(400, 2000, "anarq")), real:false}
 };
@@ -2098,6 +2166,11 @@ function luaHoje(){
   return {ilum, nome};
 }
 const noiteBR = h => h >= 19 || h < 5;
+/* hora local de outro lugar do mundo, pelo fuso do navegador (Paris e Bagdá) */
+const horaEm = tz => +new Intl.DateTimeFormat("en-GB", {timeZone:tz, hour:"numeric", hourCycle:"h23"}).format(new Date());
+const hojeBR = () => { const d = agoraBR(); return {dia:d.getUTCDate(), mes:d.getUTCMonth() + 1}; };
+const idosDeMarco = () => { const h = hojeBR(); return h.dia === 15 && h.mes === 3; };
+const diaDeTiradentes = () => { const h = hojeBR(); return h.dia === 21 && h.mes === 4; };
 const expedienteBR = () => { const d = agoraBR(), w = d.getUTCDay(), h = d.getUTCHours(); return w >= 1 && w <= 5 && h >= 8 && h < 18; };
 function diasAteMaio(){
   const d = agoraBR(), y = d.getUTCFullYear(), hoje = Date.UTC(y, d.getUTCMonth(), d.getUTCDate());
@@ -2127,7 +2200,14 @@ const MR = {
   estepe:   () => limita(Math.round(MUNDO.estepe.v / 3), 0, 12),
   maio:     () => Math.max(0, 10 - Math.floor(diasAteMaio() / 18)),
   greve17:  () => expedienteBR() ? 7 : 2,
-  verbete:  () => limita(Math.round(MUNDO.wiki.anarq / 250), 0, 8)
+  verbete:  () => limita(Math.round(MUNDO.wiki.anarq / 250), 0, 8),
+  gas:      () => limita(Math.round(12 - MUNDO.berlim.v), 0, 8),
+  ra:       () => limita(Math.round((MUNDO.luxor.v - 10) / 4), 0, 8),
+  pipa:     () => { const f = MUNDO.filad;
+    return f.tempestade ? {des:12, resto:4} : f.chuva ? {des:6, resto:0} : {des:limita(Math.round(f.vento / 5), 0, 6), resto:0}; },
+  armada:   () => limita(Math.round(MUNDO.londres.vento / 3), 0, 10),
+  reisol:   () => { const h = horaEm("Europe/Paris"); return h >= 7 && h < 19; },
+  milnoites:() => noiteBR(horaEm("Asia/Baghdad"))
 };
 const sinal = x => (x > 0 ? "+" : x < 0 ? "−" : "±") + Math.abs(x);
 const num = (x, c) => x.toFixed(c).replace(".", ",");
@@ -2152,6 +2232,16 @@ const MR_HOJE = {
   "Louise Michel":      () => (MUNDO.paris.chuva ? "chove em Paris → <b>oposição −6 em Guerra</b>" : "tempo firme em Paris → <b>+5 em Articulação e Liderança</b>") + palpite(MUNDO.paris) + ".",
   "Lucy Parsons":       () => Math.round(diasAteMaio()) + " dias do 1º de Maio → <b>" + sinal(MR.maio()) + " em tudo</b>.",
   "Edgard Leuenroth":   () => (expedienteBR() ? "fábricas abertas, greve geral" : "fora do expediente") + " → <b>oposição " + sinal(-MR.greve17()) + " em Economia e Desenvolvimento</b>.",
+  "Vladimir Putin":     () => "Berlim a " + graus(MUNDO.berlim.v) + palpite(MUNDO.berlim) + " → <b>" + sinal(MR.gas()) + " em tudo</b>.",
+  "Ramsés II":          () => "Luxor a " + graus(MUNDO.luxor.v) + palpite(MUNDO.luxor) + " → <b>" + sinal(MR.ra()) + " em tudo</b>.",
+  "Benjamin Franklin":  () => { const f = MUNDO.filad, x = MR.pipa();
+    return (f.tempestade ? "tempestade na Filadélfia, a pipa sobe" : f.chuva ? "chove na Filadélfia" : "vento de " + f.vento + " km/h na Filadélfia") + palpite(f) +
+           " → <b>" + sinal(x.des) + " em Desenvolvimento" + (x.resto ? ", " + sinal(x.resto) + " no resto" : "") + "</b>."; },
+  "Elizabeth I":        () => "vento de " + MUNDO.londres.vento + " km/h em Londres" + palpite(MUNDO.londres) + " → <b>oposição " + sinal(-MR.armada()) + " em Guerra</b>.",
+  "Luís XIV":           () => "são " + horaEm("Europe/Paris") + "h em Versalhes → <b>" + (MR.reisol() ? "o sol brilha, +6 em tudo" : "o rei dorme, −2 em tudo") + "</b>.",
+  "Harun al-Rashid":    () => "são " + horaEm("Asia/Baghdad") + "h em Bagdá → <b>" + (MR.milnoites() ? "noite de histórias, +6 em tudo e +3 na aura" : "dia, +1 em tudo") + "</b>.",
+  "Júlio César":        () => idosDeMarco() ? "<b>são os Idos de Março. Ele não sai de casa vivo.</b>" : "não são os Idos de Março: <b>César está a salvo</b>.",
+  "Tiradentes":         () => diaDeTiradentes() ? "<b>é 21 de abril: +10 em tudo</b>." : "não é 21 de abril.",
   "José Oiticica":      () => MUNDO.wiki.anarq.toLocaleString("pt-BR") + " leituras de \"Anarquismo\" ontem" + palpite(MUNDO.wiki) + " → <b>" + sinal(MR.verbete()) + " em tudo</b>."
 };
 function polarTxt(){
@@ -2172,6 +2262,7 @@ function mundoTxt(){
   const l = [];
   for(const r of ROLES){
     const fig = S.gab[r.k], p = pasDe(fig);
+    if(fig.n === "Júlio César" && !idosDeMarco() || fig.n === "Tiradentes" && !diaDeTiradentes()) continue;   /* só no dia */
     if(p && MR_HOJE[fig.n]) l.push(p.ic + " " + fig.s + ": " + MR_HOJE[fig.n]().replace(/<[^>]+>/g, ""));
   }
   return [...new Set(l)].join(" ");
@@ -2217,6 +2308,17 @@ atualizarMundo();
       .then(v => pronto("paris", v == null ? null : {chuva:v})),
     primeiro([[tempo(-22.5112, -43.1779, "cloud_cover"), j => j.current.cloud_cover]])
       .then(v => pronto("petro", v == null ? null : {nuvens:Math.round(v)})),
+    primeiro([[tempo(52.52, 13.405, "temperature_2m"), j => j.current.temperature_2m]])
+      .then(v => pronto("berlim", v == null ? null : {v:Math.round(v)})),
+    primeiro([[tempo(25.6872, 32.6396, "temperature_2m"), j => j.current.temperature_2m]])
+      .then(v => pronto("luxor", v == null ? null : {v:Math.round(v)})),
+    primeiro([[tempo(39.9526, -75.1652, "precipitation,weather_code,wind_speed_10m"), j => {
+        const c = j.current;
+        if(![c.weather_code, c.precipitation, c.wind_speed_10m].every(Number.isFinite)) return null;
+        return {tempestade:c.weather_code >= 95, chuva:c.precipitation > 0 || c.weather_code >= 51, vento:Math.round(c.wind_speed_10m)};
+      }]]).then(v => pronto("filad", v)),
+    primeiro([[tempo(51.5074, -0.1278, "wind_speed_10m"), j => j.current.wind_speed_10m]])
+      .then(v => pronto("londres", v == null ? null : {vento:Math.round(v)})),
     Promise.all([primeiro([leituras("Luiz_Inácio_Lula_da_Silva")]), primeiro([leituras("Jair_Bolsonaro")]), primeiro([leituras("Anarquismo")])])
       .then(([lula, bolso, anarq]) => { if(lula != null && bolso != null && anarq != null) pronto("wiki", {lula, bolso, anarq}); })
   ]);
@@ -2290,7 +2392,11 @@ function rateR(fig, rk){
   if(fig.n === "Marlisson" && S.marlissonFalta && ROLES.some(x => S.gab[x.k] === fig)) return 40;   /* faltou */                     /* Jesus × Eduardo Lopes: cadeira vazia */
   /* Anarquia Sem Adjetivos: sentado na sua cúpula, Malatesta joga com a melhor nota em qualquer cadeira */
   const semAdj = fig.n === "Errico Malatesta" && fig.n !== DESLIGA && ROLES.some(x => S.gab[x.k] === fig);
-  let v = (semAdj ? Math.max(...ROLES.map(x => rate(fig, x.k))) : rate(fig,rk)) + afinidade(fig) + (bon[rk] || 0);
+  const minha = ROLES.some(x => S.gab[x.k] === fig);
+  if(fig.n === "Júlio César" && minha && fig.n !== DESLIGA && idosDeMarco()) return 40;   /* Idos de Março: esfaqueado */
+  /* Gato Preto, Gato Branco: com Deng na cúpula ninguém perde pela afinidade */
+  const af = afinidade(fig), semAfin = af < 0 && minha && temPas("gato");
+  let v = (semAdj ? Math.max(...ROLES.map(x => rate(fig, x.k))) : rate(fig,rk)) + (semAfin ? 0 : af) + (bon[rk] || 0);
   if(fig.n === "Murilo Baruella") v = humorMurilo(v, rk, fig);
   /* o Pod da Associação: +10% nos status do Eduardo Lopes e do Chico Bento */
   if((fig.n === "Eduardo Lopes" || fig.n === "Chico Bento") && relAtiva("pod") && ROLES.some(x => S.gab[x.k] === fig))
@@ -2421,7 +2527,12 @@ function auraDe(gab){
     if(temPas("moscas")) a -= 3;
     if(temPas("supremo") && gab.lid.n === "Claudio") a += 4;
     const m = manchete(); if(m && m.aura) a += m.aura;
+    if(temPas("milnoites") && MR.milnoites()) a += 3;
+    /* Sedução: metade da aura do chefe da oposição muda de lado */
+    if(temPas("seducao") && S.op && S.op.lid) a += Math.max(0, (rateR(S.op.lid, "lid") - 70) / 3 * REGIMES[S.reg].aura) / 2;
   } else if(gab === S.op){
+    if(temPas("seducao")) a = 0;
+    if(temPas("catilina")) a -= 5;
     if(temPas("classes")) a /= 2;
     if(temPas("conquistador")) a -= 2;
     if(relAtiva("lentao")) a -= 5;
@@ -3011,6 +3122,7 @@ function montarOposicao(et){
   S.anuscuFora = naCupula("ANUSCU") && Math.random() < chanceAnuscuFora();
   S.marlissonFalta = temPas("networking") && !relAtiva("joelheira") && Math.random() < .25;
   S.troll = temPas("supremo") ? TROLLAGENS[rnd(TROLLAGENS.length)] : null;
+  S.martir = false; S.salto = Math.random() < .5;          /* Tiradentes e o Grande Salto do Mao */
   /* desde a v24 a oposição também usa o DLC, quando ele está ligado (e a Associação só
      depois de destravada, pelo mesmo índice da roleta) */
   const pool = F.filter(x=>!S.usados.includes(x.n) && (!x.dlc || (S.dlc && IDX[x.e])));
@@ -3065,6 +3177,11 @@ function montarOposicao(et){
     gab[p.rk]=p.fig; tomados.add(p.fig.n);
     if(ROLES.every(r=>gab[r.k])) break;
   }
+  /* Maquiavel: as duas melhores pastas (fora a cabeceira) trocam de cadeira */
+  if(temPas("dividir")){
+    const [x, y] = ["arp","eco","des","gue"].sort((a, b) => rate(gab[b], b) - rate(gab[a], a));
+    [gab[x], gab[y]] = [gab[y], gab[x]];
+  }
   if(trolou("placas")){
     const ks = ["arp","eco","des","gue"], figs = shuffle(ks.map(k => gab[k]));
     ks.forEach((k,i) => gab[k] = figs[i]);
@@ -3091,6 +3208,10 @@ function iniciarEtapa(){
   if(naCupula("Murilo Baruella") && BTC) sub += " " + btcTxt();
   atualizarMundo();
   const mt = mundoTxt(); if(mt) sub += " " + mt;
+  if(temPas("salto")) sub += S.salto ? " 🎲 O Grande Salto deu certo desta vez: +10 em tudo." : " 🎲 O Grande Salto deu errado: −6 em tudo.";
+  if(temPas("dividir")) sub += " 🦊 Maquiavel dividiu a oposição: as duas melhores pastas dela trocaram de cadeira.";
+  if(temPas("jovem")) sub += " 🏹 Alexandre nesta etapa: " + sinal([10, 7, 4, 0, -4][Math.min(S.etapa, 4)]) + " em tudo.";
+  if(temPas("seducao")) sub += " 🐍 Cleópatra seduziu o chefe da oposição: a aura dele mudou de lado.";
   if(relAtiva("zap")){
     const z = zapDaEtapa();
     sub += z.mandou
@@ -3191,6 +3312,12 @@ const FLASH = {
   danca:   {ic:"💃", t:"Hoje tem baile"},
   greve17: {ic:"🏭", t:"Greve geral!"},
   maio:    {ic:"✊", t:"Primeiro de Maio"},
+  chamas:  {ic:"🔥", t:"Roma em chamas"},
+  salto:   {ic:"🎲", t:"O Grande Salto"},
+  raio:    {ic:"⚡", t:"Raio na pipa"},
+  armada:  {ic:"🌊", t:"A Armada afunda"},
+  idos:    {ic:"🗡️", t:"Idos de Março"},
+  yes:     {ic:"🗳️", t:"Yes we can"},
   virada:  {ic:"🔄", t:"Virada!"},
   zebra:   {ic:"🦓", t:"Zebra!"},
   rodadaVitoria:{ic:"🏆", t:"Rodada sua"},
@@ -3208,7 +3335,7 @@ function flashesDoDuelo(milagre, hk){
 /* passivas de placar que entram em ação neste duelo (lado de S), antes do resultado.
    Cura e Pavio Curto só piscam quando mudam, para não repetir a cada duelo. */
 function momentosDoDuelo(i, v, d){
-  if(i === 0){ S.curaVista = 0; S.pavioVisto = false; }
+  if(i === 0){ S.curaVista = 0; S.pavioVisto = false; S.chamasVista = false; S.yesVisto = false; }
   const l = [];
   if(temPas("cinquenta") && S.etapa === 0 && i === 0) l.push("cinquenta");
   if(temPas("inimigo") && i === 0) l.push("inimigo");
@@ -3221,7 +3348,13 @@ function momentosDoDuelo(i, v, d){
     if(temPas("danca") && MR.danca() === 10) l.push("danca");
     if(temPas("greve17") && expedienteBR()) l.push("greve17");
     if(temPas("maio") && MR.maio() >= 8) l.push("maio");
+    if(temPas("salto") && S.salto) l.push("salto");
+    if(temPas("pipa") && MUNDO.filad.tempestade) l.push("raio");
+    if(temPas("armada") && MR.armada() >= 7) l.push("armada");
+    if(naCupula("Júlio César") && idosDeMarco()) l.push("idos");
   }
+  if(temPas("chamas") && d === 1 && !S.chamasVista){ S.chamasVista = true; l.push("chamas"); }
+  if(temPas("yeswecan") && v === 2 && d < 2 && !S.yesVisto){ S.yesVisto = true; l.push("yes"); }
   if(temPas("blitz") && i === 3) l.push("conta");
   if(temPas("cura") && d > 0 && S.curaVista !== d){ S.curaVista = d; l.push("cura"); }
   if(temPas("pavio") && d > 0 && !S.pavioVisto){ S.pavioVisto = true; l.push("pavio"); }
@@ -3397,6 +3530,12 @@ function jogarDuelo(rk, i, v, d){
     break;
   }
   const ganhou = r.ganhou, jogos = r.jogos, hitkill = r.hk === "meu", hitkillDele = r.hk === "dele";
+  if(!ganhou && !S.martir && (pasDe(meu) || {}).k === "martir"){
+    S.martir = true; notas.push("🪢 Tiradentes cai e vira mártir: a cúpula ganha +6 em tudo pelo resto da etapa.");
+  }
+  if(ganhou && rk === "gue" && temPas("horda") && (S.horda || 0) < 6){
+    S.horda = (S.horda || 0) + 1; notas.push("🐎 A horda cresce: +" + 2 * S.horda + " em tudo.");
+  }
   if(ganhou && !S.nocaute && (pasDe(meu) || {}).k === "nocaute"){
     S.nocaute = true;
     notas.push("🥊 Nocaute: a oposição sente o golpe pelo resto da etapa.");
@@ -3899,6 +4038,7 @@ function pvpRodada(){
     S.anuscuFora = naCupula("ANUSCU") && Math.random() < chanceAnuscuFora();
     S.marlissonFalta = temPas("networking") && !relAtiva("joelheira") && Math.random() < .25;
     S.troll = temPas("supremo") ? TROLLAGENS[rnd(TROLLAGENS.length)] : null;
+    S.martir = false; S.salto = Math.random() < .5;
   }));
   const ordem = shuffle(ROLES.map(x => x.k)), duelos = [];
   let v = 0, d = 0;
