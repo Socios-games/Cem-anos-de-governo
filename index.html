@@ -397,6 +397,51 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .rw-carta .d{font-size:.82rem;color:var(--paper-3);line-height:1.5}
 .rw-carta .d b{color:var(--brass)}
 #rw-detalhe{margin-top:22px}
+/* Gabinete */
+.gb-topo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+.gb-box{padding:14px 16px;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface)}
+.gb-box .k,.gb-dilema .k{font-family:var(--f-mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-3)}
+.gb-box .v{font-family:var(--f-disp);font-weight:900;font-size:2rem;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums}
+.gb-box .v.bom{color:var(--jade)} .gb-box .v.ruim{color:var(--oxblood)}
+.gb-box .s{font-size:.74rem;color:var(--paper-3);margin-top:4px;line-height:1.4}
+.gb-dilema .ops,.gb-ops{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.gb-op{display:flex;flex-direction:column;gap:3px;text-align:left;padding:10px 12px;border:1px solid var(--line-soft);border-left:3px solid var(--cor,var(--brass-lo));
+  border-radius:8px;background:var(--surface-2);color:inherit;font:inherit;font-size:.8rem;cursor:pointer;flex:1 1 180px}
+.gb-op:hover:not(:disabled){border-color:var(--brass-lo)}
+.gb-op:disabled{opacity:.42;cursor:default}
+.gb-op.on{opacity:1;border-color:var(--brass);background:linear-gradient(180deg,rgba(201,162,76,.16),var(--surface-2))}
+.gb-op span,.gb-op small{color:var(--paper-3);line-height:1.4} .gb-op span b{color:var(--brass)}
+.gb-op em,.gb-acao em{font-style:normal;font-size:.7rem;color:var(--oxblood)}
+.gb-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;margin-top:22px}
+.gb-grid .eyebrow{margin-bottom:8px}
+.gb-row{display:grid;grid-template-columns:2.6rem minmax(0,1fr) auto minmax(0,1fr) 4.6rem;gap:8px;align-items:center;
+  padding:8px 10px;border-bottom:1px solid var(--line-soft);border-left:3px solid var(--cor)}
+.gb-row .fn{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.12em;color:var(--cor)}
+.gb-row .lado{display:flex;align-items:center;gap:6px;min-width:0} .gb-row .lado.dir{justify-content:flex-end}
+.gb-row .nm{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gb-row .gb-vs{font-family:var(--f-mono);font-size:.8rem;display:flex;gap:4px;align-items:center;line-height:1} .gb-row .gb-vs span{color:var(--paper-3)}
+.gb-row .pc{position:relative;height:20px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.gb-row .pc i{position:absolute;inset:0 auto 0 0;background:var(--paper-3);opacity:.35}
+.gb-row.bom .pc i{background:var(--jade);opacity:.55} .gb-row.ruim .pc i{background:var(--oxblood);opacity:.55}
+.gb-row .pc span{position:relative;display:block;text-align:center;font-family:var(--f-mono);font-size:.72rem;line-height:20px}
+.gb-desg{font-family:var(--f-mono);font-size:.68rem;color:var(--oxblood);white-space:nowrap}
+.gb-nota{font-size:.74rem;color:var(--paper-3);margin:8px 0 0}
+.gb-acoes{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.gb-acao{display:grid;grid-template-columns:auto 1fr auto;gap:2px 8px;text-align:left;padding:10px 12px;border:1px solid var(--line-soft);
+  border-radius:8px;background:var(--surface);color:inherit;font:inherit;cursor:pointer}
+.gb-acao:hover:not(:disabled){border-color:var(--brass-lo)}
+.gb-acao.on{border-color:var(--brass);background:linear-gradient(180deg,rgba(201,162,76,.14),var(--surface))}
+.gb-acao:disabled{opacity:.45;cursor:default}
+.gb-acao .ic{font-size:1.2rem} .gb-acao .n{font-family:var(--f-disp);font-weight:700;font-size:.88rem}
+.gb-acao .c{font-family:var(--f-mono);font-size:.74rem;color:var(--brass)}
+.gb-acao .d,.gb-acao em,.gb-acao .pv{grid-column:1/-1;font-size:.74rem;color:var(--paper-3);line-height:1.4} .gb-acao .d b{color:var(--brass)}
+.gb-dl{font-family:var(--f-mono);font-size:.74rem;color:var(--paper-2)} .gb-dl.up{color:var(--jade)} .gb-dl.down{color:var(--oxblood)}
+.gb-x{margin-left:8px;background:none;border:0;color:var(--paper-3);text-decoration:underline;cursor:pointer;font:inherit;font-size:.6rem}
+#gb-detalhe{margin-top:14px} #gb-detalhe .eyebrow{margin:12px 0 8px}
+.gb-log ul{margin:6px 0 0;padding-left:18px;font-size:.8rem;color:var(--paper-2);line-height:1.6} .gb-log{margin-top:18px}
+.gb-row .gb-vs{white-space:nowrap}
+@media (max-width:860px){.gb-grid{grid-template-columns:1fr}.gb-row{grid-template-columns:2rem minmax(0,1fr) auto minmax(0,1fr) 3.2rem;gap:6px;padding:8px 6px}
+  .gb-row .face{display:none}.gb-dilema{grid-template-columns:1fr}.gb-dilema>.ic{display:none}}
 #rw-detalhe .eyebrow{margin:18px 0 8px}
 .rw-lista{max-height:none}
 .rw-lista .fig[aria-pressed="true"]{background:var(--surface-3);box-shadow:inset 3px 0 0 var(--brass)}
@@ -1068,6 +1113,24 @@ button,.campo{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   <div id="rw-detalhe"></div>
   <div class="acao"><button class="btn" id="rw-go" disabled>Escolha uma recompensa</button>
     <button class="btn btn-alt" id="rw-pular">Seguir sem nada</button></div>
+</section>
+
+<!-- ============ GABINETE (jogo solo) ============ -->
+<section class="screen" id="s-gabinete">
+  <div class="bar">
+    <div><span class="eyebrow" id="gb-etapa"></span></div>
+    <div class="mono" style="font-size:.7rem;color:var(--paper-3)" id="gb-anos"></div>
+  </div>
+  <h2>O Gabinete</h2>
+  <p class="lede" style="margin-top:10px">A próxima oposição já está escalada. Gaste o capital político onde ele decide a etapa — ou guarde, que rende. Os ministros cansam: quem atravessa uma etapa chega na outra com desgaste.</p>
+  <div class="gb-topo"><div class="gb-box" id="gb-cp"></div><div class="gb-box" id="gb-chance"></div></div>
+  <div class="rw-manchete gb-dilema" id="gb-dilema"></div>
+  <div class="gb-grid">
+    <div><div class="eyebrow">A próxima oposição, duelo por duelo</div><div id="gb-intel" class="gb-intel"></div></div>
+    <div><div class="eyebrow">Agenda do governo</div><div id="gb-acoes" class="gb-acoes"></div><div id="gb-detalhe"></div></div>
+  </div>
+  <div id="gb-log" class="gb-log"></div>
+  <div class="acao"><button class="btn" id="gb-go" disabled>Responda o dilema para seguir</button></div>
 </section>
 
 <!-- ============ FIM ============ -->
@@ -1765,8 +1828,10 @@ function etapaAtual(){
    o modo DLC ficar só um pouco mais fácil que o jogo limpo. Na monarquia vale mais porque
    a aura dobrada de um chefe do DLC (Jesus, Naruto, Lúcifer) desequilibra. */
 /* calibragem separada com e sem DLC, alvo ~5% de vitória em cada regime */
-/* v26: +1,25 em cada regime para compensar as passivas novas do jogo base (simulação) */
-const BASE_FORTE = {dem:1.75, dit:1.25, mon:-0.75};
+/* v26: +1,25 em cada regime para compensar as passivas novas do jogo base (simulação).
+   v27: +1,5 com o Gabinete — quem administra bem fica perto da dificuldade de antes, quem
+   gasta sem pensar cai cedo (simulação: jogador guloso × aleatório). */
+const BASE_FORTE = {dem:3.25, dit:2.75, mon:0.75};
 const DLC_FORTE = {dem:1.5, dit:0, mon:2};
 function escalada(){
   const dl = (S.dlc ? DLC_FORTE[S.reg] : 0) + BASE_FORTE[S.reg];
@@ -1992,6 +2057,9 @@ function bonusPas(rk){
   const m = manchete();
   if(m && m.rk && (m.rk === rk || m.rk === "all")) v += m.v < 0 ? neg(m.v) : m.v;
   if(S.pesquisa === S.etapa) v += RW_PESQUISA;
+  /* dilemas do Gabinete */
+  const ef = somaEfeitos("eu", rk) + somaEfeitos("fig", rk);
+  v += ef < 0 ? neg(ef) : ef;
   const dz = S.duelo;
   if(dz){
     if(temPas("cura")) v += 3 * dz.d;
@@ -2017,6 +2085,7 @@ function penalOp(rk){
   if(relAtiva("bunker") && rk === "gue") v += 5;
   if(temPas("missingno") && S.anuscuFora) v += 6;
   if(trolou("pizza")) v += 5;
+  v += somaEfeitos("op", rk);
   if(temPas("fedor")) v += 5;
   if(S.nocaute) v += 4;
   if(temPas("destruicao")) v += MR.destruicao();
@@ -2393,10 +2462,11 @@ function rateR(fig, rk){
   /* Anarquia Sem Adjetivos: sentado na sua cúpula, Malatesta joga com a melhor nota em qualquer cadeira */
   const semAdj = fig.n === "Errico Malatesta" && fig.n !== DESLIGA && ROLES.some(x => S.gab[x.k] === fig);
   const minha = ROLES.some(x => S.gab[x.k] === fig);
+  const cansaco = minha && S.desg ? DESG_PESO * (S.desg[fig.n] || 0) : 0;   /* desgaste do Gabinete */
   if(fig.n === "Júlio César" && minha && fig.n !== DESLIGA && idosDeMarco()) return 40;   /* Idos de Março: esfaqueado */
   /* Gato Preto, Gato Branco: com Deng na cúpula ninguém perde pela afinidade */
   const af = afinidade(fig), semAfin = af < 0 && minha && temPas("gato");
-  let v = (semAdj ? Math.max(...ROLES.map(x => rate(fig, x.k))) : rate(fig,rk)) + (semAfin ? 0 : af) + (bon[rk] || 0);
+  let v = (semAdj ? Math.max(...ROLES.map(x => rate(fig, x.k))) : rate(fig,rk)) + (semAfin ? 0 : af) + (bon[rk] || 0) - cansaco;
   if(fig.n === "Murilo Baruella") v = humorMurilo(v, rk, fig);
   /* o Pod da Associação: +10% nos status do Eduardo Lopes e do Chico Bento */
   if((fig.n === "Eduardo Lopes" || fig.n === "Chico Bento") && relAtiva("pod") && ROLES.some(x => S.gab[x.k] === fig))
@@ -2528,6 +2598,7 @@ function auraDe(gab){
     if(temPas("supremo") && gab.lid.n === "Claudio") a += 4;
     const m = manchete(); if(m && m.aura) a += m.aura;
     if(temPas("milnoites") && MR.milnoites()) a += 3;
+    a += somaEfeitos("aura");
     /* Sedução: metade da aura do chefe da oposição muda de lado */
     if(temPas("seducao") && S.op && S.op.lid) a += Math.max(0, (rateR(S.op.lid, "lid") - 70) / 3 * REGIMES[S.reg].aura) / 2;
   } else if(gab === S.op){
@@ -2615,7 +2686,9 @@ function novoJogo(){
     /* Associação: nocaute e ANUSCU são sorteados por etapa, em montarOposicao */
     nocaute:false, anuscuFora:false, glitch:0, troll:null, sumido:null, marlissonFalta:false, opRasputinUsado:false, opMarUsado:false,
     /* entre etapas: a manchete e as cartas que valem só numa etapa guardam o número dela */
-    manchete:null, pesquisa:-1, dossie:-1, aviso:""
+    manchete:null, pesquisa:-1, dossie:-1, aviso:"",
+    /* Gabinete (jogo solo): capital político, desgaste por ministro, ações compradas e efeitos com prazo */
+    cp:0, desg:{}, compras:{}, efeitos:[], gb:null
   };
 }
 
@@ -3078,7 +3151,7 @@ $("go").addEventListener("click",()=>{
   novoJogo(); show("s-draft"); renderDraft();
 });
 $("nome").addEventListener("keydown",e=>{ if(e.key==="Enter") $("go").click(); });
-$("confirmar").addEventListener("click",()=>{ if(!S.rels.length) return; S.mov=null; if(PV.on){ pvpIntent({t:"ready"}); return; } iniciarEtapa(); });
+$("confirmar").addEventListener("click",()=>{ if(!S.rels.length) return; S.mov=null; if(PV.on){ pvpIntent({t:"ready"}); return; } mostrarGabinete(null, null); });
 $("spin").addEventListener("click",()=>girar(false,false));
 $("rr-e").addEventListener("click",()=>girar(true,false));
 $("rr-p").addEventListener("click",()=>girar(false,true));
@@ -3113,9 +3186,17 @@ function chanceAnuscuFora(){
   const eduardo = naCupula("Eduardo Lopes") && !sumiu(S.gab[ROLES.find(x => S.gab[x.k] && S.gab[x.k].n === "Eduardo Lopes").k]);
   return (relAtiva("glitch") ? .20 : 0) + (eduardo && temPas("missingno") ? .20 : 0);
 }
+/* v27: a oposição é montada em duas partes — os candidatos (a amostra da faixa, menos quem
+   as passivas tiram) e a escalação deles nas cadeiras — para o Gabinete poder mostrar a
+   próxima oposição antes de você gastar o capital político, e o Dossiê tirar alguém dela
+   sem sortear tudo de novo. montarOposicao junta as duas (rejogadas, simulação, PvP não usa). */
 function montarOposicao(et){
-  /* o que se sorteia a cada etapa mora aqui porque é o único ponto por onde a tela e a
-     simulação passam antes de toda etapa (inclusive as rejogadas) */
+  sortearEtapa();
+  return escalarOposicao(candidatosOposicao(et));
+}
+/* o que se sorteia a cada etapa: vale para a etapa toda, e o Gabinete já mostra */
+function sortearEtapa(){
+  S.sorteioEtapa = S.etapa;
   S.nocaute = false;
   /* ANUSCU abandona o grupo: 20% com o Arquivo Corrompido, +20% com Eduardo Lopes na cúpula
      (sinergia: é o gatilho do Item Duplicado) */
@@ -3123,6 +3204,9 @@ function montarOposicao(et){
   S.marlissonFalta = temPas("networking") && !relAtiva("joelheira") && Math.random() < .25;
   S.troll = temPas("supremo") ? TROLLAGENS[rnd(TROLLAGENS.length)] : null;
   S.martir = false; S.salto = Math.random() < .5;          /* Tiradentes e o Grande Salto do Mao */
+  S.trollPerm = shuffle([0, 1, 2, 3]);                      /* as plaquinhas trocadas ficam fixas na etapa */
+}
+function candidatosOposicao(et){
   /* desde a v24 a oposição também usa o DLC, quando ele está ligado (e a Associação só
      depois de destravada, pelo mesmo índice da roleta) */
   const pool = F.filter(x=>!S.usados.includes(x.n) && (!x.dlc || (S.dlc && IDX[x.e])));
@@ -3156,7 +3240,10 @@ function montarOposicao(et){
     ord.slice(0, fora).forEach((fig, i) => S.afastados.push({fig, por: i < nAsmo ? "tentacao" : "dossie"}));
     cand = ord.slice(fora);
   }
-  cand = shuffle(cand);
+  return shuffle(cand);
+}
+function escalarOposicao(cand){
+  S.afastados = (S.afastados || []).filter(a => a.por !== "talk");
   const gab={lid:null,arp:null,eco:null,des:null,gue:null}, tomados=new Set();
 
   /* a oposição joga o jogo direito: escolhe primeiro a cabeceira,
@@ -3183,7 +3270,7 @@ function montarOposicao(et){
     [gab[x], gab[y]] = [gab[y], gab[x]];
   }
   if(trolou("placas")){
-    const ks = ["arp","eco","des","gue"], figs = shuffle(ks.map(k => gab[k]));
+    const ks = ["arp","eco","des","gue"], figs = (S.trollPerm || [0,1,2,3]).map(i => gab[ks[i]]);
     ks.forEach((k,i) => gab[k] = figs[i]);
   }
   return gab;
@@ -3192,7 +3279,13 @@ function montarOposicao(et){
 /* ======================= CONFRONTO ======================= */
 function iniciarEtapa(){
   const et = etapaAtual();
-  S.op = montarOposicao(et);
+  /* vindo do Gabinete, a oposição já está escalada e os sorteios da etapa já foram feitos;
+     rejogada (reeleição, ressurreição, anistia) monta tudo de novo */
+  if(S.opCand && S.opCandEtapa === S.etapa){
+    if(S.sorteioEtapa !== S.etapa) sortearEtapa();
+    S.op = escalarOposicao(S.opCand);
+  } else S.op = montarOposicao(et);
+  S.opCand = null; S.sorteioEtapa = -1;
   $("vs-etapa").textContent = etapaTxt();
   $("vs-anos").textContent = et.anos;
   $("vs-title").textContent = et.n;
@@ -3226,6 +3319,16 @@ function iniciarEtapa(){
   const mm = manchete();
   if(mm && mm.v !== undefined || mm && mm.aura) sub += " " + mm.ic + " " + mm.n + ": " + mm.d.replace(/<[^>]+>/g, "");
   if(S.pesquisa === S.etapa) sub += " 📊 A pesquisa favorável vale nesta etapa: +" + RW_PESQUISA + " em tudo.";
+  const efs = (S.efeitos || []).filter(efeitoAtivo).map(e => {
+    const fn = e.rk === "all" ? "tudo" : e.rk ? ROLE[e.rk].n : "";
+    if(e.alvo === "op") return "oposição " + sinal(-e.v) + " em " + fn;
+    if(e.alvo === "aura") return "aura " + sinal(e.v);
+    if(e.alvo === "fig") return (F.find(f => f.n === e.n) || {s:e.n}).s + " " + sinal(e.v);
+    return fn + " " + sinal(e.v);
+  });
+  if(efs.length) sub += " 📋 Decisões do Gabinete: " + efs.join(", ") + ".";
+  const cansados = ROLES.map(r => S.gab[r.k]).filter(f => desgDe(f));
+  if(cansados.length) sub += " 😮‍💨 Desgaste: " + cansados.map(f => f.s + " −" + num(desgDe(f) * DESG_PESO, 1).replace(",0", "")).join(", ") + ".";
   if(S.aviso){ sub += " " + S.aviso; S.aviso = ""; }
   if(serie()) sub += " No Julgamento cada confronto é uma série melhor de 5: quem é mais forte quase sempre leva.";
   if(escalada()) sub += semFim()
@@ -3590,7 +3693,11 @@ function fimEtapa(v,d){
       S.opAnterior = ROLES.map(r => vencida[r.k].n);
       S.etapa++;
       if(semFim()) iniciarEtapa();          /* no modo sem fim não há recompensa */
-      else mostrarRecompensa(vencida);
+      else {
+        /* quem atravessou a etapa chega cansado na próxima */
+        ROLES.forEach(r => { const f = S.gab[r.k]; S.desg[f.n] = (S.desg[f.n] || 0) + 1; });
+        mostrarGabinete(vencida, {v, d});
+      }
     } else {
       if(temPas("pacto")){ S.anosAntesPacto = S.anos; S.anos = Math.floor(S.anos / 2); S.pactoCobrado = true; }
       fim(S.venceu);
@@ -3779,6 +3886,345 @@ $("rw-go").addEventListener("click", ()=>{
   aplicarRecompensa();
 });
 $("rw-pular").addEventListener("click", ()=>{ if(PV.on){ pvpIntent({t:"skip"}); return; } S.rw = null; iniciarEtapa(); });
+
+/* ======================= O GABINETE (v27) ======================= */
+/* No jogo solo, entre uma etapa e outra não se escolhe mais uma carta de três: governa-se.
+   Três coisas pesam juntas:
+   - CAPITAL POLÍTICO: vencer a etapa rende capital (mais quanto mais folgada a vitória), e o
+     que sobra rende juros. Tudo no Gabinete custa capital, e cada ação fica 1 mais cara a cada
+     vez que você a repete na partida — não dá para empilhar sempre a mesma.
+   - DESGASTE: cada ministro que atravessa uma etapa cansa (−DESG_PESO em tudo por ponto).
+     Descansar custa capital; trocar a pessoa também. Quem chega novo chega descansado.
+   - A PRÓXIMA OPOSIÇÃO JÁ ESTÁ ESCALADA: o Gabinete mostra quem vem, a força de cada duelo e a
+     chance de passar a etapa, recalculada a cada decisão.
+   E um DILEMA por intervalo, sem resposta grátis: cada opção custa algo.
+   O PvP continua com as cartas de sempre (sortearRecompensasPvP). */
+/* CP_INICIAL: a transição de governo, antes da Posse — o primeiro Gabinete já é uma decisão */
+const DESG_PESO = 2, CP_RENDA = [7, 6, 5], CP_JUROS_MAX = 3, CP_INICIAL = 4;
+const ACOES = {
+  treino:   {ic:"🎓", n:"Escola de Governo",  custo:3, d:() => "<b>+4 permanentes</b> numa função à sua escolha."},
+  ferias:   {ic:"🏖️", n:"Férias",             custo:2, d:() => "Um ministro descansa: <b>o desgaste dele zera</b>."},
+  remanejar:{ic:"🔀", n:"Remanejar",          custo:1, fixo:true, d:() => "<b>Troque dois ministros de cadeira</b> para encaixar melhor contra quem vem."},
+  aura:     {ic:"🎙️", n:"Horário Nobre",      custo:4, d:() => "<b>+1,5 permanentes</b> na aura do seu chefe — vale nas quatro pastas."},
+  pesquisa: {ic:"📊", n:"Pesquisa Favorável", custo:3, umaVez:true, d:() => "<b>+6 em tudo</b>, só na próxima etapa."},
+  dossie:   {ic:"🕵️", n:"O Dossiê",           custo:4, umaVez:true, d:() => { const f = maisForteOp(); return "Afasta <b>" + (f ? esc(f.s) : "o mais forte") + "</b> da próxima oposição; entra o reserva."; }},
+  recruta:  {ic:"🤝", n:"Virar a Casaca",     custo:4, umaVez:true, d:() => "Alguém da oposição que você acabou de derrotar <b>troca de lado</b> e entra no lugar de um ministro."},
+  reforma:  {ic:"🔄", n:"Reforma Ministerial",custo:3, umaVez:true, d:() => "Três nomes novos de qualquer lugar do mapa: <b>um pode entrar</b> no lugar de um ministro."},
+  rel:      {ic:"🏺", n:"Relíquia",           custo:5, umaVez:true, d:() => { const r = S.gb && S.gb.rel; return r ? r.ic + " <b>" + esc(r.n) + "</b>: " + r.ef : "Nenhuma relíquia à vista."; }},
+  aposta:   {ic:"🎲", n:"Tudo ou Nada",       custo:2, umaVez:true, d:() => "Cara ou coroa numa função sorteada: <b>+" + RW_APOSTA[0] + "</b> ou <b>" + RW_APOSTA[1] + "</b> permanentes."},
+  vida:     {ic:"🕊", n:"Anistia",            custo:7, d:() => "Uma segunda chance guardada: se a cúpula cair, a etapa é rejogada. <b>Uma por partida.</b>"}
+};
+function custoAcao(k){
+  const a = ACOES[k];
+  return a.custo + (a.fixo ? 0 : (S.compras[k] || 0));
+}
+function acaoBloqueada(k){
+  const a = ACOES[k], gb = S.gb;
+  if(a.umaVez && gb.feitas[k]) return "já feita neste intervalo";
+  if(k === "vida" && S.anistiaTomada) return "só uma por partida";
+  if(k === "rel" && !gb.rel) return "nenhuma disponível";
+  if(k === "recruta" && !gb.vencida) return "ninguém derrotado ainda";
+  if(k === "dossie" && !maisForteOp()) return "";
+  if(custoAcao(k) > S.cp) return "falta capital";
+  return "";
+}
+const desgDe = fig => fig ? (S.desg[fig.n] || 0) : 0;
+
+/* efeitos com prazo (dilemas): {alvo:"eu"|"op"|"aura"|"fig", rk:"all"|função, v, de, ate, n?}
+   — "op" com v positivo é a oposição perdendo, como em penalOp */
+const efeitoAtivo = e => S.etapa >= e.de && S.etapa <= e.ate;
+function somaEfeitos(alvo, rk){
+  let v = 0;
+  for(const e of S.efeitos || []){
+    if(e.alvo !== alvo || !efeitoAtivo(e)) continue;
+    if(alvo === "aura") v += e.v;
+    else if(alvo === "fig"){ if(S.gab[rk] && S.gab[rk].n === e.n) v += e.v; }
+    else if(e.rk === "all" || e.rk === rk) v += e.v;
+  }
+  return v;
+}
+function efeito(alvo, rk, v, etapas, n){
+  S.efeitos.push({alvo, rk, v, n, de:S.etapa, ate:etapas === Infinity ? Infinity : S.etapa + etapas - 1});
+}
+
+/* ---------- chance de passar a etapa (o que a tela mostra) ---------- */
+/* por duelo: a logística da força, as passivas que decidem duelo e a série do Julgamento.
+   As passivas de placar (Cura, Blitz, Obama...) ficam de fora: dependem de como a etapa anda. */
+function chanceDuelo(rk){
+  const meu = S.gab[rk], dele = S.op[rk];
+  if((pasDe(meu) || {}).k === "elevence") return 1;
+  if(pasDuelo(dele) === "elevence") return 0;
+  let p = chance(forca(S.gab, rk), forca(S.op, rk));
+  if(serie()){ const q = 1 - p; p = p**3 * (1 + 3*q + 6*q*q); }
+  if((pasDe(meu) || {}).k === "leitada") p += (1 - p) * chanceHitKill();
+  if(pasDuelo(dele) === "leitada") p *= 1 - .22;
+  return p;
+}
+function chanceEtapa(){
+  let dp = [1];
+  for(const r of ROLES){
+    const p = chanceDuelo(r.k), n = new Array(dp.length + 1).fill(0);
+    dp.forEach((x, i) => { n[i] += x * (1 - p); n[i + 1] += x * p; });
+    dp = n;
+  }
+  return dp.slice(3).reduce((a, b) => a + b, 0);
+}
+/* roda `fn` num rascunho do estado e devolve a chance que daria; nada fica */
+function previa(fn){
+  const bk = {gab:{...S.gab}, treino:{...S.treino}, auraExtra:S.auraExtra, desg:{...S.desg}, efeitos:S.efeitos.slice(),
+              rels:S.rels.slice(), op:S.op, opCand:S.opCand, usados:S.usados.slice(), afastados:(S.afastados || []).slice(),
+              pesquisa:S.pesquisa, cp:S.cp};
+  try{ fn(); return chanceEtapa(); } finally{ Object.assign(S, bk); }
+}
+const pctTxt = p => Math.round(p * 100) + "%";
+function deltaTxt(p){
+  const d = Math.round((p - chanceEtapa()) * 100);
+  return `<span class="gb-dl${d > 0 ? " up" : d < 0 ? " down" : ""}">${pctTxt(p)}</span>`;
+}
+
+/* ---------- a oposição que vem ---------- */
+function reescalarOp(){
+  if(!S.opCand) return;
+  S.opCand = S.opCand.filter(f => !S.usados.includes(f.n));
+  S.op = escalarOposicao(S.opCand);
+}
+function maisForteOp(){
+  if(!S.opCand || S.opCand.length <= 5) return null;
+  return S.opCand.slice().sort((a, b) => poder(b) - poder(a))[0];
+}
+
+/* ---------- aplicar as ações ---------- */
+function trocarMinistro(entra, sai){
+  S.gab[sai] = entra; S.usados.push(entra.n);
+  reescalarOp();
+}
+const APLICA = {
+  treino:   o => { S.treino[o.rk] = (S.treino[o.rk] || 0) + 4; },
+  ferias:   o => { S.desg[S.gab[o.rk].n] = 0; },
+  remanejar:o => { [S.gab[o.a], S.gab[o.b]] = [S.gab[o.b], S.gab[o.a]]; },
+  aura:     () => { S.auraExtra += RW_AURA; },
+  pesquisa: () => { S.pesquisa = S.etapa; },
+  dossie:   () => { const f = maisForteOp(); S.opCand = S.opCand.filter(x => x !== f); S.afastados.push({fig:f, por:"dossie"}); reescalarOp(); },
+  recruta:  o => trocarMinistro(o.entra, o.sai),
+  reforma:  o => trocarMinistro(o.entra, o.sai),
+  rel:      () => { S.rels.push(S.gb.rel); },
+  aposta:   () => {
+    const rk = ROLES[rnd(ROLES.length)].k, ok = Math.random() < .5, v = RW_APOSTA[ok ? 0 : 1];
+    S.treino[rk] = (S.treino[rk] || 0) + v;
+    return "🎲 " + (ok ? "Deu cara" : "Deu coroa") + ": " + (v > 0 ? "+" : "−") + Math.abs(v) + " permanentes em " + ROLE[rk].n + ".";
+  },
+  vida:     () => { S.vidas++; S.anistiaTomada = true; }
+};
+function fazerAcao(k, o){
+  if(acaoBloqueada(k)) return;
+  const custo = custoAcao(k);
+  S.cp -= custo;
+  if(!ACOES[k].fixo) S.compras[k] = (S.compras[k] || 0) + 1;
+  S.gb.feitas[k] = true;
+  const msg = APLICA[k](o || {});
+  S.gb.log.push(ACOES[k].ic + " " + ACOES[k].n + " (−" + custo + ")" + (msg ? " · " + msg : ""));
+}
+
+/* ---------- dilemas ---------- */
+/* cada opção: t (rótulo), d (efeito em texto), custo (capital, opcional), ef() aplica e pode
+   devolver uma frase. {lid}, {forte}, {cansado} viram nomes da sua cúpula. */
+function ministroForte(){ return ROLES.slice().sort((a, b) => forca(S.gab, b.k) - forca(S.gab, a.k))[0].k; }
+function ministroCansado(){ return ROLES.slice().sort((a, b) => desgDe(S.gab[b.k]) - desgDe(S.gab[a.k]))[0].k; }
+const DILEMAS = [
+  {ic:"🚚", n:"Greve dos caminhoneiros", d:"As estradas pararam e o diesel acabou nos postos.", ops:[
+    {t:"Ceder às demandas", d:"Custa <b>2 de capital</b>.", custo:2, ef:() => {}},
+    {t:"Endurecer", d:"<b>+5 em Guerra e −5 em Articulação</b> nesta etapa.", ef:() => { efeito("eu","gue",5,1); efeito("eu","arp",-5,1); }},
+    {t:"{lid} negocia na beira da BR", d:"<b>+2 de desgaste</b> no seu chefe, e <b>+2 de capital</b>.", ef:() => { S.desg[S.gab.lid.n] = desgDe(S.gab.lid) + 2; S.cp += 2; }}]},
+  {ic:"🏛️", n:"O Centrão quer ministérios", d:"Trinta deputados, uma lista de cargos e nenhuma pressa.", ops:[
+    {t:"Entregar os cargos", d:"<b>+4 de capital</b> agora, mas <b>−2 permanentes em Articulação</b>.", ef:() => { S.cp += 4; efeito("eu","arp",-2,Infinity); }},
+    {t:"Recusar", d:"<b>−5 em Articulação</b> nesta etapa.", ef:() => efeito("eu","arp",-5,1)}]},
+  {ic:"📰", n:"Escândalo com {forte}", d:"A capa da revista de sábado tem o nome do seu ministro mais forte.", ops:[
+    {t:"Defender em público", d:"Custa <b>3 de capital</b>.", custo:3, ef:() => {}},
+    {t:"Deixar sangrar", d:"{forte} joga com <b>−10</b> nesta etapa.", ef:o => efeito("fig",null,-10,1,o.forteN)},
+    {t:"Licença até a poeira baixar", d:"{forte} joga com <b>−5</b> nesta etapa, mas <b>o desgaste dele zera</b>.", ef:o => { efeito("fig",null,-5,1,o.forteN); S.desg[o.forteN] = 0; }}]},
+  {ic:"💵", n:"O FMI oferece um empréstimo", d:"Dinheiro rápido, condições lentas.", ops:[
+    {t:"Aceitar", d:"<b>+6 de capital</b> agora, <b>−4 em Economia</b> nesta e na próxima etapa.", ef:() => { S.cp += 6; efeito("eu","eco",-4,2); }},
+    {t:"Renegociar", d:"Custa <b>1 de capital</b>: <b>+3 em Economia</b> nesta etapa.", custo:1, ef:() => efeito("eu","eco",3,1)},
+    {t:"Recusar", d:"Nada acontece.", ef:() => {}}]},
+  {ic:"🌵", n:"Seca no Nordeste", d:"Os açudes viraram chão rachado.", ops:[
+    {t:"Transposição emergencial", d:"Custa <b>3 de capital</b>: <b>+4 permanentes em Desenvolvimento</b>.", custo:3, ef:() => { S.treino.des = (S.treino.des || 0) + 4; }},
+    {t:"Carro-pipa", d:"Custa <b>1 de capital</b>.", custo:1, ef:() => {}},
+    {t:"Deixar para depois", d:"<b>−6 em Desenvolvimento</b> nesta etapa.", ef:() => efeito("eu","des",-6,1)}]},
+  {ic:"⚽", n:"Ano de Copa", d:"O país inteiro de verde e amarelo.", ops:[
+    {t:"Feriado nos jogos do Brasil", d:"Custa <b>1 de capital</b>: <b>+4 na aura</b> nesta etapa.", custo:1, ef:() => efeito("aura",null,4,1)},
+    {t:"Expediente normal", d:"<b>+2 de capital</b>.", ef:() => { S.cp += 2; }}]},
+  {ic:"🕊️", n:"A oposição propõe trégua", d:"Um bilhete chega pelo líder do governo: ninguém ataca até o fim do ano.", ops:[
+    {t:"Aceitar", d:"A oposição perde <b>3 em tudo</b>, e você <b>4 em Guerra</b>, nesta etapa.", ef:() => { efeito("op","all",3,1); efeito("eu","gue",-4,1); }},
+    {t:"Recusar e atacar", d:"<b>+3 de capital</b>, mas a oposição chega <b>+2 em tudo</b>.", ef:() => { S.cp += 3; efeito("op","all",-2,1); }}]},
+  {ic:"🎙️", n:"Delação premiada", d:"Um ex-assessor quer falar. Ninguém sabe o quanto ele sabe.", ops:[
+    {t:"Comprar o silêncio", d:"Custa <b>4 de capital</b>.", custo:4, ef:() => {}},
+    {t:"Pagar para ver", d:"Cara ou coroa: nada, ou <b>−7 em tudo</b> nesta etapa.", ef:() => {
+      if(Math.random() < .5) return "Ele não sabia de nada. Ufa.";
+      efeito("eu","all",-7,1); return "Ele sabia. −7 em tudo nesta etapa."; }}]},
+  {ic:"🛢️", n:"Boom das commodities", d:"Soja, minério e petróleo no teto.", ops:[
+    {t:"Fundo soberano", d:"<b>+4 de capital</b>.", ef:() => { S.cp += 4; }},
+    {t:"Gastar agora", d:"<b>+7 em Economia e +3 em Desenvolvimento</b> nesta etapa.", ef:() => { efeito("eu","eco",7,1); efeito("eu","des",3,1); }}]},
+  {ic:"🎓", n:"Ocupação nas universidades", d:"Os estudantes não saem enquanto o orçamento não voltar.", ops:[
+    {t:"Dialogar", d:"<b>+2 de desgaste</b> em quem cuida de Desenvolvimento, mas <b>+3 permanentes</b> lá.", ef:() => { S.desg[S.gab.des.n] = desgDe(S.gab.des) + 2; S.treino.des = (S.treino.des || 0) + 3; }},
+    {t:"Reintegração de posse", d:"<b>+3 em Guerra, −5 em Desenvolvimento e −2 na aura</b> nesta etapa.", ef:() => { efeito("eu","gue",3,1); efeito("eu","des",-5,1); efeito("aura",null,-2,1); }}]},
+  {ic:"🕵️", n:"Um espião na oposição", d:"Ele tem a agenda da semana inteira deles.", ops:[
+    {t:"Usar a informação", d:"A oposição perde <b>5 na melhor função dela</b> nesta etapa.", ef:() => efeito("op", funcaoExtrema(S.op, true), 5, 1)},
+    {t:"Vender a informação", d:"<b>+3 de capital</b>.", ef:() => { S.cp += 3; }}]},
+  {ic:"🏥", n:"{cansado} pede licença médica", d:"O ministro mais desgastado não aguenta mais.", ops:[
+    {t:"Conceder", d:"O desgaste dele <b>zera</b>, mas ele joga com <b>−8</b> nesta etapa.", ef:o => { S.desg[o.cansadoN] = 0; efeito("fig",null,-8,1,o.cansadoN); }},
+    {t:"Pagar uma clínica", d:"Custa <b>2 de capital</b>: <b>−2 de desgaste</b> nele.", custo:2, ef:o => { S.desg[o.cansadoN] = Math.max(0, (S.desg[o.cansadoN] || 0) - 2); }},
+    {t:"Negar", d:"<b>+1 de desgaste</b> nele.", ef:o => { S.desg[o.cansadoN] = (S.desg[o.cansadoN] || 0) + 1; }}]},
+  /* o do mundo real: o tamanho do problema é a variação do dólar de hoje */
+  {ic:"💱", n:"O dólar de hoje", real:true, d:"", ops:[
+    {t:"Queimar reservas", d:"Custa <b>2 de capital</b> e o câmbio volta ao lugar.", custo:2, ef:() => {}},
+    {t:"Deixar flutuar", d:"", ef:() => { const x = dolarDilema(); if(x) efeito("eu","eco",x,1); }}]}
+];
+function dolarDilema(){ return Math.round(-MUNDO.dolar.v * 6); }
+function nomesDilema(){
+  const f = S.gab[ministroForte()], c = S.gab[ministroCansado()];
+  return {lid:S.gab.lid.s, forte:f.s, forteN:f.n, cansado:c.s, cansadoN:c.n};
+}
+function textoDilema(t, o){ return t.replace(/\{lid\}/g, esc(o.lid)).replace(/\{forte\}/g, esc(o.forte)).replace(/\{cansado\}/g, esc(o.cansado)); }
+function sortearDilema(){
+  const visto = S.dilemasVistos || (S.dilemasVistos = []);
+  const cand = DILEMAS.filter(x => !visto.includes(x.n));
+  const x = (cand.length ? cand : DILEMAS)[rnd(cand.length || DILEMAS.length)];
+  visto.push(x.n);
+  if(!x.real) return x;
+  const v = MUNDO.dolar.v, eco = dolarDilema();
+  return {...x, d:"O dólar " + (v >= 0 ? "subiu " : "caiu ") + num(Math.abs(v), 2) + "% hoje" + (MUNDO.dolar.real ? " (cotação de verdade)" : " (palpite do dia, sem conexão)") + ".",
+          ops:[x.ops[0], {...x.ops[1], d:eco >= 0 ? "O real valorizou: <b>" + sinal(eco) + " em Economia</b> nesta etapa." : "<b>" + sinal(eco) + " em Economia</b> nesta etapa."}]};
+}
+function responderDilema(i){
+  const gb = S.gb, op = gb.dilema.ops[i];
+  if(gb.resposta != null || (op.custo || 0) > S.cp) return;
+  S.cp -= op.custo || 0;
+  const msg = op.ef(gb.nomes);
+  gb.resposta = i;
+  gb.log.push(gb.dilema.ic + " " + textoDilema(op.t, gb.nomes) + (msg ? " · " + msg : ""));
+}
+
+/* ---------- abrir o Gabinete ---------- */
+function mostrarGabinete(vencida, placar){
+  const et = etapaAtual();
+  sortearEtapa();
+  S.opCand = candidatosOposicao(et); S.opCandEtapa = S.etapa;
+  S.op = escalarOposicao(S.opCand);
+  const renda = placar ? CP_RENDA[Math.min(2, placar.d)] : CP_INICIAL, juros = Math.min(CP_JUROS_MAX, Math.floor(S.cp / 3));
+  S.cp += renda + juros;
+  const rel = placar ? relNova() : null;           /* na transição a relíquia já veio do draft */
+  S.gb = {vencida, renda, juros, feitas:{}, log:[], acao:null, sel:null, sai:null, a:null,
+          rel: rel && !rel.fn ? rel : (rel || null), reforma:candidatosReforma(),
+          dilema:sortearDilema(), nomes:nomesDilema(), resposta:null};
+  $("gb-etapa").textContent = placar ? "Entre etapas · a próxima é " + et.n : "Transição de governo · a primeira é " + et.n;
+  $("gb-anos").textContent = S.anos + " anos governados";
+  renderGabinete();
+  show("s-gabinete");
+}
+
+/* ---------- tela ---------- */
+const IMEDIATAS = new Set(["aura","pesquisa","dossie","rel","aposta","vida"]);
+function figBtn(f, attrs, info, extra){
+  const b = melhorCadeira(f), p = pasDe(f), rar = raridade(f);
+  return `<button class="fig" ${attrs} style="--cor:var(--f-${b.k})">
+    ${face(f)}
+    <div class="txt"><div class="nm">${esc(f.n)}</div><div class="sub">${esc(info)}</div>
+      ${p?`<div class="pas-l">${p.ic} ${esc(p.n)}</div>`:""}</div>
+    ${afinSelo(f)}
+    <div class="best" style="--cor:var(--f-${b.k})">${b.ab} ${Math.round(rateR(f,b.k))}</div>
+    <div class="ovr${rar?" r-"+rar.k:""}">${extra || ovrDe(f)}</div></button>`;
+}
+function desgSelo(f){
+  const d = desgDe(f);
+  return d ? `<span class="gb-desg" title="desgaste: −${num(d * DESG_PESO, 1)} em tudo">😮‍💨${d}</span>` : "";
+}
+function intelHTML(){
+  return ROLES.map(r => {
+    const meu = S.gab[r.k], dele = S.op[r.k], a = forca(S.gab, r.k), b = forca(S.op, r.k), p = chanceDuelo(r.k);
+    const cls = p >= .6 ? "bom" : p <= .4 ? "ruim" : "";
+    return `<div class="gb-row ${cls}" style="--cor:var(--f-${r.k})">
+      <div class="fn">${r.ab}</div>
+      <div class="lado">${face(meu,"sm")}<span class="nm">${esc(meu.s)} ${desgSelo(meu)}</span></div>
+      <div class="gb-vs"><b>${Math.round(a)}</b><span>×</span><b>${Math.round(b)}</b></div>
+      <div class="lado dir"><span class="nm">${esc(dele.s)}</span>${face(dele,"sm")}</div>
+      <div class="pc"><i style="width:${Math.round(p*100)}%"></i><span>${pctTxt(p)}</span></div>
+    </div>`;
+  }).join("") + (S.afastados && S.afastados.length ? `<p class="gb-nota">Fora da oposição: ${S.afastados.map(a => esc(a.fig.s)).join(", ")}.</p>` : "");
+}
+function detalheHTML(){
+  const gb = S.gb, k = gb.acao; if(!k) return "";
+  const titulo = t => `<div class="eyebrow">${ACOES[k].ic} ${t} <button class="gb-x" data-cancel>cancelar</button></div>`;
+  if(k === "treino") return titulo("Escola de Governo: qual função?") + `<div class="gb-ops">` + ROLES.map(r =>
+    `<button class="gb-op" data-rk="${r.k}" style="--cor:var(--f-${r.k})"><b>${r.n}</b>${deltaTxt(previa(() => APLICA.treino({rk:r.k})))}</button>`).join("") + `</div>`;
+  if(k === "ferias") return titulo("Férias: quem descansa?") + `<div class="gb-ops">` + ROLES.map(r => {
+    const f = S.gab[r.k], d = desgDe(f);
+    return `<button class="gb-op" data-rk="${r.k}" ${d ? "" : "disabled"} style="--cor:var(--f-${r.k})"><b>${esc(f.s)}</b> ${desgSelo(f) || "descansado"}${d ? deltaTxt(previa(() => APLICA.ferias({rk:r.k}))) : ""}</button>`; }).join("") + `</div>`;
+  if(k === "remanejar"){
+    if(!gb.a) return titulo("Remanejar: quem muda de cadeira?") + `<div class="gb-ops">` + ROLES.map(r =>
+      `<button class="gb-op" data-a="${r.k}" style="--cor:var(--f-${r.k})"><small>${r.ab}</small> <b>${esc(S.gab[r.k].s)}</b></button>`).join("") + `</div>`;
+    return titulo("Remanejar " + esc(S.gab[gb.a].s) + " para qual cadeira?") + `<div class="gb-ops">` + ROLES.filter(r => r.k !== gb.a).map(r =>
+      `<button class="gb-op" data-b="${r.k}" style="--cor:var(--f-${r.k})"><small>${r.ab}</small> troca com <b>${esc(S.gab[r.k].s)}</b>${deltaTxt(previa(() => APLICA.remanejar({a:gb.a, b:r.k})))}</button>`).join("") + `</div>`;
+  }
+  if(k === "recruta" || k === "reforma"){
+    const cands = k === "recruta" ? ROLES.map(r => ({f:gb.vencida[r.k], info:"jogou em " + ROLE[r.k].n})).filter(c => !S.usados.includes(c.f.n))
+                                  : gb.reforma.filter(f => !S.usados.includes(f.n)).map(f => ({f, info:f.e + " · " + f.p}));
+    let h = titulo(k === "recruta" ? "Quem vira a casaca?" : "Quem entra no ministério?") + `<div class="pool rw-lista">` +
+      cands.map((c, i) => figBtn(c.f, `data-rec="${i}" aria-pressed="${gb.sel === c.f}"`, c.info)).join("") + `</div>`;
+    gb.cands = cands;
+    if(gb.sel){
+      h += `<div class="eyebrow">Quem sai para ${esc(gb.sel.s)} entrar?</div><div class="pool rw-lista">` + ROLES.map(r => {
+        const f = S.gab[r.k], rel = relDe(f), p = previa(() => trocarMinistro(gb.sel, r.k));
+        return `<button class="rw-seat" data-sai="${r.k}" style="--cor:var(--f-${r.k})">${face(f,"sm")}
+          <div><div class="r">${r.n}</div><div class="n">${esc(f.s)} ${desgSelo(f)}${rel?` <span title="perde a relíquia">${rel.ic}</span>`:""}</div></div>
+          <div class="dl">passar ${deltaTxt(p)}</div></button>`; }).join("") + `</div>`;
+    }
+    return h;
+  }
+  return "";
+}
+function renderGabinete(){
+  const gb = S.gb, ch = chanceEtapa();
+  $("gb-cp").innerHTML = `<div class="k">Capital político</div><div class="v">🏛️ ${S.cp}</div>
+    <div class="s">${gb.vencida ? "vitória +" + gb.renda : "transição +" + gb.renda}${gb.juros ? " · juros +" + gb.juros : ""} · o que sobrar rende 1 a cada 3 (até +${CP_JUROS_MAX}). Vitória folgada rende mais.</div>`;
+  $("gb-chance").innerHTML = `<div class="k">Chance de passar a etapa</div><div class="v ${ch >= .6 ? "bom" : ch < .35 ? "ruim" : ""}">${pctTxt(ch)}</div>
+    <div class="s">${serie() ? "no Julgamento cada duelo é melhor de 5" : "melhor de 5 duelos, sem contar as passivas de placar"}</div>`;
+  const dl = gb.dilema, nm = gb.nomes;
+  $("gb-dilema").innerHTML = `<span class="ic">${dl.ic}</span><div><div class="k">Dilema · escolha um caminho</div>
+    <div class="n">${textoDilema(dl.n, nm)}</div><div class="d">${dl.d}</div>
+    <div class="gb-ops">${dl.ops.map((o, i) => {
+      const caro = (o.custo || 0) > S.cp, feito = gb.resposta === i, travado = gb.resposta != null && !feito;
+      return `<button class="gb-op dil${feito ? " on" : ""}" data-dil="${i}" ${caro || travado ? "disabled" : ""}>
+        <b>${textoDilema(o.t, nm)}</b><span>${textoDilema(o.d, nm)}</span>${caro && gb.resposta == null ? "<em>falta capital</em>" : ""}</button>`; }).join("")}</div></div>`;
+  $("gb-intel").innerHTML = intelHTML();
+  $("gb-acoes").innerHTML = Object.entries(ACOES).map(([k, a]) => {
+    const bloq = acaoBloqueada(k), pv = !bloq && IMEDIATAS.has(k) && k !== "aposta" && k !== "vida" ? deltaTxt(previa(() => APLICA[k]({}))) : "";
+    return `<button class="gb-acao${gb.acao === k ? " on" : ""}" data-acao="${k}" ${bloq ? "disabled" : ""}>
+      <span class="ic">${a.ic}</span><span class="n">${a.n}</span><span class="c">🏛️ ${custoAcao(k)}</span>
+      <span class="d">${a.d()}</span>${bloq ? `<em>${bloq}</em>` : pv ? `<span class="pv">passar → ${pv}</span>` : ""}</button>`; }).join("");
+  $("gb-detalhe").innerHTML = detalheHTML();
+  $("gb-log").innerHTML = gb.log.length ? `<div class="eyebrow">Neste intervalo</div><ul>${gb.log.map(l => `<li>${l}</li>`).join("")}</ul>` : "";
+  $("gb-go").disabled = gb.resposta == null;
+  $("gb-go").textContent = gb.resposta == null ? "Responda o dilema para seguir" : "Começar a etapa · " + pctTxt(ch);
+}
+$("s-gabinete").addEventListener("click", ev => {
+  const gb = S && S.gb; if(!gb) return;
+  const t = ev.target.closest("button"); if(!t || t.disabled) return;
+  const d = t.dataset;
+  if(d.dil != null){ responderDilema(+d.dil); }
+  else if(d.acao){
+    if(IMEDIATAS.has(d.acao)){ gb.acao = null; fazerAcao(d.acao); }
+    else { gb.acao = gb.acao === d.acao ? null : d.acao; gb.sel = null; gb.a = null; }
+  }
+  else if(d.cancel != null){ gb.acao = null; gb.sel = null; gb.a = null; }
+  else if(d.rk){ fazerAcao(gb.acao, {rk:d.rk}); gb.acao = null; }
+  else if(d.a){ gb.a = d.a; }
+  else if(d.b){ fazerAcao("remanejar", {a:gb.a, b:d.b}); gb.acao = null; gb.a = null; }
+  else if(d.rec != null){ gb.sel = gb.cands[+d.rec].f; }
+  else if(d.sai){ fazerAcao(gb.acao, {entra:gb.sel, sai:d.sai}); gb.acao = null; gb.sel = null; }
+  else if(t.id === "gb-go"){ S.gb = null; iniciarEtapa(); return; }
+  else return;
+  renderGabinete();
+});
 
 /* ======================= FIM ======================= */
 function fim(venceuTudo){
